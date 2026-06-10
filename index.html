@@ -1,0 +1,631 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F7F6F3" />
+<title>Визуальный бриф — подбор интерьера</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F7F6F3;          /* warm bone canvas */
+    --surface:#FFFFFF;
+    --surface-2:#FBFBFA;
+    --ink:#1A1A1A;         /* off-black */
+    --ink-soft:#787774;    /* muted gray */
+    --line:#E7E5E0;        /* hairline */
+    --line-strong:#D8D5CD;
+    --accent:#B4654A;      /* desaturated clay — single accent */
+    --accent-soft:#F3E7E1;
+    --radius:14px;
+    --radius-sm:9px;
+    --maxw:680px;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Hanken Grotesk',-apple-system,system-ui,sans-serif;
+    font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .serif{font-family:'Newsreader',Georgia,serif;letter-spacing:-.02em;line-height:1.1}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px;width:100%}
+
+  /* ---------- top bar ---------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(247,246,243,.82);
+    backdrop-filter:saturate(160%) blur(12px);
+    -webkit-backdrop-filter:saturate(160%) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .bar{display:flex;align-items:center;gap:12px;height:58px}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em}
+  .brand .mk{width:22px;height:22px;border:1.5px solid var(--ink);border-radius:6px;position:relative;flex:none}
+  .brand .mk:after{content:"";position:absolute;inset:5px 5px auto auto;width:6px;height:6px;background:var(--accent);border-radius:2px}
+  .brand small{display:block;font-weight:400;font-size:11px;color:var(--ink-soft);letter-spacing:0}
+  .bar-right{margin-left:auto;font-size:12px;color:var(--ink-soft)}
+  .progress{height:3px;background:var(--line);position:relative;overflow:hidden}
+  .progress > i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);transition:width .5s var(--ease)}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;animation:fade .5s var(--ease) both}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  main{padding-bottom:120px}
+
+  /* ---------- welcome ---------- */
+  .hero{padding:54px 0 18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:18px}
+  .hero h1{font-size:clamp(34px,8vw,52px);font-weight:500}
+  .hero p{margin-top:18px;color:var(--ink-soft);font-size:17px;max-width:34ch}
+  .herofig{margin-top:26px;border-radius:var(--radius);overflow:hidden;position:relative;aspect-ratio:16/10;border:1px solid var(--line);background:linear-gradient(150deg,#EEECE7,#DAD6CE)}
+  .herofig img{width:100%;height:100%;object-fit:cover;display:block;animation:photoIn .9s var(--ease) both}
+  .herofig figcaption{position:absolute;left:0;right:0;bottom:0;padding:16px 16px 14px;color:#fff;font-size:13px;letter-spacing:.01em;
+    background:linear-gradient(to top,rgba(20,18,16,.6),transparent);z-index:1}
+  .how{margin:30px 0 8px;display:grid;gap:0;border-top:1px solid var(--line)}
+  .how .row{display:flex;gap:16px;padding:18px 2px;border-bottom:1px solid var(--line);align-items:flex-start}
+  .how .n{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);padding-top:2px;flex:none;width:24px}
+  .how .row b{font-weight:600}
+  .how .row span{display:block;color:var(--ink-soft);font-size:14px;margin-top:2px}
+
+  /* ---------- niche select ---------- */
+  .niche-grid{display:grid;gap:14px;margin-top:10px}
+  .nichecard{position:relative;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;aspect-ratio:16/9;
+    transition:border-color .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease);-webkit-tap-highlight-color:transparent;
+    animation:tileIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*70ms)}
+  .nichecard:active{transform:scale(.99)}
+  .nichecard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;animation:photoIn .7s var(--ease) both}
+  .nichecard .lbl{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:18px 18px 16px;color:#fff;
+    background:linear-gradient(to top,rgba(20,18,16,.68),rgba(20,18,16,.05) 70%,transparent)}
+  .nichecard .lbl b{font-size:20px;font-weight:600;display:block;letter-spacing:-.01em}
+  .nichecard .lbl span{font-size:13px;opacity:.9}
+  .nichecard[aria-pressed="true"]{border-color:var(--accent);border-width:2px;box-shadow:0 6px 18px rgba(180,101,74,.16)}
+  .nichecard[aria-pressed="true"] .check{transform:scale(1);background:var(--accent)}
+
+  /* ---------- quiz ---------- */
+  .step-head{padding:30px 0 14px}
+  .step-kicker{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:.02em}
+  .step-head h2{font-size:30px;font-weight:500;margin-top:8px;display:flex;align-items:center;gap:12px}
+  .step-head h2 .ic{width:30px;height:30px;color:var(--accent);flex:none}
+  .step-head p{color:var(--ink-soft);margin-top:7px;font-size:15px}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}
+  @media(min-width:540px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+  .tile{
+    position:relative;border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;aspect-ratio:4/3;
+    background:var(--surface);
+    transition:border-color .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease);
+    -webkit-tap-highlight-color:transparent;
+    animation:tileIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*45ms);
+  }
+  @keyframes tileIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .tile:active{transform:scale(.98)}
+  .tile .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:0}
+  .tile .ph svg{width:42%;height:42%;opacity:.4;color:rgba(26,26,26,.5)}
+  .tile .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;animation:photoIn .7s var(--ease) both}
+  @keyframes photoIn{from{opacity:0}to{opacity:1}}
+  .tile .meta{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 12px 11px;display:flex;align-items:flex-end;gap:8px;
+    background:linear-gradient(to top,rgba(20,18,16,.55),rgba(20,18,16,.08) 60%,transparent)}
+  .chip{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#fff;font-weight:600;
+    background:rgba(20,18,16,.42);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px 9px;white-space:nowrap}
+  .check{position:absolute;top:9px;right:9px;z-index:3;width:24px;height:24px;border-radius:999px;
+    background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;
+    transform:scale(0);transition:transform .22s var(--ease);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .check svg{width:13px;height:13px}
+  .tile[aria-pressed="true"]{border-color:var(--accent);border-width:2px;box-shadow:0 4px 14px rgba(180,101,74,.12)}
+  .tile[aria-pressed="true"] .check{transform:scale(1);background:var(--accent)}
+
+  .step-foot{display:flex;align-items:center;gap:12px;margin-top:22px;color:var(--ink-soft);font-size:13px}
+  .more-note{margin-top:14px;font-size:13px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:14px}
+
+  /* ---------- bottom action bar ---------- */
+  .actionbar{position:fixed;left:0;right:0;bottom:0;z-index:45;
+    background:rgba(247,246,243,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);padding:12px 0 calc(12px + env(safe-area-inset-bottom))}
+  .actionbar .wrap{display:flex;align-items:center;gap:12px}
+  .count{font-size:13px;color:var(--ink-soft)}
+  .count b{color:var(--ink);font-weight:600}
+  .spacer{flex:1}
+
+  .btn{appearance:none;border:none;font:inherit;font-weight:600;cursor:pointer;
+    border-radius:8px;padding:13px 22px;transition:transform .14s var(--ease),background .2s,opacity .2s;
+    display:inline-flex;align-items:center;gap:9px;-webkit-tap-highlight-color:transparent}
+  .btn:active{transform:translateY(1px) scale(.99)}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{background:#333}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong)}
+  .btn-ghost:hover{background:var(--surface)}
+  .btn[disabled]{opacity:.4;pointer-events:none}
+  .btn svg{width:16px;height:16px}
+
+  /* ---------- brief ---------- */
+  .brief-head{padding:34px 0 6px}
+  .brief-head h2{font-size:32px;font-weight:500}
+  .brief-head p{color:var(--ink-soft);margin-top:8px}
+  .summary{margin-top:22px;border-top:1px solid var(--line)}
+  .sumrow{padding:16px 2px;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:center}
+  .sumrow .lab{flex:none;width:120px}
+  .sumrow .lab b{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .sumrow .lab b .ic{width:16px;height:16px;color:var(--accent);flex:none}
+  .sumrow .lab span{font-size:12px;color:var(--ink-soft)}
+  .thumbs{display:flex;gap:7px;flex-wrap:wrap;flex:1}
+  .thumb{width:42px;height:42px;border-radius:8px;border:1px solid var(--line);position:relative;overflow:hidden;flex:none}
+  .thumb .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .thumb .ph svg{width:46%;height:46%;opacity:.45}
+  .thumb .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .thumb.empty{display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:11px;border-style:dashed}
+
+  .form{margin-top:26px;display:grid;gap:14px}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+  .field input{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);transition:border-color .2s}
+  .field input:focus{outline:none;border-color:var(--accent)}
+  .stage2{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--surface-2)}
+  .stage2 .tag{display:inline-block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 9px;border-radius:999px}
+  .stage2 h3{font-size:18px;font-weight:600;margin:10px 0 4px}
+  .stage2 p{font-size:14px;color:var(--ink-soft);margin-bottom:14px}
+
+  /* ---------- sent ---------- */
+  .sent{padding:80px 0;text-align:center}
+  .sent .seal{width:72px;height:72px;border-radius:999px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;animation:pop .5s var(--ease) both}
+  .sent .seal svg{width:34px;height:34px}
+  @keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+  .sent h2{font-size:30px;font-weight:500}
+  .sent p{color:var(--ink-soft);margin:12px auto 0;max-width:32ch}
+
+  /* ---------- configurator (stage 2 demo) ---------- */
+  .cfg-head{padding:30px 0 10px}
+  .cfg-head h2{font-size:28px;font-weight:500}
+  .cfg-head p{color:var(--ink-soft);margin-top:7px;font-size:15px}
+  .stage-pill{display:inline-block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 9px;border-radius:999px;margin-bottom:14px}
+  .canvas{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,#FBFBFA,#F2F0EB);aspect-ratio:16/11;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+  .canvas .room{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.16;filter:saturate(.7)}
+  .canvas svg{width:78%;height:78%;position:relative;z-index:1;filter:drop-shadow(0 18px 24px rgba(20,18,16,.16))}
+  .controls{margin-top:20px;display:grid;gap:20px}
+  .ctl b{font-size:13px;font-weight:600;display:block;margin-bottom:10px}
+  .swatches{display:flex;gap:10px;flex-wrap:wrap}
+  .sw{width:38px;height:38px;border-radius:8px;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);transition:transform .15s var(--ease)}
+  .sw:active{transform:scale(.92)}
+  .sw[aria-pressed="true"]{border-color:var(--ink)}
+  .segs{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden}
+  .segs button{appearance:none;border:none;background:transparent;font:inherit;font-size:13px;padding:9px 15px;cursor:pointer;color:var(--ink-soft)}
+  .segs button[aria-pressed="true"]{background:var(--ink);color:#fff;font-weight:600}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+
+  .foot-link{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:14px;text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px}
+  .foot-link:hover{color:var(--ink)}
+  .center{text-align:center}
+  .mt28{margin-top:28px}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><span class="mk"></span><span>Ателье&nbsp;интерьера<small>визуальный бриф клиента</small></span></div>
+    <div class="bar-right" id="barRight"></div>
+  </div>
+  <div class="progress"><i id="progressBar"></i></div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- WELCOME -->
+    <section class="screen active" id="s-welcome">
+      <div class="hero">
+        <div class="eyebrow">Подбор материалов и стиля</div>
+        <h1 class="serif">Расскажите о вкусе<br>не словами, а картинками</h1>
+        <p>Отмечайте то, что нравится. По вашему выбору мы поймём стиль и соберём интерьер под вас — без долгих переписок и сотни фото в мессенджере.</p>
+        <figure class="herofig">
+          <img src="assets/kitchen-1.jpg" alt="Современный интерьер" loading="eager">
+          <figcaption>Подбор по эмоции, а не по техническому заданию</figcaption>
+        </figure>
+      </div>
+      <div class="how">
+        <div class="row"><div class="n">01</div><div><b>Листаете категории</b><span>Кухня, диваны, свет, двери, полы, шторы и другое</span></div></div>
+        <div class="row"><div class="n">02</div><div><b>Ставите галочки</b><span>Отмечаете всё, что откликается — можно несколько в каждой</span></div></div>
+        <div class="row"><div class="n">03</div><div><b>Получаете бриф</b><span>Дизайнер видит ваш вкус в картинках и работает точнее</span></div></div>
+      </div>
+      <div class="mt28 center">
+        <a class="foot-link" id="toCfg" href="#">Посмотреть демо конструктора (Этап 2)</a>
+      </div>
+    </section>
+
+    <!-- NICHE -->
+    <section class="screen" id="s-niche">
+      <div class="step-head">
+        <div class="step-kicker">Объект подбора</div>
+        <h2 class="serif" style="font-size:30px;font-weight:500;margin-top:8px">Что оформляем?</h2>
+        <p>С этого начнём — под тип объекта подберём подходящие примеры.</p>
+      </div>
+      <div class="niche-grid" id="nicheGrid"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="screen" id="s-quiz">
+      <div class="step-head">
+        <div class="step-kicker" id="stepKicker"></div>
+        <h2><span class="ic" id="stepIcon"></span><span id="stepTitle"></span></h2>
+        <p id="stepSub"></p>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="more-note" id="moreNote"></div>
+    </section>
+
+    <!-- BRIEF -->
+    <section class="screen" id="s-brief">
+      <div class="brief-head">
+        <div class="eyebrow">Ваш бриф готов</div>
+        <h2 class="serif">Портрет вашего вкуса</h2>
+        <p id="briefCount"></p>
+      </div>
+      <div class="summary" id="summary"></div>
+
+      <div class="form">
+        <div class="field"><label for="cname">Имя</label><input id="cname" placeholder="Как к вам обращаться" autocomplete="name"></div>
+        <div class="field"><label for="cobj">Объект</label><input id="cobj" placeholder="Например: квартира 84 м², Астана" autocomplete="off"></div>
+      </div>
+
+      <div class="stage2">
+        <span class="tag">Этап 2 · скоро</span>
+        <h3>Конструктор предмета</h3>
+        <p>Выбрали диван — меняете цвет, ткань и конфигурацию прямо на экране. Как тюнинг авто, только для мебели.</p>
+        <button class="btn btn-ghost" id="toCfg2">Открыть демо конструктора →</button>
+      </div>
+    </section>
+
+    <!-- CONFIGURATOR -->
+    <section class="screen" id="s-cfg">
+      <div class="cfg-head">
+        <span class="stage-pill">Этап 2 · демонстрация</span>
+        <h2 class="serif">Конструктор дивана</h2>
+        <p>Меняйте параметры — модель перестраивается вживую. Так же это работает для дверей, кухонь и корпусной мебели.</p>
+      </div>
+      <div class="canvas" id="cfgCanvas"></div>
+      <div class="controls">
+        <div class="ctl">
+          <b>Обивка</b>
+          <div class="swatches" id="swatches"></div>
+        </div>
+        <div class="ctl">
+          <b>Конфигурация</b>
+          <div class="segs" id="cfgSeats">
+            <button data-seats="2" aria-pressed="false">2 места</button>
+            <button data-seats="3" aria-pressed="true">3 места</button>
+            <button data-seats="corner" aria-pressed="false">Угловой</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <b>Высота спинки · <span class="mono" id="backVal">средняя</span></b>
+          <input type="range" id="backH" min="0" max="2" step="1" value="1">
+        </div>
+      </div>
+    </section>
+
+    <!-- SENT -->
+    <section class="screen" id="s-sent">
+      <div class="sent">
+        <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></div>
+        <h2 class="serif">Бриф отправлен дизайнеру</h2>
+        <p id="sentMsg">Спасибо! Мы изучим ваш выбор и вернёмся с концепцией. Это демо — данные никуда не уходят.</p>
+        <div class="mt28"><button class="btn btn-ghost" id="restart">Пройти заново</button></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ACTION BAR -->
+<div class="actionbar" id="actionbar" style="display:none">
+  <div class="wrap">
+    <button class="btn btn-ghost" id="backBtn" style="display:none">←</button>
+    <span class="count" id="count"></span>
+    <span class="spacer"></span>
+    <button class="btn btn-primary" id="nextBtn">Далее</button>
+  </div>
+</div>
+
+<script>
+/* ---------------- icons ---------------- */
+const I = {
+  mood:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+  kitchen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="M3 13h18M9 9V5m6 4V5M8 16h0m4 0h0"/></svg>',
+  sofa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M3 12a2 2 0 0 1 2 2v2h14v-2a2 2 0 0 1 4 0v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-4a2 2 0 0 1 2-2Z"/><path d="M5 18v2m14-2v2"/></svg>',
+  chair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 4h12v9H6zM6 13l-1 7m14-7 1 7M6 16h12"/></svg>',
+  lamp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3h8l3 7H5l3-7Z"/><path d="M12 10v8m-3 3h6"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="3" width="12" height="18" rx="1"/><path d="M6 21h12M14 12h.01"/></svg>',
+  floor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18M3 12h18M3 17h18M8 7v5m8-5v5M12 12v5"/></svg>',
+  curtain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h18M5 4c0 8-1 12-2 16 3 0 4-3 4-8m9-8c0 8 1 12 2 16-3 0-4-3-4-8M9 4c0 9 0 14 0 16m6-16c0 9 0 14 0 16"/></svg>',
+  bath:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"/><path d="M6 12V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2m-3 11-1 2m11-2 1 2"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>'
+};
+
+/* ---------------- styles (desaturated tints) ---------------- */
+const STYLES = [
+  {n:'Минимал',  a:'#EEECE7', b:'#DAD6CE'},
+  {n:'Сканди',   a:'#E9EEF0', b:'#D3DCE0'},
+  {n:'Лофт',     a:'#DAD5CF', b:'#B7AC9F'},
+  {n:'Классика', a:'#F2EBDC', b:'#E2D4BC'},
+  {n:'Ар-деко',  a:'#D8E0DA', b:'#AEC0B5'},
+  {n:'Современный',a:'#E6E6E8', b:'#CBCCCF'},
+  {n:'Прованс',  a:'#ECE7EE', b:'#D6CFE0'},
+  {n:'Эко',      a:'#E9E7DA', b:'#D0CBB5'},
+];
+
+/* ---------------- steps ---------------- */
+const STEPS = [
+  {key:'mood',  title:'Общее настроение', icon:'mood',   sub:'С чего начнём — какой воздух вам ближе? Отметьте 1–3 направления.', label:null},
+  {key:'kitchen',title:'Кухня',           icon:'kitchen',sub:'Самое важное помещение. Что нравится визуально?', label:'Кухня'},
+  {key:'sofa',  title:'Диваны',           icon:'sofa',   sub:'Отметьте формы и характер, которые вам по душе.', label:'Диван'},
+  {key:'chair', title:'Кресла',           icon:'chair',  sub:'Акцентная мебель — что цепляет глаз?', label:'Кресло'},
+  {key:'lamp',  title:'Свет и люстры',    icon:'lamp',   sub:'Светильники задают настроение комнаты.', label:'Свет'},
+  {key:'door',  title:'Двери',            icon:'door',   sub:'Модель, цвет и характер дверей.', label:'Дверь'},
+  {key:'floor', title:'Полы',             icon:'floor',  sub:'Ламинат, паркет, керамогранит — что ближе?', label:'Пол'},
+  {key:'curtain',title:'Шторы',           icon:'curtain',sub:'Текстиль и драпировки.', label:'Шторы'},
+];
+const EXTRA = ['Столы','Стулья','Шкафы и тумбы','Сантехника','Споты','Керамогранит','Перила','Консоли'];
+
+/* brand interior photos — AI-generated, served locally */
+const IMAGES = {
+  mood:["assets/mood-1.jpg","assets/mood-2.jpg","assets/mood-3.jpg","assets/mood-4.jpg"],
+  kitchen:["assets/kitchen-1.jpg","assets/kitchen-2.jpg","assets/kitchen-3.jpg"],
+  sofa:["assets/sofa-1.jpg","assets/sofa-2.jpg","assets/sofa-3.jpg"],
+  chair:["assets/chair-1.jpg","assets/chair-2.jpg","assets/chair-3.jpg"],
+  lamp:["assets/lamp-1.jpg","assets/lamp-2.jpg","assets/lamp-3.jpg"],
+  door:["assets/door-1.jpg","assets/door-2.jpg","assets/door-3.jpg"],
+  floor:["assets/floor-1.jpg","assets/floor-2.jpg"],
+  curtain:["assets/curtain-1.jpg","assets/curtain-2.jpg","assets/curtain-3.jpg"]
+};
+const NICHE_IMAGES = {apartment:"assets/niche-apartment.jpg",house:"assets/niche-house.jpg",commercial:"assets/niche-commercial.jpg"};
+const ROOM_BG = "assets/mood-2.jpg";
+const STYLE_NAMES = STYLES.map(s=>s.n);
+
+/* build items: each tile = a real photo */
+STEPS.forEach(s=>{
+  const urls = IMAGES[s.key] || [];
+  s.items = urls.map((url,i)=>({
+    id:s.key+'-'+i,
+    img:url,
+    style: s.key==='mood' ? (STYLE_NAMES[i]||null) : null,
+    a:STYLES[i%STYLES.length].a, b:STYLES[i%STYLES.length].b,
+    icon:s.icon
+  }));
+});
+
+/* ---------------- state ---------------- */
+const state = { step:0, niche:null, selected:{} };
+STEPS.forEach(s=>state.selected[s.key]=new Set());
+try{ const saved=JSON.parse(localStorage.getItem('briefSel')||'{}');
+  Object.keys(saved).forEach(k=>{ if(state.selected[k]) state.selected[k]=new Set(saved[k]); });
+}catch(e){}
+function persist(){ const o={}; Object.keys(state.selected).forEach(k=>o[k]=[...state.selected[k]]); localStorage.setItem('briefSel',JSON.stringify(o)); }
+
+/* ---------------- dom ---------------- */
+const $=id=>document.getElementById(id);
+const screens={welcome:$('s-welcome'),niche:$('s-niche'),quiz:$('s-quiz'),brief:$('s-brief'),cfg:$('s-cfg'),sent:$('s-sent')};
+function show(name){ Object.values(screens).forEach(s=>s.classList.remove('active')); screens[name].classList.add('active'); window.scrollTo({top:0,behavior:'instant'}); current=name; updateChrome(); }
+let current='welcome';
+
+function tileArt(it){
+  return `<div class="ph" style="background:linear-gradient(150deg,${it.a},${it.b})">${I[it.icon]}</div>`+
+         `<img class="photo" loading="lazy" alt="" src="${it.img}" onerror="this.remove()">`;
+}
+
+function renderStep(){
+  const s=STEPS[state.step];
+  $('stepKicker').textContent=`Шаг ${state.step+1} / ${STEPS.length}`;
+  $('stepTitle').textContent=s.title;
+  $('stepIcon').innerHTML=I[s.icon];
+  $('stepSub').textContent=s.sub;
+  const sel=state.selected[s.key];
+  $('grid').innerHTML=s.items.map((it,i)=>`
+    <div class="tile" data-id="${it.id}" role="button" tabindex="0" aria-pressed="${sel.has(it.id)}" style="--i:${i}">
+      ${tileArt(it)}
+      <div class="check">${I.check}</div>
+      ${it.style?`<div class="meta"><span class="chip">${it.style}</span></div>`:''}
+    </div>`).join('');
+  $('moreNote').innerHTML = state.step===0
+    ? ''
+    : `В рабочей версии в каждой категории — десятки реальных позиций. Ещё категории: ${EXTRA.join(' · ')}.`;
+  updateChrome();
+}
+
+function toggleTile(id){
+  const s=STEPS[state.step], sel=state.selected[s.key];
+  if(sel.has(id)) sel.delete(id); else sel.add(id);
+  const el=document.querySelector(`.tile[data-id="${id}"]`);
+  if(el) el.setAttribute('aria-pressed', sel.has(id));
+  persist(); updateChrome();
+}
+
+function totalPicks(){ return Object.values(state.selected).reduce((n,set)=>n+set.size,0); }
+
+function updateChrome(){
+  const ab=$('actionbar');
+  $('nextBtn').disabled=false;
+  if(current==='niche'){
+    ab.style.display='block';
+    $('backBtn').style.display='inline-flex';
+    $('count').innerHTML=state.niche?`Объект: <b>${NICHE_LABEL[state.niche]}</b>`:'Выберите тип объекта';
+    $('nextBtn').textContent='Продолжить →';
+    $('nextBtn').disabled=!state.niche;
+    $('progressBar').style.width='6%';
+    $('barRight').textContent='Объект';
+    return;
+  }
+  if(current==='quiz'){
+    ab.style.display='block';
+    $('backBtn').style.display='inline-flex';
+    const s=STEPS[state.step], c=state.selected[s.key].size;
+    $('count').innerHTML = c?`Выбрано <b>${c}</b>`:'Можно пропустить';
+    $('nextBtn').textContent = state.step===STEPS.length-1?'Собрать бриф →':'Далее';
+    const pct=((state.step)/(STEPS.length))*100;
+    $('progressBar').style.width=pct+'%';
+    $('barRight').textContent=`${state.step+1}/${STEPS.length}`;
+  } else if(current==='brief'){
+    ab.style.display='block';
+    $('backBtn').style.display='inline-flex';
+    $('count').innerHTML=`Отмечено <b>${totalPicks()}</b>`;
+    $('nextBtn').textContent='Отправить дизайнеру →';
+    $('progressBar').style.width='100%';
+    $('barRight').textContent='Бриф';
+  } else {
+    ab.style.display='none';
+    $('progressBar').style.width = current==='welcome'?'0%':'100%';
+    $('barRight').textContent='';
+  }
+}
+
+function renderBrief(){
+  const t=totalPicks();
+  $('briefCount').textContent = t? `Вы отметили ${t} вариант(ов). Вот что дизайнер увидит как ваш запрос:` : 'Вы пока ничего не отметили — можно вернуться и выбрать.';
+  const nicheRow = state.niche?`<div class="sumrow"><div class="lab"><b>Объект</b><span>тип</span></div><div class="thumbs"><div class="thumb"><img class="photo" src="${NICHE_IMAGES[state.niche]}" alt="" onerror="this.remove()"></div><span style="align-self:center;font-weight:600">${NICHE_LABEL[state.niche]}</span></div></div>`:'';
+  $('summary').innerHTML = nicheRow + STEPS.map(s=>{
+    const sel=[...state.selected[s.key]];
+    const items=s.items.filter(it=>sel.includes(it.id));
+    const thumbs = items.length
+      ? items.map(it=>`<div class="thumb">${tileArt(it)}</div>`).join('')
+      : `<div class="thumb empty">—</div>`;
+    return `<div class="sumrow">
+      <div class="lab"><b><span class="ic">${I[s.icon]}</span>${s.title}</b><span>${items.length} выбрано</span></div>
+      <div class="thumbs">${thumbs}</div></div>`;
+  }).join('');
+}
+
+/* ---------------- niche ---------------- */
+const NICHES=[
+  {key:'apartment',t:'Квартира',d:'Городское жильё',img:NICHE_IMAGES.apartment},
+  {key:'house',t:'Частный дом',d:'Коттедж, таунхаус',img:NICHE_IMAGES.house},
+  {key:'commercial',t:'Коммерция',d:'Кафе, офис, отель',img:NICHE_IMAGES.commercial},
+];
+const NICHE_LABEL={apartment:'Квартира',house:'Частный дом',commercial:'Коммерция'};
+function renderNiche(){
+  $('nicheGrid').innerHTML=NICHES.map((n,i)=>`
+    <div class="nichecard" data-niche="${n.key}" role="button" tabindex="0" aria-pressed="${state.niche===n.key}" style="--i:${i}">
+      <img src="${n.img}" alt="" loading="lazy" onerror="this.remove()">
+      <div class="check">${I.check}</div>
+      <div class="lbl"><b>${n.t}</b><span>${n.d}</span></div>
+    </div>`).join('');
+  updateChrome();
+}
+function chooseNiche(key){ state.niche=key;
+  [...$('nicheGrid').children].forEach(c=>c.setAttribute('aria-pressed',c.dataset.niche===key));
+  updateChrome();
+}
+
+/* ---------------- configurator ---------------- */
+const FABRIC=[
+  {n:'Глина',  c:'#B4654A'},
+  {n:'Олива',  c:'#6E7257'},
+  {n:'Графит', c:'#3C3B39'},
+  {n:'Песок',  c:'#C9B79B'},
+  {n:'Дымка',  c:'#8C9298'},
+];
+const cfg={fabric:'#B4654A',seats:'3',back:1};
+function sofaSVG(){
+  const c=cfg.fabric;
+  const backH = [22,40,58][cfg.back];        // back height
+  const backY = 70-backH;
+  let w, seatX=40, armW=22;
+  if(cfg.seats==='2'){ w=180; }
+  else if(cfg.seats==='3'){ w=240; }
+  else { w='corner'; }
+  const dark = shade(c,-18), light=shade(c,12);
+  if(cfg.seats==='corner'){
+    return `<svg viewBox="0 0 320 200" fill="none">
+      <rect x="36" y="${backY+10}" width="248" height="${backH+8}" rx="12" fill="${c}"/>
+      <rect x="36" y="${backY+10}" width="248" height="14" rx="7" fill="${light}"/>
+      <rect x="40" y="84" width="240" height="58" rx="14" fill="${dark}"/>
+      <rect x="48" y="92" width="110" height="44" rx="11" fill="${c}"/>
+      <rect x="164" y="92" width="110" height="44" rx="11" fill="${c}"/>
+      <rect x="276" y="60" width="40" height="86" rx="12" fill="${dark}"/>
+      <rect x="20" y="78" width="30" height="64" rx="12" fill="${dark}"/>
+      <rect x="276" y="146" width="14" height="20" rx="4" fill="#2b2b29"/>
+      <rect x="34" y="146" width="14" height="20" rx="4" fill="#2b2b29"/>
+      <rect x="262" y="146" width="14" height="20" rx="4" fill="#2b2b29"/>
+    </svg>`;
+  }
+  const x0=(320-w)/2;
+  return `<svg viewBox="0 0 320 200" fill="none">
+    <rect x="${x0+armW}" y="${backY+10}" width="${w-armW*2}" height="${backH+8}" rx="12" fill="${c}"/>
+    <rect x="${x0+armW}" y="${backY+10}" width="${w-armW*2}" height="14" rx="7" fill="${light}"/>
+    <rect x="${x0}" y="84" width="${w}" height="58" rx="16" fill="${dark}"/>
+    ${seatCushions(x0+armW,w-armW*2,c)}
+    <rect x="${x0}" y="74" width="${armW}" height="68" rx="12" fill="${dark}"/>
+    <rect x="${x0+w-armW}" y="74" width="${armW}" height="68" rx="12" fill="${dark}"/>
+    <rect x="${x0+10}" y="146" width="14" height="20" rx="4" fill="#2b2b29"/>
+    <rect x="${x0+w-24}" y="146" width="14" height="20" rx="4" fill="#2b2b29"/>
+  </svg>`;
+}
+function seatCushions(x,w,c){
+  const n = w>170?3:2, gap=6, cw=(w-gap*(n-1))/n; let s='';
+  for(let i=0;i<n;i++){ s+=`<rect x="${x+i*(cw+gap)}" y="92" width="${cw}" height="44" rx="11" fill="${c}"/>`; }
+  return s;
+}
+function shade(hex,p){ let n=parseInt(hex.slice(1),16),r=(n>>16)+p,g=((n>>8)&255)+p,b=(n&255)+p;
+  r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+function renderCfg(){ $('cfgCanvas').innerHTML=`<img class="room" src="${ROOM_BG}" alt="" onerror="this.remove()">`+sofaSVG(); }
+function initCfg(){
+  $('swatches').innerHTML=FABRIC.map(f=>`<div class="sw" data-c="${f.c}" title="${f.n}" aria-pressed="${f.c===cfg.fabric}" style="background:${f.c}"></div>`).join('');
+  renderCfg();
+}
+
+/* ---------------- events ---------------- */
+$('grid').addEventListener('click',e=>{const t=e.target.closest('.tile');if(t)toggleTile(t.dataset.id);});
+$('grid').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')){const t=e.target.closest('.tile');if(t){e.preventDefault();toggleTile(t.dataset.id);}}});
+
+$('nextBtn').addEventListener('click',()=>{
+  if(current==='niche'){ if(state.niche){ state.step=0; renderStep(); show('quiz'); } return; }
+  if(current==='quiz'){
+    if(state.step<STEPS.length-1){ state.step++; renderStep(); }
+    else { renderBrief(); show('brief'); }
+  } else if(current==='brief'){
+    const name=$('cname').value.trim();
+    $('sentMsg').innerHTML = (name?name+', спасибо! ':'Спасибо! ')+'Мы изучим ваш выбор и вернёмся с концепцией. <br><span class="mono" style="font-size:12px;color:var(--ink-soft)">Это демо — данные никуда не отправляются.</span>';
+    show('sent');
+  }
+});
+$('backBtn').addEventListener('click',()=>{
+  if(current==='niche'){ show('welcome'); }
+  else if(current==='quiz'){ if(state.step>0){state.step--;renderStep();} else { renderNiche(); show('niche'); } }
+  else if(current==='brief'){ state.step=STEPS.length-1; renderStep(); show('quiz'); }
+});
+$('nicheGrid').addEventListener('click',e=>{const c=e.target.closest('.nichecard');if(c)chooseNiche(c.dataset.niche);});
+$('nicheGrid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const c=e.target.closest('.nichecard');if(c){e.preventDefault();chooseNiche(c.dataset.niche);}}});
+document.querySelector('#s-welcome .how');
+$('toCfg').addEventListener('click',e=>{e.preventDefault();initCfg();show('cfg');});
+$('toCfg2').addEventListener('click',()=>{initCfg();show('cfg');});
+$('restart').addEventListener('click',()=>{ STEPS.forEach(s=>state.selected[s.key]=new Set()); state.niche=null; persist(); state.step=0; renderStep(); show('welcome'); });
+
+/* start button on welcome via hero */
+const startBtn=document.createElement('button');
+startBtn.className='btn btn-primary';startBtn.id='startBtn';
+startBtn.innerHTML='Начать подбор '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+startBtn.style.marginTop='28px';
+$('s-welcome').querySelector('.how').after(startBtn);
+startBtn.addEventListener('click',()=>{ renderNiche(); show('niche'); });
+
+/* configurator controls */
+$('swatches').addEventListener('click',e=>{const sw=e.target.closest('.sw');if(!sw)return;
+  cfg.fabric=sw.dataset.c; [...$('swatches').children].forEach(x=>x.setAttribute('aria-pressed',x===sw));renderCfg();});
+$('cfgSeats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  cfg.seats=b.dataset.seats;[...$('cfgSeats').children].forEach(x=>x.setAttribute('aria-pressed',x===b));renderCfg();});
+$('backH').addEventListener('input',e=>{cfg.back=+e.target.value;$('backVal').textContent=['низкая','средняя','высокая'][cfg.back];renderCfg();});
+
+/* init */
+renderStep();
+updateChrome();
+</script>
+</body>
+</html>
