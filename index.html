@@ -236,6 +236,18 @@
   .thumb .ph svg{width:46%;height:46%;opacity:.45}
   .thumb .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .thumb.empty{display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:11px;border-style:dashed}
+  .b-rooms{margin-top:14px}
+  .b-room{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:10px;margin-bottom:10px;animation:tileIn .5s var(--ease) both;animation-delay:calc(var(--r,0)*70ms)}
+  .b-room img{width:84px;height:84px;border-radius:10px;object-fit:cover;flex:none;border:1px solid var(--line)}
+  .b-room .b-info{flex:1;min-width:0}
+  .b-room .b-info b{display:block;font-size:15px;font-weight:600}
+  .b-room .b-info span{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+  .b-edit{appearance:none;border:1px solid var(--line-strong);background:transparent;color:var(--ink);font:inherit;font-size:12.5px;font-weight:600;
+    padding:8px 13px;border-radius:999px;cursor:pointer;flex:none;transition:border-color .2s,transform .15s var(--spring)}
+  .b-edit:hover{border-color:var(--accent)}
+  .b-edit:active{transform:scale(.95)}
+  .brand{cursor:pointer}
 
   .form{margin-top:26px;display:grid;gap:14px}
   .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
@@ -348,7 +360,7 @@
       <div class="hero">
         <div class="eyebrow rv d1">Визуальный подбор интерьера</div>
         <h1 class="serif rv d2">С чего начнём<br>ваш <em>интерьер</em>?</h1>
-        <p class="lede rv d3">Выберите раздел и отмечайте, что нравится. Мы поймём ваш вкус по картинкам и соберём точный бриф.</p>
+        <p class="lede rv d3">Соберите комнаты в конструкторе — фасады, столешницы, ткани, детали. Из вашего выбора сложится точный бриф для дизайнера.</p>
         <div class="picker rv d3" id="qsChips"></div>
         <div class="stats rv d3">
           <div class="stat"><b>8</b><span>категорий</span></div>
@@ -359,12 +371,12 @@
         <div class="hero-cap rv d4"><span class="dot"></span>Так клиент собирает бриф — отмечает, что нравится</div>
       </div>
       <div class="how rv d5">
-        <div class="row"><div class="n">01</div><div><b>Выбираете глазами</b><span>Кухня, свет, мебель, отделка — отмечаете то, что нравится</span></div></div>
-        <div class="row"><div class="n">02</div><div><b>Мы считываем вкус</b><span>Выбор складывается в портрет ваших предпочтений</span></div></div>
-        <div class="row"><div class="n">03</div><div><b>Получаете точный бриф</b><span>Дизайнер видит реальный запрос и работает быстрее</span></div></div>
+        <div class="row"><div class="n">01</div><div><b>Собираете комнаты</b><span>Кухня, гостиная, спальня — меняете фасады, ткани, детали</span></div></div>
+        <div class="row"><div class="n">02</div><div><b>Добавляете в бриф</b><span>Каждая собранная комната ложится в общий список</span></div></div>
+        <div class="row"><div class="n">03</div><div><b>Дизайнер получает ТЗ</b><span>Точные комплектации — и подбирает реальные материалы</span></div></div>
       </div>
       <div class="mt28 center rv d6">
-        <a class="foot-link" id="toCfg" href="#">Посмотреть демо конструктора (Этап 2)</a>
+        <a class="foot-link" id="toCfg" href="#">Открыть конструктор целиком</a>
       </div>
     </section>
 
@@ -392,8 +404,8 @@
     <!-- BRIEF -->
     <section class="screen" id="s-brief">
       <div class="brief-head">
-        <div class="eyebrow">Готово</div>
-        <h2 class="serif">Портрет вашего вкуса</h2>
+        <div class="eyebrow">Бриф</div>
+        <h2 class="serif">Ваш бриф для дизайнера</h2>
         <p id="briefCount"></p>
       </div>
       <div class="summary" id="summary"></div>
@@ -402,10 +414,10 @@
         <div class="field"><label for="cobj">Объект</label><input id="cobj" placeholder="Например: квартира 84 м², Астана" autocomplete="off"></div>
       </div>
       <div class="stage2">
-        <span class="tag">Этап 2 · скоро</span>
-        <h3>Настройте предмет под себя</h3>
-        <p>Выбрали диван — поменяйте ткань, цвет и конфигурацию. Примерочная для мебели прямо на экране.</p>
-        <button class="btn btn-ghost" id="toCfg2">Открыть демо конструктора →</button>
+        <span class="tag">Конструктор</span>
+        <h3>Добавить ещё комнату</h3>
+        <p>Соберите кухню, гостиную, спальню или ванную — комплектация добавится в этот бриф.</p>
+        <button class="btn btn-ghost" id="toCfg2">Открыть конструктор →</button>
       </div>
     </section>
 
@@ -415,9 +427,9 @@
         <div class="cfg-top">
           <button class="cfg-mini" id="cfgBack">← Назад</button>
         </div>
-        <span class="stage-pill">Этап 2 · демонстрация</span>
-        <h2 class="serif">Соберите предмет под себя</h2>
-        <p>Выбирайте детали — изображение меняется под ваш выбор. На кухне поменяйте столешницу при тех же фасадах, на двери — цвет и ручку.</p>
+        <span class="stage-pill">Конструктор</span>
+        <h2 class="serif">Соберите комнату под себя</h2>
+        <p>Меняйте детали — картинка перестраивается. Собрали — нажмите «Добавить в бриф» и переходите к следующей комнате.</p>
       </div>
       <div class="cfg-tabs" id="cfgTabs"></div>
       <div class="cfg-stage" id="cfgStage"></div>
@@ -512,12 +524,15 @@ STEPS.forEach(s=>{
 });
 
 /* ---------------- state ---------------- */
-const state = { step:0, niche:null, selected:{} };
+const state = { step:0, niche:null, selected:{}, brief:{} };
 STEPS.forEach(s=>state.selected[s.key]=new Set());
 try{ const saved=JSON.parse(localStorage.getItem('briefSel')||'{}');
   Object.keys(saved).forEach(k=>{ if(state.selected[k]) state.selected[k]=new Set(saved[k]); });
 }catch(e){}
+try{ state.brief=JSON.parse(localStorage.getItem('briefRooms')||'{}')||{}; }catch(e){ state.brief={}; }
 function persist(){ const o={}; Object.keys(state.selected).forEach(k=>o[k]=[...state.selected[k]]); localStorage.setItem('briefSel',JSON.stringify(o)); }
+function persistBrief(){ localStorage.setItem('briefRooms',JSON.stringify(state.brief)); }
+function briefRoomCount(){ return Object.keys(state.brief).length; }
 
 /* ---------------- dom ---------------- */
 const $=id=>document.getElementById(id);
@@ -577,9 +592,16 @@ function updateChrome(){
     $('barRight').textContent=`${state.step+1}/${STEPS.length}`;
   } else if(current==='brief'){
     ab.style.display='block'; $('backBtn').style.display='inline-flex';
-    $('count').innerHTML=`Отмечено <b>${totalPicks()}</b>`;
+    $('count').innerHTML=`Комнат: <b>${briefRoomCount()}</b> · фото: <b>${totalPicks()}</b>`;
     $('nextBtn').textContent='Отправить дизайнеру →';
     $('progressBar').style.width='100%'; $('barRight').textContent='Бриф';
+  } else if(current==='cfg'){
+    ab.style.display='block'; $('backBtn').style.display='inline-flex';
+    const n=briefRoomCount();
+    $('count').innerHTML = n?`В брифе: <b>${n}</b> комн.`:'Соберите и добавьте в бриф';
+    $('nextBtn').textContent = roomInBrief(cfgProduct) ? (n?'Перейти к брифу →':'В брифе ✓') : 'Добавить в бриф +';
+    $('progressBar').style.width = Math.min(90,(n/5)*100)+'%';
+    $('barRight').textContent='Конструктор';
   } else {
     ab.style.display='none';
     $('progressBar').style.width = current==='welcome'?'0%':'100%'; $('barRight').textContent='';
@@ -587,19 +609,25 @@ function updateChrome(){
 }
 
 function renderBrief(){
-  const t=totalPicks();
-  $('briefCount').textContent = t? 'По вашему выбору сложился портрет вкуса — вот что увидит дизайнер:' : 'Вы пока ничего не отметили — можно вернуться и выбрать.';
+  const t=totalPicks(), rn=briefRoomCount();
+  $('briefCount').textContent = (rn||t)? 'Комплектации комнат и ваш вкус — это и получит дизайнер в работу:' : 'Пока пусто — соберите комнату в конструкторе или отметьте фото.';
+  const roomCards = rn? `<div class="b-rooms"><span class="eyebrow" style="display:block;margin:6px 0 12px">Собрано в конструкторе</span>${CFG_ORDER.filter(p=>state.brief[p]).map((p,i)=>{
+    const st=state.brief[p];
+    return `<div class="b-room" style="--r:${i}"><img src="${cfgURLFor(p,st)}" alt="" loading="lazy" onerror="this.remove()"><div class="b-info"><b>${CONFIGS[p].title}</b><span>${specText(p,st)}</span></div><button class="b-edit" data-edit="${p}">Изменить</button></div>`;
+  }).join('')}</div>`:'';
   const moodSel=[...state.selected.mood].map(id=>STYLE_NAMES[+id.split('-')[1]]).filter(Boolean);
   const styleCard = moodSel.length?`<div class="stylecard"><span class="eyebrow">Ваш стиль</span><div class="styletags">${moodSel.map((n,i)=>`<span class="stag" style="--t:${i}">${n}</span>`).join('')}</div></div>`:'';
   const nicheRow = state.niche?`<div class="sumrow" style="--r:0"><div class="lab"><b>Объект</b><span>тип</span></div><div class="thumbs"><div class="thumb"><img class="photo" src="${NICHE_IMAGES[state.niche]}" alt="" onerror="this.remove()"></div><span style="align-self:center;font-weight:600">${NICHE_LABEL[state.niche]}</span></div></div>`:'';
-  $('summary').innerHTML = styleCard + nicheRow + STEPS.map((s,ri)=>{
+  const quizRows = t? `<span class="eyebrow" style="display:block;margin:22px 0 4px">Вкус по фотографиям</span>` + STEPS.map((s,ri)=>{
     const sel=[...state.selected[s.key]];
     const items=s.items.filter(it=>sel.includes(it.id));
-    const thumbs = items.length ? items.map(it=>`<div class="thumb">${tileArt(it)}</div>`).join('') : `<div class="thumb empty">—</div>`;
+    if(!items.length) return '';
+    const thumbs = items.map(it=>`<div class="thumb">${tileArt(it)}</div>`).join('');
     return `<div class="sumrow" style="--r:${ri+1}">
       <div class="lab"><b><span class="ic">${I[s.icon]}</span>${s.title}</b><span>${items.length} выбрано</span></div>
       <div class="thumbs">${thumbs}</div></div>`;
-  }).join('');
+  }).join('') : '';
+  $('summary').innerHTML = roomCards + styleCard + nicheRow + quizRows;
 }
 
 /* ---------------- niche ---------------- */
@@ -652,7 +680,7 @@ const CONFIGS = {
     ]},
   sofa:{ title:'Гостиная', dir:'assets/cfg/s2-', order:['style','fabric','form','rug'], state:{style:'min',fabric:'clay',form:'straight',rug:'rug'},
     parts:[
-      {key:'style',label:'Стиль интерьера',opts:[{v:'min',n:'Минимал'},{v:'loft',n:'Лофт'},{v:'cls',n:'Классика'}]},
+      {key:'style',label:'Стиль интерьера',opts:[{v:'min',n:'Минимал'},{v:'loft',n:'Лофт'},{v:'cls',n:'Классика'},{v:'dark',n:'Дарк'}]},
       {key:'fabric',label:'Обивка',opts:[{v:'clay',n:'Глина',sw:'#B4654A'},{v:'olive',n:'Олива',sw:'#6E7257'},{v:'grey',n:'Серый',sw:'#8C9298'}]},
       {key:'form',label:'Форма',opts:[{v:'straight',n:'Прямой'},{v:'corner',n:'Угловой'}]},
       {key:'rug',label:'Ковёр',opts:[{v:'rug',n:'С ковром'},{v:'none',n:'Без ковра'}]}
@@ -673,8 +701,12 @@ const CONFIGS = {
 };
 let cfgProduct='kitchen', cfgFront=0;
 function cfgURL(p){ const c=CONFIGS[p]; return c.dir + c.order.map(k=>c.state[k]).join('-') + '.jpg'; }
+function cfgURLFor(p,st){ const c=CONFIGS[p]; return c.dir + c.order.map(k=>st[k]).join('-') + '.jpg'; }
+function roomInBrief(p){ const b=state.brief[p]; if(!b) return false; const c=CONFIGS[p]; return c.order.every(k=>b[k]===c.state[k]); }
+function addRoomToBrief(){ state.brief[cfgProduct]={...CONFIGS[cfgProduct].state}; persistBrief(); }
+function specText(p,st){ const c=CONFIGS[p]; return c.parts.map(part=>(part.opts.find(o=>o.v===st[part.key])||{}).n||'').join(' · '); }
 const CFG_ORDER=['kitchen','sofa','bed','bath','door'];
-function renderCfgTabs(){ $('cfgTabs').innerHTML=CFG_ORDER.map(p=>`<button data-p="${p}" aria-pressed="${p===cfgProduct}">${CONFIGS[p].title}</button>`).join(''); }
+function renderCfgTabs(){ $('cfgTabs').innerHTML=CFG_ORDER.map(p=>`<button data-p="${p}" aria-pressed="${p===cfgProduct}">${CONFIGS[p].title}${state.brief[p]?' ✓':''}</button>`).join(''); }
 function renderCfgParts(){
   const c=CONFIGS[cfgProduct];
   $('cfgParts').innerHTML=c.parts.map(part=>{
@@ -692,7 +724,7 @@ function setCfgImage(){
   const done=()=>{ back.classList.add('show'); front.classList.remove('show'); cfgFront^=1; };
   back.onload=done; back.onerror=done; back.src=url;
 }
-function chooseOpt(o){ CONFIGS[cfgProduct].state[o.dataset.part]=o.dataset.v; renderCfgParts(); setCfgImage(); }
+function chooseOpt(o){ CONFIGS[cfgProduct].state[o.dataset.part]=o.dataset.v; renderCfgParts(); setCfgImage(); updateChrome(); }
 function initCfg(){
   $('cfgStage').innerHTML='<img alt=""><img alt="">'; cfgFront=0;
   renderCfgTabs(); renderCfgParts();
@@ -707,6 +739,11 @@ $('grid').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')){cons
 $('moreNote').addEventListener('click',e=>{const b=e.target.closest('.cfglink');if(b)openCfg('quiz',b.dataset.p);});
 
 $('nextBtn').addEventListener('click',()=>{
+  if(current==='cfg'){
+    if(!roomInBrief(cfgProduct)){ addRoomToBrief(); renderCfgTabs(); updateChrome(); }
+    else { renderBrief(); show('brief'); }
+    return;
+  }
   if(current==='niche'){ if(state.niche){ state.step=0; renderStep(); show('quiz'); } return; }
   if(current==='quiz'){
     if(state.step<STEPS.length-1){ state.step++; renderStep(); }
@@ -718,6 +755,7 @@ $('nextBtn').addEventListener('click',()=>{
   }
 });
 $('backBtn').addEventListener('click',()=>{
+  if(current==='cfg'){ if(cfgReturn==='quiz'){ renderStep(); } show(cfgReturn||'welcome'); return; }
   if(current==='niche'){ show('welcome'); }
   else if(current==='quiz'){
     if(state.entry==='quick' && state.step===state.entryStep){ show('welcome'); }
@@ -730,27 +768,28 @@ $('nicheGrid').addEventListener('click',e=>{const c=e.target.closest('.nichecard
 $('nicheGrid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const c=e.target.closest('.nichecard');if(c){e.preventDefault();chooseNiche(c.dataset.niche);}}});
 $('toCfg').addEventListener('click',e=>{e.preventDefault();openCfg('welcome');});
 $('toCfg2').addEventListener('click',()=>{openCfg('brief');});
-$('restart').addEventListener('click',()=>{ STEPS.forEach(s=>state.selected[s.key]=new Set()); state.niche=null; persist(); state.step=0; renderStep(); show('welcome'); });
+$('restart').addEventListener('click',()=>{ STEPS.forEach(s=>state.selected[s.key]=new Set()); state.niche=null; state.brief={}; persist(); persistBrief(); state.step=0; renderStep(); show('welcome'); });
+$('summary').addEventListener('click',e=>{const b=e.target.closest('.b-edit');if(!b)return;const p=b.dataset.edit;CONFIGS[p].state={...state.brief[p]};openCfg('brief',p);});
+document.querySelector('.brand').addEventListener('click',()=>show('welcome'));
 
 /* start button on welcome */
 const startBtn=document.createElement('button');
 startBtn.className='btn btn-primary';startBtn.id='startBtn';
-startBtn.innerHTML='Собрать мой бриф '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+startBtn.innerHTML='Мой бриф '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 startBtn.style.marginTop='28px';startBtn.className+=' rv d5';
 $('s-welcome').querySelector('.how').after(startBtn);
-startBtn.addEventListener('click',()=>{ state.entry='full'; renderNiche(); show('niche'); });
+startBtn.addEventListener('click',()=>{ renderBrief(); show('brief'); });
 
-/* quick start — section picker is the primary entry (kitchen = most requested) */
-const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'lamp',label:'Свет'},{key:'door',label:'Двери'},{key:'floor',label:'Полы'},{key:'__cfg',label:'Конструктор',cfg:true},{key:'__full',label:'Весь интерьер',full:true}];
+/* picker — rooms open the CONFIGURATOR (the core); photo quiz is the optional extra */
+const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'bed',label:'Спальня'},{key:'bath',label:'Ванная'},{key:'door',label:'Дверь'},{key:'__quiz',label:'Подбор по фото',full:true}];
 function startAt(key){ const idx=STEPS.findIndex(s=>s.key===key); state.entry='quick'; state.entryStep=idx<0?0:idx; state.step=state.entryStep; if(!state.niche) state.niche='apartment'; renderStep(); show('quiz'); }
-$('qsChips').innerHTML=QUICK.map((q,i)=>`<button class="qs${q.hot?' qs-hot':''}${q.full?' qs-full':''}${q.cfg?' qs-cfg':''}" data-k="${q.key}" style="--i:${i}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.cfg?'<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="15" cy="8" r="2.2"/><circle cx="7" cy="16" r="2.2"/></svg></span>':''}${q.label}</button>`).join('');
+$('qsChips').innerHTML=QUICK.map((q,i)=>`<button class="qs${q.hot?' qs-hot':''}${q.full?' qs-full':''}" data-k="${q.key}" style="--i:${i}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.label}</button>`).join('');
 $('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(!b)return; const k=b.dataset.k;
-  if(k==='__full'){ state.entry='full'; renderNiche(); show('niche'); }
-  else if(k==='__cfg'){ openCfg('welcome','kitchen'); }
-  else startAt(k);});
+  if(k==='__quiz'){ state.entry='full'; renderNiche(); show('niche'); }
+  else openCfg('welcome',k);});
 
 /* configurator controls */
-$('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfgProduct=b.dataset.p;[...$('cfgTabs').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===cfgProduct));renderCfgParts();setCfgImage();});
+$('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfgProduct=b.dataset.p;[...$('cfgTabs').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===cfgProduct));renderCfgParts();setCfgImage();updateChrome();});
 $('cfgParts').addEventListener('click',e=>{const o=e.target.closest('.opt');if(o)chooseOpt(o);});
 $('cfgParts').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const o=e.target.closest('.opt');if(o){e.preventDefault();chooseOpt(o);}}});
 $('cfgBack').addEventListener('click',()=>{ if(cfgReturn==='quiz'){ renderStep(); } show(cfgReturn||'welcome'); });
