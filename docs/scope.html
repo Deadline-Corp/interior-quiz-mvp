@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+<style>
+  @page{size:A4;margin:18mm 16mm}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;color:#1A1A1A;font-size:11.5px;line-height:1.5}
+  .eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#B4654A;font-weight:700}
+  h1{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:6px 0 4px;line-height:1.1}
+  .lead{color:#555;font-size:12px;max-width:150mm;margin-bottom:4px}
+  .rule{height:2px;background:#B4654A;width:46px;margin:12px 0 16px}
+  h2{font-size:13px;font-weight:700;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+  h2 .num{display:inline-flex;width:20px;height:20px;border-radius:5px;background:#1A1A1A;color:#fff;font-size:11px;align-items:center;justify-content:center;flex:none}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px 18px}
+  .card{border:1px solid #E7E5E0;border-radius:9px;padding:13px 15px;background:#FBFBFA;break-inside:avoid}
+  .card p{color:#555;margin-top:4px}
+  ul{margin:5px 0 0 15px}
+  li{margin:2px 0;color:#444}
+  .phase{display:flex;gap:10px;margin:6px 0;align-items:flex-start}
+  .phase b{flex:none;width:74px;color:#B4654A;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;padding-top:1px}
+  .phase span{color:#444}
+  .foot{margin-top:18px;padding-top:12px;border-top:1px solid #E7E5E0;color:#777;font-size:10px;display:flex;justify-content:space-between}
+  .tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#B4654A;background:#F3E7E1;border-radius:99px;padding:3px 8px;margin-left:6px}
+  .section{margin-bottom:15px}
+  .note{background:#F3E7E1;border-radius:8px;padding:11px 14px;color:#7a3f2c;font-size:10.5px;margin:14px 0}
+</style></head><body>
+  <div class="eyebrow">Deadline-Corp · Объём работ</div>
+  <h1>Визуальный квиз-бриф для дизайнера интерьеров</h1>
+  <p class="lead">Что показывает демо и что входит в полную разработку готового продукта. Демо — интерактивный прототип на заглушках; ниже — процессы, которые мы доводим до рабочего сервиса.</p>
+  <div class="rule"></div>
+
+  <div class="section">
+  <div class="grid">
+    <div class="card">
+      <h2><span class="num">1</span>Клиентский квиз <span class="tag">демо есть</span></h2>
+      <p>В демо — 8 категорий и выбор ниши. В продукте:</p>
+      <ul>
+        <li>Все категории и десятки реальных позиций в каждой</li>
+        <li>Фильтры по нише, бюджету, помещению</li>
+        <li>Сохранение прогресса и возврат к брифу по ссылке</li>
+        <li>Авто-определение стиля по выбору (расширенная логика)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="num">2</span>Админ-панель студии <span class="tag">ядро</span></h2>
+      <p>Главная часть — управление контентом без программиста:</p>
+      <ul>
+        <li>Загрузка и каталогизация фото по категориям и стилям</li>
+        <li>Теги, сортировка, drag-and-drop, скрытие позиций</li>
+        <li>Редактирование текстов, категорий, порядка шагов</li>
+        <li>Несколько дизайнеров / филиалов под одним аккаунтом</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="num">3</span>Брифы и работа с клиентом</h2>
+      <ul>
+        <li>Входящие брифы в одном кабинете, карточка клиента</li>
+        <li>Статусы (новый / в работе / закрыт), заметки</li>
+        <li>Экспорт брифа в PDF, печать</li>
+        <li>Уведомления: Telegram / WhatsApp / e-mail при новом брифе</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="num">4</span>Конструктор предмета <span class="tag">этап 2</span></h2>
+      <p>Демо-конструктор дивана показывает идею. В продукте:</p>
+      <ul>
+        <li>Настройка цвета, ткани, конфигурации, размеров</li>
+        <li>Двери, кухни, корпусная мебель</li>
+        <li>2D-визуализация (далее — опционально 3D / AR)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="num">5</span>Аналитика и рост</h2>
+      <ul>
+        <li>Что чаще выбирают: стили, позиции, ниши</li>
+        <li>Конверсия квиза, незавершённые брифы</li>
+        <li>Данные для контента и закупки у поставщиков</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="num">6</span>Платформа и запуск</h2>
+      <ul>
+        <li>Брендинг: логотип, цвета, свой домен</li>
+        <li>Мобильная PWA — открывается с телефона как приложение</li>
+        <li>Хостинг, бэкап, безопасность, базовая поддержка</li>
+        <li>Бэкенд: база данных, хранилище изображений, формы</li>
+      </ul>
+    </div>
+  </div>
+  </div>
+
+  <h2 style="margin-bottom:10px"><span class="num">→</span>Примерный порядок работ</h2>
+  <div class="phase"><b>Фаза 1</b><span>Дизайн-система и квиз: финальный UX, все категории, мобильная версия.</span></div>
+  <div class="phase"><b>Фаза 2</b><span>Бэкенд + админ-панель: загрузка контента, отправка брифа, уведомления.</span></div>
+  <div class="phase"><b>Фаза 3</b><span>Кабинет дизайнера: брифы, статусы, экспорт PDF, аналитика.</span></div>
+  <div class="phase"><b>Фаза 4</b><span>Конструктор предмета (этап 2) и доп. категории по запросу.</span></div>
+
+  <div class="note"><b>Наполнение контентом</b> — отдельная совместная работа: фотографии по стилям и категориям подбираются вместе со студией. Мы даём удобный инструмент загрузки, дизайнер задаёт вкус и приоритеты.</div>
+
+  <div class="foot">
+    <span>Deadline-Corp · разработка под ключ</span>
+    <span>Демо: deadline-corp.github.io/interior-quiz-mvp</span>
+  </div>
+</body></html>
