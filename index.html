@@ -306,6 +306,20 @@
   .cfglink em{font-style:normal;font-size:20px;color:var(--accent);flex:none;transition:transform .25s var(--ease)}
   .cfglink:hover em{transform:translateX(4px)}
 
+  /* ---------- desktop ---------- */
+  @media(min-width:1080px){
+    :root{--maxw:1060px}
+    .grid{grid-template-columns:repeat(4,1fr)}
+    .grid .tile:first-child{grid-column:span 2;grid-row:span 2}
+    .niche-grid{grid-template-columns:repeat(3,1fr)}
+    .nichecard{aspect-ratio:4/3}
+    #s-cfg{display:grid;grid-template-columns:1fr 1fr;column-gap:44px;align-items:start}
+    #s-cfg .cfg-head,#s-cfg .cfg-tabs{grid-column:1/-1}
+    #s-cfg .cfg-stage{grid-column:1;grid-row:3 / span 4;position:sticky;top:84px}
+    #s-cfg .cfg-spec{grid-column:2;margin-top:0}
+    #s-cfg .cfg-parts{grid-column:2;margin-top:16px}
+    #s-cfg .cfg-note{grid-column:2}
+  }
   .foot-link{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:14px;text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px;transition:color .2s,gap .2s}
   .foot-link:hover{color:var(--ink);gap:10px}
   .center{text-align:center}.mt28{margin-top:28px}
@@ -400,7 +414,6 @@
       <div class="cfg-head">
         <div class="cfg-top">
           <button class="cfg-mini" id="cfgBack">← Назад</button>
-          <button class="cfg-mini" id="cfgShuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Перемешать</button>
         </div>
         <span class="stage-pill">Этап 2 · демонстрация</span>
         <h2 class="serif">Соберите предмет под себя</h2>
@@ -623,12 +636,13 @@ function initHeroMosaic(){
 
 /* ---------------- configurator (image part-swapper) ---------------- */
 const CONFIGS = {
-  kitchen:{ title:'Кухня', dir:'assets/cfg/k-', order:['layout','facade','counter','handle'], state:{layout:'isl',facade:'oak',counter:'stone',handle:'none'},
+  kitchen:{ title:'Кухня', dir:'assets/cfg/k-', order:['layout','facade','counter','handle','backsplash'], state:{layout:'isl',facade:'oak',counter:'stone',handle:'none',backsplash:'stone'},
     parts:[
       {key:'layout',label:'Планировка',opts:[{v:'isl',n:'С островом'},{v:'ang',n:'Угловая'}]},
       {key:'facade',label:'Фасады',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'white',n:'Белый',sw:'#ECEAE4'},{v:'graphite',n:'Графит',sw:'#3C3B39'},{v:'sage',n:'Зелёный',sw:'#8A9479'}]},
       {key:'counter',label:'Столешница',opts:[{v:'stone',n:'Камень',sw:'#E2DED6'},{v:'graphite',n:'Графит',sw:'#3C3B39'},{v:'wood',n:'Дерево',sw:'#B07B4E'}]},
-      {key:'handle',label:'Фурнитура',opts:[{v:'none',n:'Без ручек'},{v:'brass',n:'Латунь',sw:'#B08D57'}]}
+      {key:'handle',label:'Фурнитура',opts:[{v:'none',n:'Без ручек'},{v:'brass',n:'Латунь',sw:'#B08D57'}]},
+      {key:'backsplash',label:'Фартук',opts:[{v:'stone',n:'Камень',sw:'#E8E2D8'},{v:'tile',n:'Плитка',sw:'#F4F4F2'}]}
     ]},
   door:{ title:'Дверь', dir:'assets/cfg/d-', order:['leaf','handle','glass'], state:{leaf:'oak',handle:'black',glass:'solid'},
     parts:[
@@ -636,22 +650,25 @@ const CONFIGS = {
       {key:'handle',label:'Ручка',opts:[{v:'black',n:'Чёрная',sw:'#1c1c1c'},{v:'brass',n:'Латунь',sw:'#B08D57'}]},
       {key:'glass',label:'Остекление',opts:[{v:'solid',n:'Глухое'},{v:'glass',n:'Со стеклом'}]}
     ]},
-  sofa:{ title:'Гостиная', dir:'assets/cfg/s2-', order:['style','fabric','form'], state:{style:'min',fabric:'clay',form:'straight'},
+  sofa:{ title:'Гостиная', dir:'assets/cfg/s2-', order:['style','fabric','form','rug'], state:{style:'min',fabric:'clay',form:'straight',rug:'rug'},
     parts:[
       {key:'style',label:'Стиль интерьера',opts:[{v:'min',n:'Минимал'},{v:'loft',n:'Лофт'},{v:'cls',n:'Классика'}]},
       {key:'fabric',label:'Обивка',opts:[{v:'clay',n:'Глина',sw:'#B4654A'},{v:'olive',n:'Олива',sw:'#6E7257'},{v:'grey',n:'Серый',sw:'#8C9298'}]},
-      {key:'form',label:'Форма',opts:[{v:'straight',n:'Прямой'},{v:'corner',n:'Угловой'}]}
+      {key:'form',label:'Форма',opts:[{v:'straight',n:'Прямой'},{v:'corner',n:'Угловой'}]},
+      {key:'rug',label:'Ковёр',opts:[{v:'rug',n:'С ковром'},{v:'none',n:'Без ковра'}]}
     ]},
-  bath:{ title:'Ванная', dir:'assets/cfg/b-', order:['tile','fix','vanity'], state:{tile:'light',fix:'black',vanity:'oak'},
+  bath:{ title:'Ванная', dir:'assets/cfg/b-', order:['tile','fix','vanity','sink'], state:{tile:'light',fix:'black',vanity:'oak',sink:'vessel'},
     parts:[
       {key:'tile',label:'Плитка',opts:[{v:'light',n:'Светлый камень',sw:'#E5DFD4'},{v:'slate',n:'Сланец',sw:'#4A4D50'},{v:'terrazzo',n:'Терраццо',sw:'#D9C8B8'}]},
       {key:'fix',label:'Смесители',opts:[{v:'black',n:'Чёрные',sw:'#1c1c1c'},{v:'brass',n:'Латунь',sw:'#B08D57'}]},
-      {key:'vanity',label:'Тумба',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'white',n:'Белая',sw:'#ECEAE4'}]}
+      {key:'vanity',label:'Тумба',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'white',n:'Белая',sw:'#ECEAE4'}]},
+      {key:'sink',label:'Раковина',opts:[{v:'vessel',n:'Накладная'},{v:'inset',n:'Встроенная'}]}
     ]},
-  bed:{ title:'Спальня', dir:'assets/cfg/bd-', order:['head','textile'], state:{head:'fabric',textile:'light'},
+  bed:{ title:'Спальня', dir:'assets/cfg/bd-', order:['head','textile','curt'], state:{head:'fabric',textile:'light',curt:'light'},
     parts:[
       {key:'head',label:'Изголовье',opts:[{v:'fabric',n:'Ткань',sw:'#D8C9B6'},{v:'wood',n:'Орех',sw:'#6B4B33'}]},
-      {key:'textile',label:'Текстиль',opts:[{v:'light',n:'Светлый',sw:'#EFEAE0'},{v:'graphite',n:'Графит',sw:'#4A4A48'},{v:'terra',n:'Терракота',sw:'#B4654A'}]}
+      {key:'textile',label:'Текстиль',opts:[{v:'light',n:'Светлый',sw:'#EFEAE0'},{v:'graphite',n:'Графит',sw:'#4A4A48'},{v:'terra',n:'Терракота',sw:'#B4654A'}]},
+      {key:'curt',label:'Шторы',opts:[{v:'light',n:'Лён',sw:'#E9E2D4'},{v:'dark',n:'Графит',sw:'#494A4C'}]}
     ]}
 };
 let cfgProduct='kitchen', cfgFront=0;
@@ -683,11 +700,6 @@ function initCfg(){
 }
 let cfgReturn='welcome';
 function openCfg(ret,product){ cfgReturn=ret||'welcome'; if(product) cfgProduct=product; initCfg(); show('cfg'); }
-function shuffleCfg(){
-  const c=CONFIGS[cfgProduct];
-  c.parts.forEach(p=>{ const others=p.opts.filter(o=>o.v!==c.state[p.key]); const pick=others[Math.floor(Math.random()*others.length)]||p.opts[0]; c.state[p.key]=pick.v; });
-  renderCfgParts(); setCfgImage();
-}
 
 /* ---------------- events ---------------- */
 $('grid').addEventListener('click',e=>{const t=e.target.closest('.tile');if(t)toggleTile(t.dataset.id);});
@@ -742,7 +754,6 @@ $('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(
 $('cfgParts').addEventListener('click',e=>{const o=e.target.closest('.opt');if(o)chooseOpt(o);});
 $('cfgParts').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const o=e.target.closest('.opt');if(o){e.preventDefault();chooseOpt(o);}}});
 $('cfgBack').addEventListener('click',()=>{ if(cfgReturn==='quiz'){ renderStep(); } show(cfgReturn||'welcome'); });
-$('cfgShuffle').addEventListener('click',shuffleCfg);
 
 /* ---------------- theme ---------------- */
 const themeBtn=$('themeBtn');
