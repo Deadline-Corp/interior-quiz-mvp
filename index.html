@@ -119,17 +119,16 @@
   .how .n{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);padding-top:2px;flex:none;width:24px}
   .how .row b{font-weight:600}
   .how .row span{display:block;color:var(--ink-soft);font-size:14px;margin-top:2px}
-  .quickstart{margin-top:24px}
-  .qs-label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:11px}
-  .qs-chips{display:flex;gap:9px;flex-wrap:wrap}
-  .qs{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;
-    padding:9px 16px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;-webkit-tap-highlight-color:transparent;
-    transition:transform .15s var(--spring),border-color .2s,background .2s,box-shadow .2s}
+  .picker{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .qs{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:600;
+    padding:13px 20px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent;
+    transition:transform .15s var(--spring),border-color .2s,background .2s,box-shadow .2s;animation:tileIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
   .qs:hover{transform:translateY(-2px);border-color:var(--accent)}
   .qs:active{transform:scale(.96)}
-  .qs.qs-hot{background:var(--accent);color:var(--on-ink);border-color:var(--accent);box-shadow:0 6px 16px rgba(180,101,74,.22)}
-  .qs.qs-hot:hover{box-shadow:0 9px 22px rgba(180,101,74,.3)}
-  .qs .ic{width:15px;height:15px}
+  .qs.qs-hot{background:var(--accent);color:var(--on-ink);border-color:var(--accent);box-shadow:0 8px 20px rgba(180,101,74,.26)}
+  .qs.qs-hot:hover{box-shadow:0 11px 26px rgba(180,101,74,.34)}
+  .qs.qs-full{background:transparent;border-style:dashed;color:var(--ink-soft)}
+  .qs .ic{width:17px;height:17px}
 
   /* niche */
   .niche-grid{display:grid;gap:14px;margin-top:10px}
@@ -275,6 +274,23 @@
   .opt .dot{width:18px;height:18px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);flex:none}
   .opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
   .cfg-note{margin-top:18px;font-size:13px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:14px}
+  .cfg-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .cfg-mini{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;
+    padding:8px 14px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;-webkit-tap-highlight-color:transparent;
+    transition:transform .15s var(--spring),border-color .2s}
+  .cfg-mini:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .cfg-mini:active{transform:scale(.96)}
+  .cfg-mini svg{width:14px;height:14px}
+  .cfglink{appearance:none;width:100%;text-align:left;border:1px solid var(--line);border-radius:var(--radius);
+    background:linear-gradient(135deg,var(--surface-2),var(--accent-soft));padding:16px 18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;font:inherit;color:var(--ink);margin-bottom:14px;
+    transition:transform .2s var(--ease),box-shadow .2s;-webkit-tap-highlight-color:transparent}
+  .cfglink:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(180,101,74,.16)}
+  .cfglink:active{transform:scale(.99)}
+  .cfglink b{display:block;font-size:14.5px;font-weight:600}
+  .cfglink i{display:block;font-style:normal;font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+  .cfglink em{font-style:normal;font-size:20px;color:var(--accent);flex:none;transition:transform .25s var(--ease)}
+  .cfglink:hover em{transform:translateX(4px)}
 
   .foot-link{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:14px;text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px;transition:color .2s,gap .2s}
   .foot-link:hover{color:var(--ink);gap:10px}
@@ -303,8 +319,9 @@
     <section class="screen active" id="s-welcome">
       <div class="hero">
         <div class="eyebrow rv d1">Визуальный подбор интерьера</div>
-        <h1 class="serif rv d2">Ваш вкус — в том,<br>что <em>цепляет</em> взгляд</h1>
-        <p class="lede rv d3">Отмечайте интерьеры и предметы, которые откликаются. По вашему выбору мы соберём точный бриф — без долгих переписок и сотен фотографий в мессенджере.</p>
+        <h1 class="serif rv d2">С чего начнём<br>ваш <em>интерьер</em>?</h1>
+        <p class="lede rv d3">Выберите раздел и отмечайте, что нравится. Мы поймём ваш вкус по картинкам и соберём точный бриф.</p>
+        <div class="picker rv d3" id="qsChips"></div>
         <div class="stats rv d3">
           <div class="stat"><b>8</b><span>категорий</span></div>
           <div class="stat"><b>40+</b><span>примеров</span></div>
@@ -317,10 +334,6 @@
         <div class="row"><div class="n">01</div><div><b>Выбираете глазами</b><span>Кухня, свет, мебель, отделка — отмечаете то, что нравится</span></div></div>
         <div class="row"><div class="n">02</div><div><b>Мы считываем вкус</b><span>Выбор складывается в портрет ваших предпочтений</span></div></div>
         <div class="row"><div class="n">03</div><div><b>Получаете точный бриф</b><span>Дизайнер видит реальный запрос и работает быстрее</span></div></div>
-      </div>
-      <div class="quickstart rv d6">
-        <span class="qs-label">Частый запрос — начните сразу с раздела:</span>
-        <div class="qs-chips" id="qsChips"></div>
       </div>
       <div class="mt28 center rv d6">
         <a class="foot-link" id="toCfg" href="#">Посмотреть демо конструктора (Этап 2)</a>
@@ -371,6 +384,10 @@
     <!-- CONFIGURATOR -->
     <section class="screen" id="s-cfg">
       <div class="cfg-head">
+        <div class="cfg-top">
+          <button class="cfg-mini" id="cfgBack">← Назад</button>
+          <button class="cfg-mini" id="cfgShuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Перемешать</button>
+        </div>
         <span class="stage-pill">Этап 2 · демонстрация</span>
         <h2 class="serif">Соберите предмет под себя</h2>
         <p>Выбирайте детали — изображение меняется под ваш выбор. На кухне поменяйте столешницу при тех же фасадах, на двери — цвет и ручку.</p>
@@ -498,7 +515,9 @@ function renderStep(){
       <div class="check">${I.check}</div>
       ${it.style?`<div class="meta"><span class="chip">${it.style}</span></div>`:''}
     </div>`).join('');
-  $('moreNote').innerHTML = state.step===0 ? '' : `В рабочей версии в каждой категории — десятки реальных позиций. Ещё категории: ${EXTRA.join(' · ')}.`;
+  const promoSub={kitchen:'Фасады и столешница меняются вживую',sofa:'Обивка и форма меняются вживую',door:'Полотно и ручка меняются вживую'};
+  const promo = promoSub[s.key]?`<button class="cfglink" data-p="${s.key}"><span><b>Соберите ${({kitchen:'свою кухню',sofa:'свой диван',door:'свою дверь'})[s.key]} в конструкторе</b><i>${promoSub[s.key]}</i></span><em>→</em></button>`:'';
+  $('moreNote').innerHTML = promo + (state.step===0 ? '' : `В рабочей версии в каждой категории — десятки реальных позиций. Ещё категории: ${EXTRA.join(' · ')}.`);
   updateChrome();
 }
 
@@ -627,10 +646,18 @@ function initCfg(){
   renderCfgTabs(); renderCfgParts();
   const imgs=$('cfgStage').querySelectorAll('img'); imgs[0].src=cfgURL(cfgProduct); imgs[0].classList.add('show');
 }
+let cfgReturn='welcome';
+function openCfg(ret,product){ cfgReturn=ret||'welcome'; if(product) cfgProduct=product; initCfg(); show('cfg'); }
+function shuffleCfg(){
+  const c=CONFIGS[cfgProduct];
+  c.parts.forEach(p=>{ const others=p.opts.filter(o=>o.v!==c.state[p.key]); const pick=others[Math.floor(Math.random()*others.length)]||p.opts[0]; c.state[p.key]=pick.v; });
+  renderCfgParts(); setCfgImage();
+}
 
 /* ---------------- events ---------------- */
 $('grid').addEventListener('click',e=>{const t=e.target.closest('.tile');if(t)toggleTile(t.dataset.id);});
 $('grid').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')){const t=e.target.closest('.tile');if(t){e.preventDefault();toggleTile(t.dataset.id);}}});
+$('moreNote').addEventListener('click',e=>{const b=e.target.closest('.cfglink');if(b)openCfg('quiz',b.dataset.p);});
 
 $('nextBtn').addEventListener('click',()=>{
   if(current==='niche'){ if(state.niche){ state.step=0; renderStep(); show('quiz'); } return; }
@@ -645,13 +672,17 @@ $('nextBtn').addEventListener('click',()=>{
 });
 $('backBtn').addEventListener('click',()=>{
   if(current==='niche'){ show('welcome'); }
-  else if(current==='quiz'){ if(state.step>0){state.step--;renderStep();} else { renderNiche(); show('niche'); } }
+  else if(current==='quiz'){
+    if(state.entry==='quick' && state.step===state.entryStep){ show('welcome'); }
+    else if(state.step>0){ state.step--; renderStep(); }
+    else { renderNiche(); show('niche'); }
+  }
   else if(current==='brief'){ state.step=STEPS.length-1; renderStep(); show('quiz'); }
 });
 $('nicheGrid').addEventListener('click',e=>{const c=e.target.closest('.nichecard');if(c)chooseNiche(c.dataset.niche);});
 $('nicheGrid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const c=e.target.closest('.nichecard');if(c){e.preventDefault();chooseNiche(c.dataset.niche);}}});
-$('toCfg').addEventListener('click',e=>{e.preventDefault();initCfg();show('cfg');});
-$('toCfg2').addEventListener('click',()=>{initCfg();show('cfg');});
+$('toCfg').addEventListener('click',e=>{e.preventDefault();openCfg('welcome');});
+$('toCfg2').addEventListener('click',()=>{openCfg('brief');});
 $('restart').addEventListener('click',()=>{ STEPS.forEach(s=>state.selected[s.key]=new Set()); state.niche=null; persist(); state.step=0; renderStep(); show('welcome'); });
 
 /* start button on welcome */
@@ -660,18 +691,20 @@ startBtn.className='btn btn-primary';startBtn.id='startBtn';
 startBtn.innerHTML='Собрать мой бриф '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 startBtn.style.marginTop='28px';startBtn.className+=' rv d5';
 $('s-welcome').querySelector('.how').after(startBtn);
-startBtn.addEventListener('click',()=>{ renderNiche(); show('niche'); });
+startBtn.addEventListener('click',()=>{ state.entry='full'; renderNiche(); show('niche'); });
 
-/* quick start — jump straight to a popular category (kitchen = most requested) */
-const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'lamp',label:'Свет'},{key:'door',label:'Двери'},{key:'floor',label:'Полы'}];
-function startAt(key){ const idx=STEPS.findIndex(s=>s.key===key); state.step=idx<0?0:idx; if(!state.niche) state.niche='apartment'; renderStep(); show('quiz'); }
-$('qsChips').innerHTML=QUICK.map(q=>`<button class="qs${q.hot?' qs-hot':''}" data-k="${q.key}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.label}</button>`).join('');
-$('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(b)startAt(b.dataset.k);});
+/* quick start — section picker is the primary entry (kitchen = most requested) */
+const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'lamp',label:'Свет'},{key:'door',label:'Двери'},{key:'floor',label:'Полы'},{key:'__full',label:'Весь интерьер',full:true}];
+function startAt(key){ const idx=STEPS.findIndex(s=>s.key===key); state.entry='quick'; state.entryStep=idx<0?0:idx; state.step=state.entryStep; if(!state.niche) state.niche='apartment'; renderStep(); show('quiz'); }
+$('qsChips').innerHTML=QUICK.map((q,i)=>`<button class="qs${q.hot?' qs-hot':''}${q.full?' qs-full':''}" data-k="${q.key}" style="--i:${i}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.label}</button>`).join('');
+$('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(!b)return; if(b.dataset.k==='__full'){ state.entry='full'; renderNiche(); show('niche'); } else startAt(b.dataset.k);});
 
 /* configurator controls */
 $('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfgProduct=b.dataset.p;[...$('cfgTabs').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===cfgProduct));renderCfgParts();setCfgImage();});
 $('cfgParts').addEventListener('click',e=>{const o=e.target.closest('.opt');if(o)chooseOpt(o);});
 $('cfgParts').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const o=e.target.closest('.opt');if(o){e.preventDefault();chooseOpt(o);}}});
+$('cfgBack').addEventListener('click',()=>{ if(cfgReturn==='quiz'){ renderStep(); } show(cfgReturn||'welcome'); });
+$('cfgShuffle').addEventListener('click',shuffleCfg);
 
 /* ---------------- theme ---------------- */
 const themeBtn=$('themeBtn');
