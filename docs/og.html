@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Hanken+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1200px;height:630px;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;position:relative;background:#1A1A1A}
+  .bg{position:absolute;inset:0;background:url('../assets/niche-house.jpg') center/cover}
+  .scrim{position:absolute;inset:0;background:linear-gradient(105deg,rgba(20,16,14,.92) 0%,rgba(20,16,14,.74) 42%,rgba(20,16,14,.28) 100%)}
+  .wrap{position:absolute;inset:0;padding:72px 80px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+  .top{display:flex;align-items:center;gap:12px}
+  .mk{width:34px;height:34px;border:2px solid #fff;border-radius:9px;position:relative}
+  .mk:after{content:"";position:absolute;inset:7px 7px auto auto;width:9px;height:9px;background:#C2705A;border-radius:3px}
+  .top b{font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .top span{color:rgba(255,255,255,.6);font-size:14px;margin-left:4px}
+  .eyebrow{font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:#D98E76;font-weight:700;margin-bottom:18px}
+  h1{font-family:'Newsreader',serif;font-size:74px;font-weight:500;line-height:1.04;letter-spacing:-.02em;max-width:18ch}
+  h1 em{font-style:normal;color:#D98E76}
+  .sub{margin-top:22px;font-size:23px;color:rgba(255,255,255,.82);max-width:30ch;line-height:1.4}
+  .foot{display:flex;align-items:center;gap:26px;font-size:18px;color:rgba(255,255,255,.85)}
+  .pill{display:flex;align-items:baseline;gap:8px}
+  .pill b{font-family:'Newsreader',serif;font-size:30px;font-weight:600;color:#fff}
+  .pill span{font-size:14px;color:rgba(255,255,255,.6)}
+  .dot{width:5px;height:5px;border-radius:9px;background:rgba(255,255,255,.4)}
+</style></head><body>
+  <div class="bg"></div><div class="scrim"></div>
+  <div class="wrap">
+    <div class="top"><span class="mk"></span><b>Ателье интерьера</b><span>· визуальный подбор</span></div>
+    <div>
+      <div class="eyebrow">Визуальный бриф клиента</div>
+      <h1>Ваш вкус — в том,<br>что <em>цепляет</em> взгляд</h1>
+      <div class="sub">Клиент выбирает интерьеры глазами — мы собираем точный бриф.</div>
+    </div>
+    <div class="foot">
+      <div class="pill"><b>8</b><span>категорий</span></div><div class="dot"></div>
+      <div class="pill"><b>40+</b><span>примеров</span></div><div class="dot"></div>
+      <div class="pill"><b>2 мин</b><span>на бриф</span></div>
+    </div>
+  </div>
+</body></html>
