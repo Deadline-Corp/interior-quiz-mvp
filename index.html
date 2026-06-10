@@ -128,6 +128,8 @@
   .qs.qs-hot{background:var(--accent);color:var(--on-ink);border-color:var(--accent);box-shadow:0 8px 20px rgba(180,101,74,.26)}
   .qs.qs-hot:hover{box-shadow:0 11px 26px rgba(180,101,74,.34)}
   .qs.qs-full{background:transparent;border-style:dashed;color:var(--ink-soft)}
+  .qs.qs-cfg{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .qs.qs-cfg:hover{box-shadow:0 8px 20px rgba(180,101,74,.18)}
   .qs .ic{width:17px;height:17px}
 
   /* niche */
@@ -269,10 +271,19 @@
   .cfg-part b{font-size:13px;font-weight:600;display:block;margin-bottom:10px}
   .cfg-part b span{color:var(--accent);font-weight:600}
   .optrow{display:flex;gap:10px;flex-wrap:wrap}
-  .opt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;padding:7px 14px 7px 9px;cursor:pointer;background:var(--surface);font-size:13px;font-weight:600;color:var(--ink);-webkit-tap-highlight-color:transparent;transition:border-color .2s,box-shadow .2s,transform .15s var(--spring)}
+  .opt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;padding:9px 16px;cursor:pointer;background:var(--surface);font-size:13px;font-weight:600;color:var(--ink);-webkit-tap-highlight-color:transparent;transition:border-color .2s,box-shadow .2s,transform .15s var(--spring)}
+  .opt:hover{border-color:var(--accent)}
   .opt:active{transform:scale(.95)}
-  .opt .dot{width:18px;height:18px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);flex:none}
   .opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .opt.has-sw{flex-direction:column;gap:7px;border-radius:13px;padding:9px 10px 8px;min-width:66px}
+  .opt.has-sw .dot{width:44px;height:44px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),inset 0 -10px 14px rgba(0,0,0,.06);flex:none;transition:transform .18s var(--spring)}
+  .opt.has-sw:hover .dot{transform:scale(1.05)}
+  .opt.has-sw u{text-decoration:none;font-size:12px}
+  .opt.has-sw[aria-pressed="true"] .dot{box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
+  .cfg-spec{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:14px;padding:11px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);font-size:13px}
+  .cfg-spec .sp-lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--ink-soft);margin-right:2px}
+  .cfg-spec .sp-item{font-weight:600}
+  .cfg-spec .sp-dot{width:4px;height:4px;border-radius:9px;background:var(--line-strong)}
   .cfg-note{margin-top:18px;font-size:13px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:14px}
   .cfg-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
   .cfg-mini{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;
@@ -394,6 +405,7 @@
       </div>
       <div class="cfg-tabs" id="cfgTabs"></div>
       <div class="cfg-stage" id="cfgStage"></div>
+      <div class="cfg-spec" id="cfgSpec"></div>
       <div class="cfg-parts" id="cfgParts"></div>
       <div class="cfg-note">Это демо: детали подменяются заранее подготовленными изображениями. В рабочей версии — десятки реальных вариантов на каждую деталь и любые их сочетания.</div>
     </section>
@@ -608,15 +620,18 @@ function initHeroMosaic(){
 
 /* ---------------- configurator (image part-swapper) ---------------- */
 const CONFIGS = {
-  kitchen:{ title:'Кухня', dir:'assets/cfg/k-', order:['facade','counter'], state:{facade:'oak',counter:'stone'},
+  kitchen:{ title:'Кухня', dir:'assets/cfg/k-', order:['layout','facade','counter','handle'], state:{layout:'isl',facade:'oak',counter:'stone',handle:'none'},
     parts:[
+      {key:'layout',label:'Планировка',opts:[{v:'isl',n:'С островом'},{v:'ang',n:'Угловая'}]},
       {key:'facade',label:'Фасады',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'white',n:'Белый',sw:'#ECEAE4'},{v:'graphite',n:'Графит',sw:'#3C3B39'},{v:'sage',n:'Зелёный',sw:'#8A9479'}]},
-      {key:'counter',label:'Столешница',opts:[{v:'stone',n:'Камень',sw:'#E2DED6'},{v:'graphite',n:'Графит',sw:'#3C3B39'},{v:'wood',n:'Дерево',sw:'#B07B4E'}]}
+      {key:'counter',label:'Столешница',opts:[{v:'stone',n:'Камень',sw:'#E2DED6'},{v:'graphite',n:'Графит',sw:'#3C3B39'},{v:'wood',n:'Дерево',sw:'#B07B4E'}]},
+      {key:'handle',label:'Фурнитура',opts:[{v:'none',n:'Без ручек'},{v:'brass',n:'Латунь',sw:'#B08D57'}]}
     ]},
-  door:{ title:'Дверь', dir:'assets/cfg/d-', order:['leaf','handle'], state:{leaf:'oak',handle:'black'},
+  door:{ title:'Дверь', dir:'assets/cfg/d-', order:['leaf','handle','glass'], state:{leaf:'oak',handle:'black',glass:'solid'},
     parts:[
       {key:'leaf',label:'Полотно',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'graphite',n:'Графит',sw:'#3C3B39'}]},
-      {key:'handle',label:'Ручка',opts:[{v:'black',n:'Чёрная',sw:'#1c1c1c'},{v:'brass',n:'Латунь',sw:'#B08D57'}]}
+      {key:'handle',label:'Ручка',opts:[{v:'black',n:'Чёрная',sw:'#1c1c1c'},{v:'brass',n:'Латунь',sw:'#B08D57'}]},
+      {key:'glass',label:'Остекление',opts:[{v:'solid',n:'Глухое'},{v:'glass',n:'Со стеклом'}]}
     ]},
   sofa:{ title:'Диван', dir:'assets/cfg/s-', order:['fabric','form'], state:{fabric:'clay',form:'straight'},
     parts:[
@@ -631,8 +646,12 @@ function renderCfgParts(){
   const c=CONFIGS[cfgProduct];
   $('cfgParts').innerHTML=c.parts.map(part=>{
     const cur=c.state[part.key], curName=(part.opts.find(o=>o.v===cur)||{}).n||'';
-    return `<div class="cfg-part"><b>${part.label} · <span>${curName}</span></b><div class="optrow">${part.opts.map(o=>`<div class="opt" data-part="${part.key}" data-v="${o.v}" role="button" tabindex="0" aria-pressed="${o.v===cur}">${o.sw?`<span class="dot" style="background:${o.sw}"></span>`:''}${o.n}</div>`).join('')}</div></div>`;
+    return `<div class="cfg-part"><b>${part.label} · <span>${curName}</span></b><div class="optrow">${part.opts.map(o=>
+      o.sw?`<div class="opt has-sw" data-part="${part.key}" data-v="${o.v}" role="button" tabindex="0" aria-pressed="${o.v===cur}"><span class="dot" style="background:${o.sw}"></span><u>${o.n}</u></div>`
+          :`<div class="opt" data-part="${part.key}" data-v="${o.v}" role="button" tabindex="0" aria-pressed="${o.v===cur}">${o.n}</div>`
+    ).join('')}</div></div>`;
   }).join('');
+  $('cfgSpec').innerHTML='<span class="sp-lbl">Ваша комплектация</span>'+c.parts.map(p=>`<span class="sp-item">${(p.opts.find(o=>o.v===c.state[p.key])||{}).n||''}</span>`).join('<span class="sp-dot"></span>');
 }
 function setCfgImage(){
   const url=cfgURL(cfgProduct), imgs=$('cfgStage').querySelectorAll('img');
@@ -694,10 +713,13 @@ $('s-welcome').querySelector('.how').after(startBtn);
 startBtn.addEventListener('click',()=>{ state.entry='full'; renderNiche(); show('niche'); });
 
 /* quick start — section picker is the primary entry (kitchen = most requested) */
-const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'lamp',label:'Свет'},{key:'door',label:'Двери'},{key:'floor',label:'Полы'},{key:'__full',label:'Весь интерьер',full:true}];
+const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'lamp',label:'Свет'},{key:'door',label:'Двери'},{key:'floor',label:'Полы'},{key:'__cfg',label:'Конструктор',cfg:true},{key:'__full',label:'Весь интерьер',full:true}];
 function startAt(key){ const idx=STEPS.findIndex(s=>s.key===key); state.entry='quick'; state.entryStep=idx<0?0:idx; state.step=state.entryStep; if(!state.niche) state.niche='apartment'; renderStep(); show('quiz'); }
-$('qsChips').innerHTML=QUICK.map((q,i)=>`<button class="qs${q.hot?' qs-hot':''}${q.full?' qs-full':''}" data-k="${q.key}" style="--i:${i}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.label}</button>`).join('');
-$('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(!b)return; if(b.dataset.k==='__full'){ state.entry='full'; renderNiche(); show('niche'); } else startAt(b.dataset.k);});
+$('qsChips').innerHTML=QUICK.map((q,i)=>`<button class="qs${q.hot?' qs-hot':''}${q.full?' qs-full':''}${q.cfg?' qs-cfg':''}" data-k="${q.key}" style="--i:${i}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.cfg?'<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="15" cy="8" r="2.2"/><circle cx="7" cy="16" r="2.2"/></svg></span>':''}${q.label}</button>`).join('');
+$('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(!b)return; const k=b.dataset.k;
+  if(k==='__full'){ state.entry='full'; renderNiche(); show('niche'); }
+  else if(k==='__cfg'){ openCfg('welcome','kitchen'); }
+  else startAt(k);});
 
 /* configurator controls */
 $('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfgProduct=b.dataset.p;[...$('cfgTabs').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===cfgProduct));renderCfgParts();setCfgImage();});
