@@ -119,6 +119,17 @@
   .how .n{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);padding-top:2px;flex:none;width:24px}
   .how .row b{font-weight:600}
   .how .row span{display:block;color:var(--ink-soft);font-size:14px;margin-top:2px}
+  .quickstart{margin-top:24px}
+  .qs-label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:11px}
+  .qs-chips{display:flex;gap:9px;flex-wrap:wrap}
+  .qs{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;
+    padding:9px 16px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;-webkit-tap-highlight-color:transparent;
+    transition:transform .15s var(--spring),border-color .2s,background .2s,box-shadow .2s}
+  .qs:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .qs:active{transform:scale(.96)}
+  .qs.qs-hot{background:var(--accent);color:var(--on-ink);border-color:var(--accent);box-shadow:0 6px 16px rgba(180,101,74,.22)}
+  .qs.qs-hot:hover{box-shadow:0 9px 22px rgba(180,101,74,.3)}
+  .qs .ic{width:15px;height:15px}
 
   /* niche */
   .niche-grid{display:grid;gap:14px;margin-top:10px}
@@ -306,6 +317,10 @@
         <div class="row"><div class="n">01</div><div><b>Выбираете глазами</b><span>Кухня, свет, мебель, отделка — отмечаете то, что нравится</span></div></div>
         <div class="row"><div class="n">02</div><div><b>Мы считываем вкус</b><span>Выбор складывается в портрет ваших предпочтений</span></div></div>
         <div class="row"><div class="n">03</div><div><b>Получаете точный бриф</b><span>Дизайнер видит реальный запрос и работает быстрее</span></div></div>
+      </div>
+      <div class="quickstart rv d6">
+        <span class="qs-label">Частый запрос — начните сразу с раздела:</span>
+        <div class="qs-chips" id="qsChips"></div>
       </div>
       <div class="mt28 center rv d6">
         <a class="foot-link" id="toCfg" href="#">Посмотреть демо конструктора (Этап 2)</a>
@@ -646,6 +661,12 @@ startBtn.innerHTML='Собрать мой бриф '+ '<svg viewBox="0 0 24 24" 
 startBtn.style.marginTop='28px';startBtn.className+=' rv d5';
 $('s-welcome').querySelector('.how').after(startBtn);
 startBtn.addEventListener('click',()=>{ renderNiche(); show('niche'); });
+
+/* quick start — jump straight to a popular category (kitchen = most requested) */
+const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'lamp',label:'Свет'},{key:'door',label:'Двери'},{key:'floor',label:'Полы'}];
+function startAt(key){ const idx=STEPS.findIndex(s=>s.key===key); state.step=idx<0?0:idx; if(!state.niche) state.niche='apartment'; renderStep(); show('quiz'); }
+$('qsChips').innerHTML=QUICK.map(q=>`<button class="qs${q.hot?' qs-hot':''}" data-k="${q.key}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.label}</button>`).join('');
+$('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(b)startAt(b.dataset.k);});
 
 /* configurator controls */
 $('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfgProduct=b.dataset.p;[...$('cfgTabs').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===cfgProduct));renderCfgParts();setCfgImage();});
