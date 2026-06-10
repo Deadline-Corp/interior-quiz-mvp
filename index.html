@@ -158,6 +158,10 @@
   .sumrow .lab b{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
   .sumrow .lab b .ic{width:16px;height:16px;color:var(--accent);flex:none}
   .sumrow .lab span{font-size:12px;color:var(--ink-soft)}
+  .stylecard{margin:18px 0 6px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2)}
+  .stylecard .eyebrow{display:block;margin-bottom:10px}
+  .styletags{display:flex;gap:8px;flex-wrap:wrap}
+  .stag{font-size:13px;font-weight:600;color:#8a4631;background:var(--accent-soft);border:1px solid #E6CBC0;border-radius:999px;padding:5px 13px}
   .thumbs{display:flex;gap:7px;flex-wrap:wrap;flex:1}
   .thumb{width:42px;height:42px;border-radius:8px;border:1px solid var(--line);position:relative;overflow:hidden;flex:none}
   .thumb .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
@@ -223,18 +227,18 @@
     <!-- WELCOME -->
     <section class="screen active" id="s-welcome">
       <div class="hero">
-        <div class="eyebrow">Подбор материалов и стиля</div>
-        <h1 class="serif">Расскажите о вкусе<br>не словами, а картинками</h1>
-        <p>Отмечайте то, что нравится. По вашему выбору мы поймём стиль и соберём интерьер под вас — без долгих переписок и сотни фото в мессенджере.</p>
+        <div class="eyebrow">Визуальный подбор интерьера</div>
+        <h1 class="serif">Ваш вкус — в том,<br>что цепляет взгляд</h1>
+        <p>Отмечайте интерьеры и предметы, которые откликаются. По вашему выбору мы соберём точный бриф — без долгих переписок и сотен фотографий в мессенджере.</p>
         <figure class="herofig">
           <img src="assets/kitchen-1.jpg" alt="Современный интерьер" loading="eager">
-          <figcaption>Подбор по эмоции, а не по техническому заданию</figcaption>
+          <figcaption>Бриф, который собирается за минуты — глазами, а не словами</figcaption>
         </figure>
       </div>
       <div class="how">
-        <div class="row"><div class="n">01</div><div><b>Листаете категории</b><span>Кухня, диваны, свет, двери, полы, шторы и другое</span></div></div>
-        <div class="row"><div class="n">02</div><div><b>Ставите галочки</b><span>Отмечаете всё, что откликается — можно несколько в каждой</span></div></div>
-        <div class="row"><div class="n">03</div><div><b>Получаете бриф</b><span>Дизайнер видит ваш вкус в картинках и работает точнее</span></div></div>
+        <div class="row"><div class="n">01</div><div><b>Выбираете глазами</b><span>Кухня, свет, мебель, отделка — отмечаете то, что нравится</span></div></div>
+        <div class="row"><div class="n">02</div><div><b>Мы считываем вкус</b><span>Выбор складывается в портрет ваших предпочтений</span></div></div>
+        <div class="row"><div class="n">03</div><div><b>Получаете точный бриф</b><span>Дизайнер видит реальный запрос и работает быстрее</span></div></div>
       </div>
       <div class="mt28 center">
         <a class="foot-link" id="toCfg" href="#">Посмотреть демо конструктора (Этап 2)</a>
@@ -244,9 +248,9 @@
     <!-- NICHE -->
     <section class="screen" id="s-niche">
       <div class="step-head">
-        <div class="step-kicker">Объект подбора</div>
-        <h2 class="serif" style="font-size:30px;font-weight:500;margin-top:8px">Что оформляем?</h2>
-        <p>С этого начнём — под тип объекта подберём подходящие примеры.</p>
+        <div class="step-kicker">Шаг 1 · Объект</div>
+        <h2 class="serif" style="font-size:30px;font-weight:500;margin-top:8px">С какого пространства начнём?</h2>
+        <p>Выберите тип объекта — покажем релевантные примеры.</p>
       </div>
       <div class="niche-grid" id="nicheGrid"></div>
     </section>
@@ -265,7 +269,7 @@
     <!-- BRIEF -->
     <section class="screen" id="s-brief">
       <div class="brief-head">
-        <div class="eyebrow">Ваш бриф готов</div>
+        <div class="eyebrow">Готово</div>
         <h2 class="serif">Портрет вашего вкуса</h2>
         <p id="briefCount"></p>
       </div>
@@ -278,8 +282,8 @@
 
       <div class="stage2">
         <span class="tag">Этап 2 · скоро</span>
-        <h3>Конструктор предмета</h3>
-        <p>Выбрали диван — меняете цвет, ткань и конфигурацию прямо на экране. Как тюнинг авто, только для мебели.</p>
+        <h3>Настройте предмет под себя</h3>
+        <p>Выбрали диван — поменяйте ткань, цвет и конфигурацию. Примерочная для мебели прямо на экране.</p>
         <button class="btn btn-ghost" id="toCfg2">Открыть демо конструктора →</button>
       </div>
     </section>
@@ -316,7 +320,7 @@
     <section class="screen" id="s-sent">
       <div class="sent">
         <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></div>
-        <h2 class="serif">Бриф отправлен дизайнеру</h2>
+        <h2 class="serif">Бриф у дизайнера</h2>
         <p id="sentMsg">Спасибо! Мы изучим ваш выбор и вернёмся с концепцией. Это демо — данные никуда не уходят.</p>
         <div class="mt28"><button class="btn btn-ghost" id="restart">Пройти заново</button></div>
       </div>
@@ -364,27 +368,27 @@ const STYLES = [
 
 /* ---------------- steps ---------------- */
 const STEPS = [
-  {key:'mood',  title:'Общее настроение', icon:'mood',   sub:'С чего начнём — какой воздух вам ближе? Отметьте 1–3 направления.', label:null},
-  {key:'kitchen',title:'Кухня',           icon:'kitchen',sub:'Самое важное помещение. Что нравится визуально?', label:'Кухня'},
-  {key:'sofa',  title:'Диваны',           icon:'sofa',   sub:'Отметьте формы и характер, которые вам по душе.', label:'Диван'},
-  {key:'chair', title:'Кресла',           icon:'chair',  sub:'Акцентная мебель — что цепляет глаз?', label:'Кресло'},
-  {key:'lamp',  title:'Свет и люстры',    icon:'lamp',   sub:'Светильники задают настроение комнаты.', label:'Свет'},
-  {key:'door',  title:'Двери',            icon:'door',   sub:'Модель, цвет и характер дверей.', label:'Дверь'},
-  {key:'floor', title:'Полы',             icon:'floor',  sub:'Ламинат, паркет, керамогранит — что ближе?', label:'Пол'},
-  {key:'curtain',title:'Шторы',           icon:'curtain',sub:'Текстиль и драпировки.', label:'Шторы'},
+  {key:'mood',  title:'Настроение интерьера', icon:'mood', sub:'С чего начнём — какая атмосфера вам ближе? Отметьте 1–3 направления.', label:null},
+  {key:'kitchen',title:'Кухня',           icon:'kitchen',sub:'Сердце дома. Отметьте кухни, которые цепляют.', label:'Кухня'},
+  {key:'sofa',  title:'Диваны',           icon:'sofa',   sub:'Главный предмет гостиной — выберите силуэты по душе.', label:'Диван'},
+  {key:'chair', title:'Кресла',           icon:'chair',  sub:'Акценты, которые задают характер комнате.', label:'Кресло'},
+  {key:'lamp',  title:'Свет',             icon:'lamp',   sub:'Свет, который создаёт настроение пространства.', label:'Свет'},
+  {key:'door',  title:'Двери',            icon:'door',   sub:'Деталь, которую замечают каждый день.', label:'Дверь'},
+  {key:'floor', title:'Полы',             icon:'floor',  sub:'Основа интерьера под ногами — что ближе?', label:'Пол'},
+  {key:'curtain',title:'Шторы',           icon:'curtain',sub:'Текстиль, который смягчает пространство.', label:'Шторы'},
 ];
 const EXTRA = ['Столы','Стулья','Шкафы и тумбы','Сантехника','Споты','Керамогранит','Перила','Консоли'];
 
 /* brand interior photos — AI-generated, served locally */
 const IMAGES = {
-  mood:["assets/mood-1.jpg","assets/mood-2.jpg","assets/mood-3.jpg","assets/mood-4.jpg"],
-  kitchen:["assets/kitchen-1.jpg","assets/kitchen-2.jpg","assets/kitchen-3.jpg"],
-  sofa:["assets/sofa-1.jpg","assets/sofa-2.jpg","assets/sofa-3.jpg"],
-  chair:["assets/chair-1.jpg","assets/chair-2.jpg","assets/chair-3.jpg"],
-  lamp:["assets/lamp-1.jpg","assets/lamp-2.jpg","assets/lamp-3.jpg"],
-  door:["assets/door-1.jpg","assets/door-2.jpg","assets/door-3.jpg"],
-  floor:["assets/floor-1.jpg","assets/floor-2.jpg"],
-  curtain:["assets/curtain-1.jpg","assets/curtain-2.jpg","assets/curtain-3.jpg"]
+  mood:["assets/mood-1.jpg","assets/mood-2.jpg","assets/mood-3.jpg","assets/mood-4.jpg","assets/mood-5.jpg","assets/mood-6.jpg"],
+  kitchen:["assets/kitchen-1.jpg","assets/kitchen-2.jpg","assets/kitchen-3.jpg","assets/kitchen-4.jpg","assets/kitchen-5.jpg"],
+  sofa:["assets/sofa-1.jpg","assets/sofa-2.jpg","assets/sofa-3.jpg","assets/sofa-4.jpg","assets/sofa-5.jpg"],
+  chair:["assets/chair-1.jpg","assets/chair-2.jpg","assets/chair-3.jpg","assets/chair-4.jpg","assets/chair-5.jpg"],
+  lamp:["assets/lamp-1.jpg","assets/lamp-2.jpg","assets/lamp-3.jpg","assets/lamp-4.jpg","assets/lamp-5.jpg"],
+  door:["assets/door-1.jpg","assets/door-2.jpg","assets/door-3.jpg","assets/door-4.jpg","assets/door-5.jpg"],
+  floor:["assets/floor-1.jpg","assets/floor-2.jpg","assets/floor-3.jpg","assets/floor-4.jpg"],
+  curtain:["assets/curtain-1.jpg","assets/curtain-2.jpg","assets/curtain-3.jpg","assets/curtain-4.jpg","assets/curtain-5.jpg"]
 };
 const NICHE_IMAGES = {apartment:"assets/niche-apartment.jpg",house:"assets/niche-house.jpg",commercial:"assets/niche-commercial.jpg"};
 const ROOM_BG = "assets/mood-2.jpg";
@@ -488,9 +492,11 @@ function updateChrome(){
 
 function renderBrief(){
   const t=totalPicks();
-  $('briefCount').textContent = t? `Вы отметили ${t} вариант(ов). Вот что дизайнер увидит как ваш запрос:` : 'Вы пока ничего не отметили — можно вернуться и выбрать.';
+  $('briefCount').textContent = t? 'По вашему выбору сложился портрет вкуса — вот что увидит дизайнер:' : 'Вы пока ничего не отметили — можно вернуться и выбрать.';
+  const moodSel=[...state.selected.mood].map(id=>STYLE_NAMES[+id.split('-')[1]]).filter(Boolean);
+  const styleCard = moodSel.length?`<div class="stylecard"><span class="eyebrow">Ваш стиль</span><div class="styletags">${moodSel.map(n=>`<span class="stag">${n}</span>`).join('')}</div></div>`:'';
   const nicheRow = state.niche?`<div class="sumrow"><div class="lab"><b>Объект</b><span>тип</span></div><div class="thumbs"><div class="thumb"><img class="photo" src="${NICHE_IMAGES[state.niche]}" alt="" onerror="this.remove()"></div><span style="align-self:center;font-weight:600">${NICHE_LABEL[state.niche]}</span></div></div>`:'';
-  $('summary').innerHTML = nicheRow + STEPS.map(s=>{
+  $('summary').innerHTML = styleCard + nicheRow + STEPS.map(s=>{
     const sel=[...state.selected[s.key]];
     const items=s.items.filter(it=>sel.includes(it.id));
     const thumbs = items.length
@@ -611,7 +617,7 @@ $('restart').addEventListener('click',()=>{ STEPS.forEach(s=>state.selected[s.ke
 /* start button on welcome via hero */
 const startBtn=document.createElement('button');
 startBtn.className='btn btn-primary';startBtn.id='startBtn';
-startBtn.innerHTML='Начать подбор '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+startBtn.innerHTML='Собрать мой бриф '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 startBtn.style.marginTop='28px';
 $('s-welcome').querySelector('.how').after(startBtn);
 startBtn.addEventListener('click',()=>{ renderNiche(); show('niche'); });
