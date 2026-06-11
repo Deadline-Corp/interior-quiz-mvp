@@ -321,6 +321,11 @@
   .cfg-spec .sp-item{font-weight:600}
   .cfg-spec .sp-dot{width:4px;height:4px;border-radius:9px;background:var(--line-strong)}
   .cfg-note{margin-top:18px;font-size:13px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:14px}
+  .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,18px);z-index:60;opacity:0;pointer-events:none;
+    background:var(--ink);color:var(--on-ink);font-size:14px;font-weight:600;padding:12px 20px;border-radius:999px;
+    box-shadow:0 10px 30px rgba(20,18,16,.28);display:flex;align-items:center;gap:9px;transition:opacity .3s var(--ease),transform .35s var(--spring);max-width:88vw}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast svg{width:17px;height:17px;color:var(--accent)}
   .cfg-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
   .cfg-mini{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;
     padding:8px 14px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;-webkit-tap-highlight-color:transparent;
@@ -388,7 +393,7 @@
       <div class="hero">
         <div class="eyebrow rv d1">Конструктор интерьера</div>
         <h1 class="serif rv d2">Соберите свой<br><em>интерьер</em> сами</h1>
-        <p class="lede rv d3">Меняйте фасады, столешницы, ткани и стили — картинка перестраивается мгновенно. Готовые комнаты складываются в бриф для дизайнера.</p>
+        <p class="lede rv d3">Меняйте фасады, столешницы, ткани и стили — и видите финал ещё до заказа. Никаких «представлял одно, а вышло другое»: готовый дизайн уходит дизайнеру точной спецификацией.</p>
         <div class="showcase rv d4" id="showcase"></div>
         <div class="hero-cap rv d4"><span class="dot"></span>Живое демо: одна кухня, меняется только выбранная деталь</div>
         <div class="pick-label rv d5">Выберите комнату и начните:</div>
@@ -457,8 +462,8 @@
           <button class="cfg-mini" id="cfgBack">← Назад</button>
         </div>
         <span class="stage-pill">Конструктор</span>
-        <h2 class="serif">Соберите комнату под себя</h2>
-        <p>Меняйте детали — картинка перестраивается. Собрали — нажмите «Добавить в бриф» и переходите к следующей комнате.</p>
+        <h2 class="serif" id="cfgTitle">Соберите комнату под себя</h2>
+        <p>Нажимайте на детали — картинка перестраивается под выбор. Собрали комнату — добавьте её в бриф и переходите к следующей.</p>
       </div>
       <div class="cfg-tabs" id="cfgTabs"></div>
       <div class="cfg-stage" id="cfgStage"></div>
@@ -472,7 +477,7 @@
       <div class="sent">
         <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></div>
         <h2 class="serif">Бриф у дизайнера</h2>
-        <p id="sentMsg">Спасибо! Мы изучим ваш выбор и вернёмся с концепцией. Это демо — данные никуда не уходят.</p>
+        <p id="sentMsg">Дизайнер получил вашу спецификацию и закажет именно эти материалы — вы получите ровно то, что собрали. <br><span class="mono" style="font-size:12px;color:var(--ink-soft)">Это демо — данные никуда не отправляются.</span></p>
         <div class="mt28"><button class="btn btn-ghost" id="restart">Пройти заново</button></div>
       </div>
     </section>
@@ -488,6 +493,7 @@
     <button class="btn btn-primary" id="nextBtn">Далее</button>
   </div>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
 /* ---------------- icons ---------------- */
@@ -639,7 +645,7 @@ function updateChrome(){
 
 function renderBrief(){
   const t=totalPicks(), rn=briefRoomCount();
-  $('briefCount').textContent = (rn||t)? 'Комплектации комнат и ваш вкус — это и получит дизайнер в работу:' : 'Пока пусто — соберите комнату в конструкторе или отметьте фото.';
+  $('briefCount').textContent = (rn||t)? 'Точная спецификация для дизайнера — он закажет эти материалы под ваш готовый дизайн:' : 'Пока пусто — соберите комнату в конструкторе или отметьте фото.';
   const roomCards = rn? `<div class="b-rooms"><span class="eyebrow" style="display:block;margin:6px 0 12px">Собрано в конструкторе</span>${CFG_ORDER.filter(p=>state.brief[p]).map((p,i)=>{
     const st=state.brief[p];
     return `<div class="b-room" style="--r:${i}"><img src="${cfgURLFor(p,st)}" alt="" loading="lazy" onerror="this.remove()"><div class="b-info"><b>${CONFIGS[p].title}</b><span>${specText(p,st)}</span></div><button class="b-edit" data-edit="${p}">Изменить</button></div>`;
@@ -720,12 +726,12 @@ const CONFIGS = {
       {key:'handle',label:'Ручка',opts:[{v:'black',n:'Чёрная',sw:'#1c1c1c'},{v:'brass',n:'Латунь',sw:'#B08D57'}]},
       {key:'glass',label:'Остекление',opts:[{v:'solid',n:'Глухое'},{v:'glass',n:'Со стеклом'}]}
     ]},
-  sofa:{ title:'Гостиная', dir:'assets/cfg/s2-', order:['style','fabric','form','rug'], state:{style:'min',fabric:'clay',form:'straight',rug:'rug'},
+  sofa:{ title:'Гостиная', dir:'assets/cfg/s2-', order:['style','fabric','form','pillows'], state:{style:'min',fabric:'clay',form:'straight',pillows:'pill'},
     parts:[
       {key:'style',label:'Стиль интерьера',opts:[{v:'min',n:'Минимал'},{v:'loft',n:'Лофт'},{v:'cls',n:'Классика'},{v:'dark',n:'Дарк'}]},
       {key:'fabric',label:'Обивка',opts:[{v:'clay',n:'Глина',sw:'#B4654A'},{v:'olive',n:'Олива',sw:'#6E7257'},{v:'grey',n:'Серый',sw:'#8C9298'}]},
-      {key:'form',label:'Форма',opts:[{v:'straight',n:'Прямой'},{v:'corner',n:'Угловой'}]},
-      {key:'rug',label:'Ковёр',opts:[{v:'rug',n:'С ковром'},{v:'none',n:'Без ковра'}]}
+      {key:'form',label:'Форма дивана',opts:[{v:'straight',n:'Прямой'},{v:'corner',n:'Угловой'}]},
+      {key:'pillows',label:'Подушки',opts:[{v:'pill',n:'С подушками'},{v:'plain',n:'Без подушек'}]}
     ]},
   bath:{ title:'Ванная', dir:'assets/cfg/b-', order:['tile','fix','vanity','sink'], state:{tile:'light',fix:'black',vanity:'oak',sink:'vessel'},
     parts:[
@@ -734,11 +740,12 @@ const CONFIGS = {
       {key:'vanity',label:'Тумба',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'white',n:'Белая',sw:'#ECEAE4'}]},
       {key:'sink',label:'Раковина',opts:[{v:'vessel',n:'Накладная'},{v:'inset',n:'Встроенная'}]}
     ]},
-  bed:{ title:'Спальня', dir:'assets/cfg/bd-', order:['head','textile','curt'], state:{head:'fabric',textile:'light',curt:'light'},
+  bed:{ title:'Спальня', dir:'assets/cfg/bd-', order:['head','textile','curt','floor'], state:{head:'fabric',textile:'light',curt:'linen',floor:'oak'},
     parts:[
       {key:'head',label:'Изголовье',opts:[{v:'fabric',n:'Ткань',sw:'#D8C9B6'},{v:'wood',n:'Орех',sw:'#6B4B33'}]},
       {key:'textile',label:'Текстиль',opts:[{v:'light',n:'Светлый',sw:'#EFEAE0'},{v:'graphite',n:'Графит',sw:'#4A4A48'},{v:'terra',n:'Терракота',sw:'#B4654A'}]},
-      {key:'curt',label:'Шторы',opts:[{v:'light',n:'Лён',sw:'#E9E2D4'},{v:'dark',n:'Графит',sw:'#494A4C'}]}
+      {key:'curt',label:'Шторы',opts:[{v:'linen',n:'Лён',sw:'#E9E2D4'},{v:'dark',n:'Графит',sw:'#494A4C'},{v:'velvet',n:'Бархат',sw:'#9E5640'}]},
+      {key:'floor',label:'Пол',opts:[{v:'oak',n:'Дуб',sw:'#C49A6C'},{v:'walnut',n:'Орех',sw:'#6B4B33'}]}
     ]}
 };
 let cfgProduct='kitchen', cfgFront=0;
@@ -746,6 +753,8 @@ function cfgURL(p){ const c=CONFIGS[p]; return c.dir + c.order.map(k=>c.state[k]
 function cfgURLFor(p,st){ const c=CONFIGS[p]; return c.dir + c.order.map(k=>st[k]).join('-') + '.jpg'; }
 function roomInBrief(p){ const b=state.brief[p]; if(!b) return false; const c=CONFIGS[p]; return c.order.every(k=>b[k]===c.state[k]); }
 function addRoomToBrief(){ state.brief[cfgProduct]={...CONFIGS[cfgProduct].state}; persistBrief(); }
+let toastT;
+function showToast(msg){ const el=$('toast'); el.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>${msg}`; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
 function specText(p,st){ const c=CONFIGS[p]; return c.parts.map(part=>(part.opts.find(o=>o.v===st[part.key])||{}).n||'').join(' · '); }
 const CFG_ORDER=['kitchen','sofa','bed','bath','door'];
 function renderCfgTabs(){ $('cfgTabs').innerHTML=CFG_ORDER.map(p=>`<button data-p="${p}" aria-pressed="${p===cfgProduct}">${CONFIGS[p].title}${state.brief[p]?' ✓':''}</button>`).join(''); }
@@ -782,7 +791,7 @@ $('moreNote').addEventListener('click',e=>{const b=e.target.closest('.cfglink');
 
 $('nextBtn').addEventListener('click',()=>{
   if(current==='cfg'){
-    if(!roomInBrief(cfgProduct)){ addRoomToBrief(); renderCfgTabs(); updateChrome(); }
+    if(!roomInBrief(cfgProduct)){ addRoomToBrief(); renderCfgTabs(); updateChrome(); showToast(`${CONFIGS[cfgProduct].title} — в брифе`); }
     else { renderBrief(); show('brief'); }
     return;
   }
@@ -792,7 +801,7 @@ $('nextBtn').addEventListener('click',()=>{
     else { renderBrief(); show('brief'); }
   } else if(current==='brief'){
     const name=$('cname').value.trim();
-    $('sentMsg').innerHTML = (name?name+', спасибо! ':'Спасибо! ')+'Мы изучим ваш выбор и вернёмся с концепцией. <br><span class="mono" style="font-size:12px;color:var(--ink-soft)">Это демо — данные никуда не отправляются.</span>';
+    $('sentMsg').innerHTML = (name?name+', спецификация принята! ':'Спецификация принята! ')+'Дизайнер закажет именно эти материалы — вы получите ровно то, что собрали, без сюрпризов. <br><span class="mono" style="font-size:12px;color:var(--ink-soft)">Это демо — данные никуда не отправляются.</span>';
     show('sent');
   }
 });

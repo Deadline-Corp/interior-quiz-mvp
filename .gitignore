@@ -1,3 +1,9 @@
 ﻿images_raw.json
 images_ok.json
 transcribe.py
+
+reels/node_modules/
+reels/.hyperframes/
+reels/capture/
+reels/frame_*.jpg
+gen-batch.ps1

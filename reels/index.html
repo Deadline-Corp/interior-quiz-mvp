@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  [data-composition-id="root"]{
+    --bg:#F4F1EC; --ink:#1A1A1A; --soft:#7d756a; --accent:#B4654A; --soft2:#F0E5DE;
+    position:relative; width:1080px; height:1920px; overflow:hidden;
+    background:var(--bg); color:var(--ink);
+    font-family:'Inter','Helvetica Neue',system-ui,sans-serif;
+  }
+  [data-composition-id="root"] .serif{font-family:'Playfair Display',Georgia,serif;letter-spacing:-.02em;line-height:1.04}
+  [data-composition-id="root"] .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  [data-composition-id="root"] .layer{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+    padding:140px 96px;box-sizing:border-box;opacity:0}
+  [data-composition-id="root"] .kicker{font-size:32px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:34px}
+  [data-composition-id="root"] .h-big{font-size:118px;font-weight:500}
+  [data-composition-id="root"] .h-big em{font-style:normal;color:var(--accent)}
+  [data-composition-id="root"] .sub{font-size:42px;color:var(--soft);margin-top:30px;max-width:20ch;line-height:1.35}
+
+  /* DEMO full-bleed */
+  #s-demo{padding:0;justify-content:flex-end}
+  #s-demo .imgs{position:absolute;inset:0;overflow:hidden;will-change:transform}
+  #s-demo .imgs img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+  #s-demo .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(18,15,12,.82) 0%,rgba(18,15,12,.18) 34%,rgba(18,15,12,.04) 52%,rgba(18,15,12,.34) 100%)}
+  #s-demo .top{position:absolute;top:150px;left:0;right:0;text-align:center;color:#fff}
+  #s-demo .top .k{font-size:30px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#F0C9BB}
+  #s-demo .top .t{font-size:62px;font-weight:600;margin-top:14px}
+  #s-demo .botwrap{position:absolute;left:0;right:0;bottom:150px;display:flex;flex-direction:column;align-items:center;gap:22px}
+  #s-demo .chip{display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+    backdrop-filter:blur(8px);color:#fff;font-size:44px;font-weight:600;padding:20px 38px;border-radius:999px;opacity:0;position:absolute;bottom:0;white-space:nowrap}
+  #s-demo .chip .dot{width:30px;height:30px;border-radius:9px;flex:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
+  #s-demo .hint{color:rgba(255,255,255,.92);font-size:34px;font-weight:500}
+
+  /* BRIEF */
+  #s-brief .speclist{margin-top:40px;display:flex;flex-direction:column;gap:18px}
+  #s-brief .specrow{display:flex;align-items:center;gap:22px;border:1px solid #e2ddd4;background:#fbf9f5;border-radius:18px;padding:24px 30px}
+  #s-brief .specrow .sw{width:46px;height:46px;border-radius:11px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+  #s-brief .specrow b{font-size:38px;font-weight:600}
+  #s-brief .specrow span{font-size:32px;color:var(--soft);margin-left:auto}
+
+  /* END */
+  #s-end{justify-content:center;text-align:center;align-items:center}
+  #s-end .brand{display:flex;align-items:center;gap:18px;margin-bottom:40px}
+  #s-end .mk{width:64px;height:64px;border:4px solid var(--ink);border-radius:18px;position:relative}
+  #s-end .mk:after{content:"";position:absolute;inset:14px 14px auto auto;width:16px;height:16px;background:var(--accent);border-radius:5px}
+  #s-end .brand span{font-size:40px;font-weight:700}
+  #s-end .link{margin-top:46px;font-size:34px;color:var(--soft)}
+</style>
+</head>
+<body>
+<div data-composition-id="root" data-width="1080" data-height="1920" data-start="0" data-duration="22" data-track-index="0">
+
+  <!-- HOOK -->
+  <div class="layer" id="s-hook">
+    <div class="kicker" id="hk">Ремонт мечты?</div>
+    <div class="h-big serif" id="h1">Представляли<br>одно —</div>
+    <div class="h-big serif" id="h2" style="color:var(--accent)">а вышло другое.</div>
+  </div>
+
+  <!-- TURN -->
+  <div class="layer" id="s-turn">
+    <div class="kicker" id="tk">Решение</div>
+    <div class="h-big serif" id="t1">Соберите интерьер <em>сами</em></div>
+    <div class="sub" id="t2">Конструктор, где вы видите финал ещё до заказа.</div>
+  </div>
+
+  <!-- DEMO -->
+  <div class="layer" id="s-demo">
+    <div class="imgs" id="demoImgs">
+      <img src="d1.jpg" id="im1" crossorigin="anonymous">
+      <img src="d2.jpg" id="im2" crossorigin="anonymous">
+      <img src="d3.jpg" id="im3" crossorigin="anonymous">
+      <img src="d4.jpg" id="im4" crossorigin="anonymous">
+      <img src="d5.jpg" id="im5" crossorigin="anonymous">
+    </div>
+    <div class="scrim"></div>
+    <div class="top">
+      <div class="k" id="dk">Одна кухня</div>
+      <div class="t serif" id="dt">Меняется только деталь</div>
+    </div>
+    <div class="botwrap">
+      <div class="chip" id="c1"><span class="dot" style="background:#8A9479"></span>Фасады · Зелёные</div>
+      <div class="chip" id="c2"><span class="dot" style="background:#3C3B39"></span>Столешница · Графит</div>
+      <div class="chip" id="c3"><span class="dot" style="background:#cdbfa6"></span>Планировка · Угловая</div>
+      <div class="chip" id="c4"><span class="dot" style="background:#B08D57"></span>Фурнитура · Латунь</div>
+    </div>
+  </div>
+
+  <!-- BRIEF -->
+  <div class="layer" id="s-brief">
+    <div class="kicker" id="bk">Готово</div>
+    <div class="h-big serif" id="bh" style="font-size:92px">Дизайн — в бриф<br>дизайнеру</div>
+    <div class="speclist">
+      <div class="specrow" id="sr1"><span class="sw" style="background:#8A9479"></span><b>Кухня</b><span>Зелёные фасады</span></div>
+      <div class="specrow" id="sr2"><span class="sw" style="background:#3C3B39"></span><b>Столешница</b><span>Графит</span></div>
+      <div class="specrow" id="sr3"><span class="sw" style="background:#B08D57"></span><b>Фурнитура</b><span>Латунь</span></div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div class="layer" id="s-end">
+    <div class="brand" id="eb"><span class="mk"></span><span>Ателье интерьера</span></div>
+    <div class="h-big serif" id="e1" style="text-align:center">Закажет ровно это.</div>
+    <div class="h-big serif" id="e2" style="text-align:center;color:var(--accent)">Без сюрпризов.</div>
+    <div class="link mono" id="el">deadline-corp.github.io/interior-quiz-mvp</div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+
+/* HOOK 0.2 - 3.2 */
+tl.fromTo("#s-hook",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},0.2);
+tl.from("#hk",{y:30,opacity:0,duration:.5,ease:"power3.out"},0.35);
+tl.from("#h1",{y:60,opacity:0,duration:.7,ease:"power3.out"},0.5);
+tl.from("#h2",{y:60,opacity:0,duration:.7,ease:"expo.out"},1.05);
+tl.to("#s-hook",{opacity:0,duration:.5,ease:"power2.in"},3.0);
+
+/* TURN 3.1 - 5.7 */
+tl.fromTo("#s-turn",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},3.15);
+tl.from("#tk",{y:26,opacity:0,duration:.45,ease:"power3.out"},3.3);
+tl.from("#t1",{y:54,opacity:0,duration:.7,ease:"power4.out"},3.5);
+tl.from("#t2",{y:34,opacity:0,duration:.55,ease:"power2.out"},3.95);
+tl.to("#s-turn",{opacity:0,duration:.5,ease:"power2.in"},5.4);
+
+/* DEMO 5.5 - 15.6 */
+tl.fromTo("#s-demo",{opacity:0},{opacity:1,duration:.6,ease:"power2.out"},5.5);
+tl.set("#im1",{opacity:1},5.5);
+tl.fromTo("#demoImgs",{scale:1.02},{scale:1.1,duration:10,ease:"none"},5.5);
+tl.from("#s-demo .top",{y:-30,opacity:0,duration:.6,ease:"power3.out"},6.0);
+/* crossfades */
+tl.to("#im1",{opacity:0,duration:.7,ease:"power1.inOut"},7.2);
+tl.fromTo("#im2",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},7.2);
+tl.to("#im2",{opacity:0,duration:.7,ease:"power1.inOut"},9.2);
+tl.fromTo("#im3",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},9.2);
+tl.to("#im3",{opacity:0,duration:.7,ease:"power1.inOut"},11.2);
+tl.fromTo("#im4",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},11.2);
+tl.to("#im4",{opacity:0,duration:.7,ease:"power1.inOut"},13.2);
+tl.fromTo("#im5",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},13.2);
+/* chips, each tied to its change */
+tl.fromTo("#c1",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},7.25);
+tl.to("#c1",{opacity:0,y:-18,duration:.35,ease:"power2.in"},9.0);
+tl.fromTo("#c2",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},9.25);
+tl.to("#c2",{opacity:0,y:-18,duration:.35,ease:"power2.in"},11.0);
+tl.fromTo("#c3",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},11.25);
+tl.to("#c3",{opacity:0,y:-18,duration:.35,ease:"power2.in"},13.0);
+tl.fromTo("#c4",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},13.25);
+tl.to("#c4",{opacity:0,y:-18,duration:.35,ease:"power2.in"},15.0);
+tl.to("#s-demo",{opacity:0,duration:.55,ease:"power2.in"},15.15);
+
+/* BRIEF 15.3 - 18.5 */
+tl.fromTo("#s-brief",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},15.35);
+tl.from("#bk",{y:24,opacity:0,duration:.4,ease:"power3.out"},15.5);
+tl.from("#bh",{y:50,opacity:0,duration:.65,ease:"power4.out"},15.65);
+tl.from("#sr1",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.1);
+tl.from("#sr2",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.3);
+tl.from("#sr3",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.5);
+tl.to("#s-brief",{opacity:0,duration:.5,ease:"power2.in"},18.2);
+
+/* END 18.35 - 22 */
+tl.fromTo("#s-end",{opacity:0},{opacity:1,duration:.55,ease:"power2.out"},18.35);
+tl.from("#eb",{y:30,opacity:0,duration:.55,ease:"power3.out"},18.5);
+tl.from("#e1",{y:50,opacity:0,duration:.65,ease:"power4.out"},18.8);
+tl.from("#e2",{y:50,opacity:0,duration:.65,ease:"expo.out"},19.15);
+tl.from("#el",{opacity:0,duration:.6,ease:"power2.out"},19.7);
+tl.to("#s-end",{opacity:0,duration:.7,ease:"power2.in"},21.3);
+
+window.__timelines["root"] = tl;
+</script>
+</body>
+</html>
