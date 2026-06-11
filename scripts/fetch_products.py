@@ -41,7 +41,10 @@ for sku, w_cm, url in PRODUCTS:
         continue
     cut = remove(raw)                     # bytes PNG с альфа-каналом
     img = Image.open(io.BytesIO(cut)).convert("RGBA")
-    bbox = img.getbbox()                  # обрезать прозрачные поля
+    # обрезка по ПОРОГУ прозрачности (не >0): убирает полупрозрачные поля/тень-ореол
+    # после rembg — иначе товар «висит» над полом из-за невидимых пикселей снизу
+    mask = img.split()[3].point(lambda p: 255 if p > 45 else 0)
+    bbox = mask.getbbox()
     if bbox:
         img = img.crop(bbox)
     img.save(os.path.join(OUT, f"{sku}.png"))

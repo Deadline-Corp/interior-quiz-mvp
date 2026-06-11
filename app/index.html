@@ -112,6 +112,16 @@
   .sw:hover{transform:scale(1.06)}
   .sw.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface) inset}
   .sw-name{padding:0 16px 10px;font-size:12px;color:var(--ink-2)}
+  .wallnav{display:flex;align-items:center;gap:10px;padding:14px 16px 2px}
+  .wnav-btn{width:32px;height:32px;flex:none;border-radius:8px;border:1px solid var(--line-2);background:var(--surface);font-size:18px;color:var(--ink-2);display:grid;place-items:center;transition:all .15s}
+  .wnav-btn:hover{background:var(--bg);border-color:var(--accent);color:var(--accent)}
+  .wallnav-mid{flex:1;text-align:center;font-size:12.5px;min-width:0}
+  .wallnav-mid b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wallnav-dots{display:inline-flex;gap:6px;margin-top:6px}
+  .wallnav-dots i{width:8px;height:8px;border-radius:50%;background:var(--line-2);cursor:pointer;transition:transform .12s}
+  .wallnav-dots i:hover{transform:scale(1.35)}
+  .wallnav-dots i.has{background:var(--accent)}
+  .wallnav-dots i.on{background:var(--ink);box-shadow:0 0 0 3px var(--accent-soft)}
   .sel-card{border-top:1px solid var(--line);padding-bottom:8px}
   .sel-card .head{padding:12px 16px 2px}
   .sel-card .head b{font-size:13.5px}
@@ -267,11 +277,21 @@ const CATALOG = [
   {sku:'WC38',name:'Унитаз',store:'homepro',price:5990,w:38,h:78,mount:'floor',draw:'toilet',vars:[{name:'Белый',fill:'#eeebe4'}],rooms:['bath']},
   {sku:'SHW90',name:'Душевой уголок 90',store:'homepro',price:11990,w:90,h:200,mount:'floor',draw:'shower',vars:[{name:'Стекло',fill:'#cfe0e6'}],rooms:['bath']},
   // --- Этап B: реальные товары с вырезанными фото (Firecrawl scrape + rembg) ---
-  {sku:'R-FRIDGE',name:'Холодильник Toshiba 11.9 фт³',store:'homepro',price:9290,old:13990,w:60,h:161,mount:'floor',img:'fridge-toshiba.png',draw:'fridge',vars:[{name:'Тёмно-синий',fill:'#2b3138'}],rooms:['kitchen']},
-  {sku:'R-SOFAL',name:'Диван 3-местный Lamona',store:'index',price:9990,w:214,h:99,mount:'floor',img:'sofa-lamona.png',draw:'sofa',vars:[{name:'Серый',fill:'#8e8a84'}],rooms:['living']},
-  {sku:'R-SOFAK',name:'Диван угловой Koncept Zette',store:'homepro',price:12255,old:15600,w:213,h:109,mount:'floor',img:'sofa-koncept.png',draw:'sofa',vars:[{name:'Шоколад',fill:'#5a4a42'}],rooms:['living']},
-  {sku:'R-WARD',name:'Шкаф 4-дверный Maxi',store:'index',price:17990,w:180,h:218,mount:'floor',img:'wardrobe-maxi.png',draw:'wardrobe',vars:[{name:'Серый',fill:'#b7b3ad'}],rooms:['bedroom','living']},
-  {sku:'R-BED',name:'Кровать Rotterdam 6 фт',store:'index',price:8590,w:165,h:102,mount:'floor',img:'bed-rotterdam.png',draw:'bed',vars:[{name:'Дуб / белый',fill:'#c9b48f'}],rooms:['bedroom']},
+  {sku:'R-FRIDGE',name:'Холодильник Toshiba 11.9 фт³',store:'homepro',price:9290,old:13990,w:60,h:167,mount:'floor',img:'fridge-toshiba.png',draw:'fridge',vars:[{name:'Тёмно-синий',fill:'#2b3138'}],rooms:['kitchen']},
+  {sku:'R-SOFAL',name:'Диван 3-местный Lamona',store:'index',price:9990,w:214,h:97,mount:'floor',img:'sofa-lamona.png',draw:'sofa',vars:[{name:'Серый',fill:'#8e8a84'}],rooms:['living']},
+  {sku:'R-SOFAK',name:'Диван угловой Koncept Zette',store:'homepro',price:12255,old:15600,w:213,h:106,mount:'floor',img:'sofa-koncept.png',draw:'sofa',vars:[{name:'Шоколад',fill:'#5a4a42'}],rooms:['living']},
+  {sku:'R-WARD',name:'Шкаф 4-дверный Maxi',store:'index',price:17990,w:180,h:219,mount:'floor',img:'wardrobe-maxi.png',draw:'wardrobe',vars:[{name:'Серый',fill:'#b7b3ad'}],rooms:['bedroom','living']},
+  {sku:'R-BED',name:'Кровать Rotterdam 6 фт',store:'index',price:8590,w:165,h:101,mount:'floor',img:'bed-rotterdam.png',draw:'bed',vars:[{name:'Дуб / белый',fill:'#c9b48f'}],rooms:['bedroom']},
+  {sku:'R-DINTBL',name:'Обеденный стол Serrano 160',store:'index',price:8990,w:160,h:80,mount:'floor',img:'dining-table-index.png',draw:'base',vars:[{name:'Серый',fill:'#8a8a8a'}],rooms:['living']},
+  {sku:'R-TVST',name:'ТВ-тумба Curvy 160',store:'index',price:5940,w:160,h:51,mount:'floor',img:'tv-stand-index.png',draw:'base',vars:[{name:'Белый',fill:'#f0eee9'}],rooms:['living','bedroom']},
+  {sku:'R-COFFEE',name:'Журнальный стол Maribo 120',store:'index',price:2190,w:120,h:52,mount:'floor',img:'coffee-table-index.png',draw:'base',vars:[{name:'Лайт оук',fill:'#c8a86e'}],rooms:['living']},
+  {sku:'R-ARM',name:'Кресло Pillry',store:'index',price:1990,w:58,h:86,mount:'floor',img:'armchair-index.png',draw:'sofa',vars:[{name:'Серый',fill:'#b0aba8'}],rooms:['living','bedroom']},
+  {sku:'R-DRESS',name:'Комод Molly 4 ящика 80',store:'index',price:4590,w:80,h:102,mount:'floor',img:'dresser-index.png',draw:'wardrobe',vars:[{name:'Лайт оук',fill:'#c4a05a'}],rooms:['bedroom','living']},
+  {sku:'R-NIGHT',name:'Стеллаж узкий Valux 63',store:'index',price:1290,w:63,h:103,mount:'floor',img:'nightstand-index.png',draw:'base',vars:[{name:'Белый',fill:'#f0f0ef'}],rooms:['bedroom','living']},
+  {sku:'R-WASH',name:'Стиральная машина LG 10 кг',store:'homepro',price:16800,w:60,h:85,mount:'floor',img:'washer-lg.png',draw:'washer',vars:[{name:'Белый',fill:'#f2f2f2'}],rooms:['kitchen','bath']},
+  {sku:'R-KBASE',name:'Тумба кухонная Cabin 60',store:'homepro',price:4503,old:5600,w:60,h:84,mount:'floor',img:'kitchen-base-homepro.png',draw:'base',vars:[{name:'Белый',fill:'#ffffff'}],rooms:['kitchen']},
+  {sku:'R-HOOD',name:'Вытяжка Lucky Flame 90',store:'homepro',price:9900,old:14900,w:90,h:57,mount:'wall',elev:150,img:'hood-homepro.png',draw:'hood',vars:[{name:'Сталь',fill:'#c0bfbd'}],rooms:['kitchen']},
+  {sku:'R-WC',name:'Унитаз Nasco NC-8611S',store:'homepro',price:5590,w:39,h:49,mount:'floor',img:'toilet-homepro.png',draw:'toilet',vars:[{name:'Белый',fill:'#f5f4f2'}],rooms:['bath']},
 ];
 const prod = sku => CATALOG.find(p=>p.sku===sku);
 
@@ -405,17 +425,10 @@ function renderPlan(){ drawPlan(); renderPlanLeft(); syncHeader(); save(); }
 
 function confirmPlan(){
   if(!app.rooms.length) return;
-  // создаём/обновляем стены для всех комнат, сохраняя уже обставленные
-  for(const r of app.rooms){
-    if(!app.walls[r.id]){
-      const types=roomTypes(r.name);
-      app.walls[r.id]={wallW:Math.round(Math.max(r.w,r.h)*10)/10, wallH:2.7, paint:TYPE_PAINT[types[0]], items:[]};
-    }
-  }
-  for(const k of Object.keys(app.walls)) if(!app.rooms.find(r=>String(r.id)===String(k))) delete app.walls[k];
+  ensureRoomWalls();
   roomKey = String(app.rooms[0].id);
   show('rooms');
-  wallHintShow(`Планировка подтверждена: ${app.rooms.length} помещений. Можно обставить хоть одно — например, только кухню`, 4600);
+  wallHintShow(`Планировка подтверждена: ${app.rooms.length} помещений, у каждого 4 стены. Можно обставить хоть одно — например, только кухню`, 4600);
 }
 
 /* ====================================================================
@@ -425,8 +438,28 @@ const wallSvg=$('#wallSvg'), roomsLeft=$('#roomsLeft'), roomsRight=$('#roomsRigh
 let roomKey=null, wallSel=null, wallDrag=null;
 function wallHintShow(t,ms=2800){wallHint.textContent=t;wallHint.classList.add('show');clearTimeout(wallHint._t);if(ms)wallHint._t=setTimeout(()=>wallHint.classList.remove('show'),ms);}
 function roomMeta(id){ const r=app.rooms.find(x=>String(x.id)===String(id)); return r?{name:r.name,types:roomTypes(r.name)}:{name:'?',types:['living']}; }
-const wallOf = id => app.walls[id];
-const curWall = ()=>wallOf(roomKey);
+// Комната = 4 стены (sides). Каждая сторона: {wallW, wallH, paint, items}.
+// curWall() возвращает активную сторону — весь код ниже работает с ней как раньше.
+function ensureRoomWalls(){
+  for(const r of app.rooms){
+    const types=roomTypes(r.name), paint=TYPE_PAINT[types[0]];
+    const widths=[r.w,r.h,r.w,r.h].map(v=>Math.round(v*10)/10);
+    let rw=app.walls[r.id];
+    if(!rw){
+      app.walls[r.id]={active:0, sides:widths.map(wv=>({wallW:wv,wallH:2.7,paint,items:[]}))};
+    } else if(!rw.sides){            // миграция старого формата {wallW,wallH,paint,items}
+      const o={wallW:rw.wallW||widths[0],wallH:rw.wallH||2.7,paint:rw.paint||paint,items:rw.items||[]};
+      app.walls[r.id]={active:0, sides:[o,
+        {wallW:widths[1],wallH:o.wallH,paint:o.paint,items:[]},
+        {wallW:widths[2],wallH:o.wallH,paint:o.paint,items:[]},
+        {wallW:widths[3],wallH:o.wallH,paint:o.paint,items:[]}]};
+    }
+  }
+  for(const k of Object.keys(app.walls)) if(!app.rooms.find(r=>String(r.id)===String(k))) delete app.walls[k];
+}
+const curRW = ()=>app.walls[roomKey];
+const curWall = ()=>{ const rw=app.walls[roomKey]; return rw&&rw.sides ? rw.sides[rw.active] : null; };
+const SIDE_NAMES=['Фронтальная','Правая','Задняя','Левая'];
 
 const layer=p=>p.mount==='bg'?'bg':(p.mount==='floor'?'floor':'wall');
 function itemBox(it){const p=prod(it.sku);return{x:it.x,y:it.y,w:p.w/100,h:p.h/100};}
@@ -436,8 +469,8 @@ function problems(it,w){
   if(layer(p)!=='bg')for(const o of w.items){if(o.id===it.id)continue;const po=prod(o.sku);if(layer(po)!==layer(p))continue;const ob=itemBox(o);if(b.x<ob.x+ob.w&&b.x+b.w>ob.x&&b.y<ob.y+ob.h&&b.y+b.h>ob.y){out.push(`${p.name}: пересекается с «${po.name}»`);break;}}
   return out;
 }
-function allEntries(){const out=[];for(const r of app.rooms){const w=app.walls[r.id];if(!w)continue;for(const it of w.items){const p=prod(it.sku);if(p.store)out.push({room:r.name,it,p});}}return out;}
-function allProblems(){const out=[];for(const r of app.rooms){const w=app.walls[r.id];if(!w||!w.items.length)continue;for(const it of w.items)for(const t of problems(it,w))out.push(`${r.name}: ${t}`);}return out;}
+function allEntries(){const out=[];for(const r of app.rooms){const rw=app.walls[r.id];if(!rw||!rw.sides)continue;for(const side of rw.sides)for(const it of side.items){const p=prod(it.sku);if(p.store)out.push({room:r.name,it,p});}}return out;}
+function allProblems(){const out=[];for(const r of app.rooms){const rw=app.walls[r.id];if(!rw||!rw.sides)continue;for(const side of rw.sides){if(!side.items.length)continue;for(const it of side.items)for(const t of problems(it,side))out.push(`${r.name}: ${t}`);}}return out;}
 const projTotal=()=>allEntries().reduce((s,e)=>s+e.p.price,0);
 
 /* отрисовщики предметов */
@@ -473,7 +506,8 @@ function miniSvg(p){
 
 function renderRoomBar(){
   roomBar.innerHTML=app.rooms.map(r=>{
-    const w=app.walls[r.id],cnt=w?w.items.filter(i=>prod(i.sku).store).length:0;
+    const rw=app.walls[r.id];
+    const cnt=rw&&rw.sides?rw.sides.reduce((s,sd)=>s+sd.items.filter(i=>prod(i.sku).store).length,0):0;
     return `<button class="room-tab ${String(r.id)===String(roomKey)?'on':''}" data-rk="${r.id}" role="tab">${esc(r.name)}${cnt?`<span class="cnt num">${cnt}</span>`:''}</button>`;
   }).join('');
   roomBar.querySelectorAll('[data-rk]').forEach(b=>b.onclick=()=>{roomKey=b.dataset.rk;wallSel=null;renderRooms();});
@@ -495,14 +529,20 @@ function renderRoomsLeft(){
   roomsLeft.querySelectorAll('[data-sku]').forEach(b=>b.onclick=()=>addItem(b.dataset.sku));
 }
 function renderRoomsRight(){
-  const w=curWall(), meta=roomMeta(roomKey);
+  const w=curWall(), rw=curRW(), active=rw.active, meta=roomMeta(roomKey);
   const it=w.items.find(i=>i.id===wallSel);
   const probs=w.items.flatMap(i=>problems(i,w));
   const shop=w.items.filter(i=>prod(i.sku).store);
   const entries=allEntries(), roomsUsed=new Set(entries.map(e=>e.room)).size, projProbs=allProblems();
   const upd=new Date();upd.setMinutes(0,0,0);
   roomsRight.innerHTML=`
-    <h2>Стена · ${esc(meta.name)}</h2>
+    <div class="wallnav">
+      <button class="wnav-btn" id="wallPrev" aria-label="Предыдущая стена">‹</button>
+      <div class="wallnav-mid"><b>${esc(meta.name)} · стена ${active+1}/4</b>
+        <span class="wallnav-dots">${rw.sides.map((s,i)=>`<i class="${i===active?'on':''}${s.items.length?' has':''}" data-wn="${i}" title="${SIDE_NAMES[i]}"></i>`).join('')}</span></div>
+      <button class="wnav-btn" id="wallNext" aria-label="Следующая стена">›</button>
+    </div>
+    <h2>${SIDE_NAMES[active]} стена</h2>
     <div class="row2">
       <div class="field"><label>Ширина, м</label><input id="ww" type="number" step="0.1" min="1.5" max="9" value="${w.wallW}"></div>
       <div class="field"><label>Высота, м</label><input id="wh" type="number" step="0.05" min="2.2" max="4" value="${w.wallH}"></div>
@@ -522,9 +562,12 @@ function renderRoomsRight(){
       <button class="btn btn-primary" id="orderBtn" ${entries.length&&!projProbs.length?'':'disabled'} title="${projProbs.length?'Сначала исправь: '+esc(projProbs[0]):''}">Оплатить заказ →</button>
     </div>
     <p class="muted-note">POC: схематичные блоки реальных габаритов; фотореализм — следующий этап.</p>`;
-  $('#ww').onchange=e=>{w.wallW=Math.max(1.5,Math.min(9,+e.target.value||w.wallW));renderRooms();};
-  $('#wh').onchange=e=>{w.wallH=Math.max(2.2,Math.min(4,+e.target.value||2.7));renderRooms();};
-  roomsRight.querySelectorAll('[data-paint]').forEach(b=>b.onclick=()=>{w.paint=b.dataset.paint;renderRooms();});
+  $('#ww').onchange=e=>{w.wallW=Math.max(1.5,Math.min(9,+e.target.value||w.wallW));renderRooms();};            // ширина — у каждой стены своя
+  $('#wh').onchange=e=>{const v=Math.max(2.2,Math.min(4,+e.target.value||2.7));rw.sides.forEach(s=>s.wallH=v);renderRooms();};   // высота — на всю комнату
+  roomsRight.querySelectorAll('[data-paint]').forEach(b=>b.onclick=()=>{rw.sides.forEach(s=>s.paint=b.dataset.paint);renderRooms();});  // цвет — на всю комнату
+  $('#wallPrev').onclick=()=>{rw.active=(rw.active+3)%4;wallSel=null;renderRooms();};
+  $('#wallNext').onclick=()=>{rw.active=(rw.active+1)%4;wallSel=null;renderRooms();};
+  roomsRight.querySelectorAll('[data-wn]').forEach(d=>d.onclick=()=>{rw.active=+d.dataset.wn;wallSel=null;renderRooms();});
   $('#exportBtn').onclick=exportPNG;
   $('#saveBtn').onclick=()=>{save();wallHintShow('Проект сохранён. В Фазе 1 — сохранение в аккаунт с любого устройства');};
   $('#orderBtn').onclick=()=>{if(allEntries().length&&!allProblems().length){show('order');}};
@@ -539,31 +582,72 @@ function selCard(it){
 let WPX=180; const FLOOR_H=0.45;
 function wallScale(){const r=wallSvg.getBoundingClientRect(),w=curWall();WPX=Math.min((r.width-80)/w.wallW,(r.height-60)/(w.wallH+FLOOR_H));WPX=Math.max(60,Math.min(260,WPX));}
 const wmx=m=>40+m*WPX, wmy=m=>20+(curWall().wallH-m)*WPX;
+function sceneDefs(){
+  const w=curWall(),W=w.wallW,x0=wmx(0),fy=wmy(0),fh=FLOOR_H*WPX,blur=Math.max(2.5,WPX*0.035);
+  return `<defs>
+    <pattern id="grain" width="14" height="160" patternUnits="userSpaceOnUse"><path d="M4 0 q3 40 0 80 q-3 40 0 80 M10 0 q-2 50 1 95 q2 35 -1 65" stroke="rgba(60,40,20,.14)" stroke-width="1.4" fill="none"/></pattern>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dcebef"/><stop offset="1" stop-color="#c4d8de"/></linearGradient>
+    <radialGradient id="wallLight" cx="36%" cy="-6%" r="125%"><stop offset="0" stop-color="#fff" stop-opacity="0.16"/><stop offset="44%" stop-color="#fff" stop-opacity="0.02"/><stop offset="100%" stop-color="#1c1917" stop-opacity="0.16"/></radialGradient>
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#caa97a"/><stop offset="1" stop-color="#a4854f"/></linearGradient>
+    <linearGradient id="floorFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bd9b6c" stop-opacity="0.12"/><stop offset="0.8" stop-color="#b2905f" stop-opacity="0.9"/><stop offset="1" stop-color="#a4854f" stop-opacity="1"/></linearGradient>
+    <filter id="contact" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="${blur}"/></filter>
+    <filter id="wallshadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="${blur*1.3}"/></filter>
+    <linearGradient id="wallAO" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1917" stop-opacity="0"/><stop offset="1" stop-color="#1c1917" stop-opacity="0.13"/></linearGradient>
+    <clipPath id="floorClip"><rect x="${x0}" y="${fy}" width="${W*WPX}" height="${fh}"/></clipPath>
+  </defs>`;
+}
+function itemBody(it){
+  const p=prod(it.sku),pw=p.w/100*WPX,ph=p.h/100*WPX;
+  return p.img ? `<image href="assets/products/${p.img}" x="0" y="0" width="${pw}" height="${ph}" preserveAspectRatio="none"/>` : DRAW[p.draw](pw,ph,p.vars[it.variant]);
+}
 function drawWall(){
   wallScale();const w=curWall(),W=w.wallW,H=w.wallH;
   wallSvg.setAttribute('viewBox',`0 0 ${W*WPX+80} ${(H+FLOOR_H)*WPX+40}`);
-  let g=grainDefs();
-  g+=`<rect x="${wmx(0)}" y="${wmy(H)}" width="${W*WPX}" height="${H*WPX}" fill="${w.paint}"/>`;
-  g+=`<rect x="${wmx(0)}" y="${wmy(0)}" width="${W*WPX}" height="${FLOOR_H*WPX}" fill="${FLOOR}"/>`;
-  for(let i=1;i<6;i++)g+=`<line x1="${wmx(0)}" y1="${wmy(0)+FLOOR_H*WPX/6*i}" x2="${wmx(W)}" y2="${wmy(0)+FLOOR_H*WPX/6*i}" stroke="rgba(28,25,23,.08)"/>`;
-  g+=`<rect x="${wmx(0)}" y="${wmy(0)-6}" width="${W*WPX}" height="6" fill="#dcd5c8"/>`;
-  g+=`<rect x="${wmx(0)}" y="${wmy(H)}" width="${W*WPX}" height="${H*WPX}" fill="none" stroke="#a39e94" stroke-width="2"/>`;
-  g+=`<line x1="${wmx(0)}" y1="${wmy(H)-12}" x2="${wmx(W)}" y2="${wmy(H)-12}" stroke="#a8a29e"/><text x="${wmx(W/2)}" y="${wmy(H)-18}" text-anchor="middle" font-size="11" fill="#78716c" font-family="JetBrains Mono">${W.toFixed(1).replace('.',',')} м</text>`;
+  const x0=wmx(0), wy=wmy(H), fy=wmy(0), fh=FLOOR_H*WPX;
+  let g=sceneDefs();
+  // СТЕНА: краска + мягкий свет сверху-слева + виньетка по углам
+  g+=`<rect x="${x0}" y="${wy}" width="${W*WPX}" height="${H*WPX}" fill="${w.paint}"/>`;
+  g+=`<rect x="${x0}" y="${wy}" width="${W*WPX}" height="${H*WPX}" fill="url(#wallLight)"/>`;
+  g+=`<rect x="${x0}" y="${fy-0.55*WPX}" width="${W*WPX}" height="${0.55*WPX}" fill="url(#wallAO)"/>`;   // затемнение угла стена-пол
+  // ПОЛ: градиент глубины + перспективные доски
+  g+=`<rect x="${x0}" y="${fy}" width="${W*WPX}" height="${fh}" fill="url(#floorGrad)"/>`;
+  for(let i=1;i<6;i++){const yy=fy+fh/5.5*i;g+=`<line x1="${x0}" y1="${yy}" x2="${x0+W*WPX}" y2="${yy}" stroke="rgba(60,40,20,${0.05+i*0.012})"/>`;}
+  for(let xm=0.6;xm<W;xm+=1.2){g+=`<line x1="${wmx(xm)}" y1="${fy}" x2="${wmx(xm)+fh*0.16}" y2="${fy+fh}" stroke="rgba(60,40,20,.07)"/>`;}
+  // ПЛИНТУС с бликом
+  g+=`<rect x="${x0}" y="${fy-8}" width="${W*WPX}" height="8" fill="#e9e3d7"/><rect x="${x0}" y="${fy-8}" width="${W*WPX}" height="2" fill="rgba(255,255,255,.5)"/><rect x="${x0}" y="${fy-1}" width="${W*WPX}" height="1.5" fill="rgba(28,25,23,.18)"/>`;
   const order={bg:0,floor:1,wall:2,ceil:3};
   const sorted=[...w.items].sort((a,b)=>order[layer(prod(a.sku))]-order[layer(prod(b.sku))]);
+  // ОТРАЖЕНИЯ на полу (только стоящие на полу), затухают в пол
+  g+=`<g clip-path="url(#floorClip)">`;
+  for(const it of sorted){ if(layer(prod(it.sku))!=='floor')continue;
+    const p=prod(it.sku),pw=p.w/100*WPX,ph=p.h/100*WPX,x=wmx(it.x);
+    g+=`<g opacity="0.2" transform="matrix(1,0,0,-1,0,${2*fy})"><g transform="translate(${x} ${fy-ph})">${itemBody(it)}</g></g>`;
+  }
+  g+=`</g><rect x="${x0}" y="${fy}" width="${W*WPX}" height="${fh}" fill="url(#floorFade)"/>`;
+  // размерная линейка
+  g+=`<line x1="${x0}" y1="${wy-12}" x2="${x0+W*WPX}" y2="${wy-12}" stroke="#a8a29e"/><text x="${wmx(W/2)}" y="${wy-18}" text-anchor="middle" font-size="11" fill="#78716c" font-family="JetBrains Mono">${W.toFixed(1).replace('.',',')} м</text>`;
+  // ТЕНИ НА СТЕНЕ за мебелью (мягкие, смещены от света слева-сверху) — «вклеивают» предмет в сцену
+  for(const it of sorted){ const p=prod(it.sku); if(layer(p)==='bg')continue;
+    const pw=p.w/100*WPX,ph=p.h/100*WPX,x=wmx(it.x),y=wmy(it.y+p.h/100);
+    g+=`<rect x="${x+pw*0.05}" y="${y+ph*0.06}" width="${pw}" height="${ph}" rx="7" fill="rgba(28,22,14,.11)" filter="url(#wallshadow)"/>`;
+  }
+  // КОНТАКТНЫЕ ТЕНИ под мебелью (мягкие, размытые — мебель «стоит», не висит)
+  for(const it of sorted){ if(layer(prod(it.sku))!=='floor')continue;
+    const p=prod(it.sku),pw=p.w/100*WPX,x=wmx(it.x);
+    g+=`<ellipse cx="${x+pw/2}" cy="${fy+2}" rx="${pw*0.5}" ry="${Math.max(7,WPX*0.06)}" fill="rgba(28,22,14,.34)" filter="url(#contact)"/>`;
+  }
+  // ПРЕДМЕТЫ
   for(const it of sorted){
     const p=prod(it.sku),pw=p.w/100*WPX,ph=p.h/100*WPX,x=wmx(it.x),y=wmy(it.y+p.h/100);
     const bad=problems(it,w).length>0,s=wallSel===it.id;
-    if(layer(p)==='floor')g+=`<ellipse cx="${x+pw/2}" cy="${wmy(0)+3}" rx="${pw/2*0.92}" ry="4.5" fill="rgba(28,25,23,.10)"/>`;
-    const body = p.img ? `<image href="assets/products/${p.img}" x="0" y="0" width="${pw}" height="${ph}" preserveAspectRatio="none"/>` : DRAW[p.draw](pw,ph,p.vars[it.variant]);
-    g+=`<g data-item="${it.id}" transform="translate(${x} ${y})" style="cursor:grab">${body}
+    g+=`<g data-item="${it.id}" transform="translate(${x} ${y})" style="cursor:grab">${itemBody(it)}
       ${bad?`<rect x="-3" y="-3" width="${pw+6}" height="${ph+6}" fill="rgba(185,28,28,.12)" stroke="#b91c1c" stroke-width="2" rx="4"/>`:''}
-      ${s?`<rect x="-4" y="-4" width="${pw+8}" height="${ph+8}" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 4" rx="4"/><text x="${pw/2}" y="-10" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="600" font-family="JetBrains Mono">${p.w}×${p.h}</text>`:''}
+      ${s?`<rect x="-5" y="-5" width="${pw+10}" height="${ph+10}" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 4" rx="5"/><text x="${pw/2}" y="-11" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="600" font-family="JetBrains Mono">${p.w}×${p.h} см</text>`:''}
     </g>`;
   }
-  if(!w.items.length)g+=`<text x="${wmx(W/2)}" y="${wmy(H/2)}" text-anchor="middle" font-size="14" fill="#a39e94" font-family="Outfit">Пустая стена — выбери товар слева</text>`;
+  if(!w.items.length)g+=`<text x="${wmx(W/2)}" y="${wmy(H*0.55)}" text-anchor="middle" font-size="14" fill="rgba(28,25,23,.32)" font-family="Outfit">Пустая стена — выбери товар слева</text>`;
   wallSvg.innerHTML=g;
-  $('#wallInfo').textContent=`${meta_name()} · стена ${W.toFixed(1).replace('.',',')} × ${H.toFixed(2).replace('.',',')} м · схематичный режим`;
+  $('#wallInfo').textContent=`${meta_name()} · стена ${curRW().active+1}/4 · ${W.toFixed(1).replace('.',',')}×${H.toFixed(2).replace('.',',')} м`;
 }
 function meta_name(){return roomMeta(roomKey).name;}
 function defaultY(p){const w=curWall();if(p.mount==='floor')return 0;if(p.mount==='ceil')return w.wallH-p.h/100;return (p.elev??120)/100;}
@@ -677,7 +761,7 @@ function show(screen){
   syncHeader(); save();
 }
 function confirmPlanSilent(){
-  for(const r of app.rooms){ if(!app.walls[r.id]){const types=roomTypes(r.name);app.walls[r.id]={wallW:Math.round(Math.max(r.w,r.h)*10)/10,wallH:2.7,paint:TYPE_PAINT[types[0]],items:[]};} }
+  ensureRoomWalls();
   if(!roomKey||!app.rooms.find(r=>String(r.id)===String(roomKey))) roomKey=String(app.rooms[0].id);
 }
 $('#stepPlan').onclick=()=>show('plan');
