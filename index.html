@@ -98,18 +98,39 @@
   .stat b{font-family:'Newsreader',serif;font-size:26px;font-weight:600;display:block;line-height:1}
   .stat span{font-size:11.5px;color:var(--ink-soft);letter-spacing:.02em}
 
-  /* hero living mosaic */
-  .mosaic{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:9px}
-  .hm{position:relative;border-radius:13px;overflow:hidden;aspect-ratio:1;border:1px solid var(--line);background:linear-gradient(150deg,#EEEAE3,#DAD4CA)}
-  .hm:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
-  .hm img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease)}
-  .hm .bdg{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:99px;background:#fff;color:var(--accent);
-    display:flex;align-items:center;justify-content:center;transform:scale(0);transition:transform .35s var(--spring);box-shadow:0 2px 7px rgba(0,0,0,.18);z-index:2}
-  .hm .bdg svg{width:13px;height:13px}
-  .hm:after{content:"";position:absolute;inset:0;border:2px solid var(--accent);border-radius:13px;opacity:0;transition:opacity .3s var(--ease)}
-  .hm.on:after{opacity:1}
-  .hm.on .bdg{transform:scale(1);background:var(--accent);color:#fff}
-  .hm.on img{transform:scale(1.05)}
+  /* hero live configurator showcase */
+  .showcase{margin-top:26px;position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;border:1px solid var(--line);
+    background:linear-gradient(150deg,#EEEAE3,#DAD4CA);box-shadow:0 16px 38px rgba(20,18,16,.12)}
+  .showcase img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.03);transition:opacity .6s var(--ease),transform .9s var(--ease)}
+  .showcase img.show{opacity:1;transform:scale(1)}
+  .sc-tag{position:absolute;top:12px;left:12px;z-index:3;display:inline-flex;align-items:center;gap:7px;
+    background:rgba(20,18,16,.62);backdrop-filter:blur(6px);color:#fff;font-size:12.5px;font-weight:600;
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 13px;transition:opacity .3s}
+  .sc-tag .swd{width:13px;height:13px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+  .pick-label{margin-top:26px;font-size:13.5px;font-weight:600;color:var(--ink-soft)}
+  .room-grid{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .roomcard{position:relative;border:1px solid var(--line);border-radius:13px;overflow:hidden;cursor:pointer;aspect-ratio:16/10;
+    -webkit-tap-highlight-color:transparent;transition:transform .25s var(--ease),box-shadow .25s var(--ease);
+    animation:tileIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*60ms)}
+  .roomcard:active{transform:scale(.98)}
+  .roomcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+  .roomcard .rl{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:12px;color:#fff;display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(to top,rgba(20,18,16,.66),transparent);font-weight:600;font-size:14.5px}
+  .roomcard .rl em{font-style:normal;opacity:.85;transition:transform .25s var(--ease)}
+  .roomcard.rc-hot .rl i{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    background:var(--accent);border-radius:99px;padding:3px 8px;margin-left:8px}
+  @media(hover:hover){
+    .roomcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(20,18,16,.15)}
+    .roomcard:hover img{transform:scale(1.05)}
+    .roomcard:hover .rl em{transform:translateX(3px)}
+  }
+  .briefbadge{margin-left:8px;height:34px;border-radius:9px;border:1px solid var(--line-strong);background:transparent;color:var(--ink);
+    display:flex;align-items:center;gap:7px;padding:0 11px;cursor:pointer;flex:none;font:inherit;font-size:12.5px;font-weight:700;
+    transition:transform .2s var(--spring),background .2s,border-color .2s}
+  .briefbadge:hover{background:var(--surface);border-color:var(--accent)}
+  .briefbadge svg{width:15px;height:15px}
+  .briefbadge i{font-style:normal;min-width:16px;height:16px;border-radius:99px;background:var(--accent);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;padding:0 4px}
   .hero-cap{margin-top:13px;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
   .hero-cap .dot{width:7px;height:7px;border-radius:99px;background:var(--accent);animation:pulse 1.8s ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
@@ -325,6 +346,12 @@
     .grid .tile:first-child{grid-column:span 2;grid-row:span 2}
     .niche-grid{grid-template-columns:repeat(3,1fr)}
     .nichecard{aspect-ratio:4/3}
+    .hero{display:grid;grid-template-columns:1.05fr 1fr;column-gap:48px;grid-auto-rows:min-content;align-items:start}
+    .hero .eyebrow,.hero h1,.hero .lede{grid-column:1}
+    .showcase{grid-column:2;grid-row:1 / span 4;margin-top:6px}
+    .hero-cap{grid-column:2}
+    .pick-label,.room-grid,.stats{grid-column:1 / -1}
+    .room-grid{grid-template-columns:repeat(3,1fr)}
     #s-cfg{display:grid;grid-template-columns:1fr 1fr;column-gap:44px;align-items:start}
     #s-cfg .cfg-head,#s-cfg .cfg-tabs{grid-column:1/-1}
     #s-cfg .cfg-stage{grid-column:1;grid-row:3 / span 4;position:sticky;top:84px}
@@ -347,6 +374,7 @@
   <div class="wrap bar">
     <div class="brand"><span class="mk"></span><span>Ателье&nbsp;интерьера<small>визуальный подбор · демо</small></span></div>
     <div class="bar-right" id="barRight"></div>
+    <button class="briefbadge" id="briefBadge" title="Мой бриф"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 13h6M9 17h4"/></svg>Бриф<i id="briefBadgeN">0</i></button>
     <button class="themebtn" id="themeBtn" aria-label="Сменить тему" title="Светлая / тёмная"></button>
   </div>
   <div class="progress"><i id="progressBar"></i></div>
@@ -358,25 +386,26 @@
     <!-- WELCOME -->
     <section class="screen active" id="s-welcome">
       <div class="hero">
-        <div class="eyebrow rv d1">Визуальный подбор интерьера</div>
-        <h1 class="serif rv d2">С чего начнём<br>ваш <em>интерьер</em>?</h1>
-        <p class="lede rv d3">Соберите комнаты в конструкторе — фасады, столешницы, ткани, детали. Из вашего выбора сложится точный бриф для дизайнера.</p>
-        <div class="picker rv d3" id="qsChips"></div>
-        <div class="stats rv d3">
-          <div class="stat"><b>8</b><span>категорий</span></div>
-          <div class="stat"><b>40+</b><span>примеров</span></div>
-          <div class="stat"><b>2 мин</b><span>на бриф</span></div>
+        <div class="eyebrow rv d1">Конструктор интерьера</div>
+        <h1 class="serif rv d2">Соберите свой<br><em>интерьер</em> сами</h1>
+        <p class="lede rv d3">Меняйте фасады, столешницы, ткани и стили — картинка перестраивается мгновенно. Готовые комнаты складываются в бриф для дизайнера.</p>
+        <div class="showcase rv d4" id="showcase"></div>
+        <div class="hero-cap rv d4"><span class="dot"></span>Живое демо: одна кухня, меняется только выбранная деталь</div>
+        <div class="pick-label rv d5">Выберите комнату и начните:</div>
+        <div class="room-grid rv d5" id="roomGrid"></div>
+        <div class="stats rv d5">
+          <div class="stat"><b>5</b><span>комнат</span></div>
+          <div class="stat"><b>290+</b><span>комбинаций</span></div>
+          <div class="stat"><b>3 мин</b><span>до брифа</span></div>
         </div>
-        <div class="mosaic rv d4" id="heroMosaic"></div>
-        <div class="hero-cap rv d4"><span class="dot"></span>Так клиент собирает бриф — отмечает, что нравится</div>
       </div>
-      <div class="how rv d5">
+      <div class="how rv d6">
         <div class="row"><div class="n">01</div><div><b>Собираете комнаты</b><span>Кухня, гостиная, спальня — меняете фасады, ткани, детали</span></div></div>
         <div class="row"><div class="n">02</div><div><b>Добавляете в бриф</b><span>Каждая собранная комната ложится в общий список</span></div></div>
         <div class="row"><div class="n">03</div><div><b>Дизайнер получает ТЗ</b><span>Точные комплектации — и подбирает реальные материалы</span></div></div>
       </div>
       <div class="mt28 center rv d6">
-        <a class="foot-link" id="toCfg" href="#">Открыть конструктор целиком</a>
+        <a class="foot-link" id="toQuiz" href="#">Дополнительно: подбор стиля по фотографиям →</a>
       </div>
     </section>
 
@@ -531,7 +560,7 @@ try{ const saved=JSON.parse(localStorage.getItem('briefSel')||'{}');
 }catch(e){}
 try{ state.brief=JSON.parse(localStorage.getItem('briefRooms')||'{}')||{}; }catch(e){ state.brief={}; }
 function persist(){ const o={}; Object.keys(state.selected).forEach(k=>o[k]=[...state.selected[k]]); localStorage.setItem('briefSel',JSON.stringify(o)); }
-function persistBrief(){ localStorage.setItem('briefRooms',JSON.stringify(state.brief)); }
+function persistBrief(){ localStorage.setItem('briefRooms',JSON.stringify(state.brief)); try{updateBriefBadge();}catch(e){} }
 function briefRoomCount(){ return Object.keys(state.brief).length; }
 
 /* ---------------- dom ---------------- */
@@ -651,15 +680,28 @@ function chooseNiche(key){ state.niche=key;
   updateChrome();
 }
 
-/* ---------------- hero living mosaic ---------------- */
-const MOSAIC=["assets/sofa-4.jpg","assets/kitchen-2.jpg","assets/lamp-1.jpg","assets/chair-2.jpg","assets/mood-3.jpg","assets/door-1.jpg"];
-function initHeroMosaic(){
-  const el=$('heroMosaic'); if(!el) return;
-  el.innerHTML=MOSAIC.map(src=>`<div class="hm"><img src="${src}" alt="" loading="eager" onerror="this.remove()"><span class="bdg">${I.check}</span></div>`).join('');
+/* ---------------- hero live configurator showcase ---------------- */
+const SHOWCASE=[
+  {src:'assets/cfg/k-isl-oak-stone-none-stone.jpg',  lbl:'Фасады · Дуб',        sw:'#C49A6C'},
+  {src:'assets/cfg/k-isl-sage-stone-none-stone.jpg', lbl:'Фасады · Зелёный',    sw:'#8A9479'},
+  {src:'assets/cfg/k-isl-sage-graphite-none-stone.jpg',lbl:'Столешница · Графит',sw:'#3C3B39'},
+  {src:'assets/cfg/k-ang-sage-graphite-none-stone.jpg',lbl:'Планировка · Угловая'},
+  {src:'assets/cfg/k-ang-sage-graphite-brass-stone.jpg',lbl:'Фурнитура · Латунь', sw:'#B08D57'},
+];
+function initShowcase(){
+  const el=$('showcase'); if(!el) return;
+  el.innerHTML='<img alt=""><img alt="">'+`<span class="sc-tag" id="scTag"></span>`;
+  const imgs=el.querySelectorAll('img'); let front=0, i=0;
+  const setTag=f=>{ $('scTag').innerHTML=(f.sw?`<span class="swd" style="background:${f.sw}"></span>`:'')+f.lbl; };
+  imgs[0].src=SHOWCASE[0].src; imgs[0].classList.add('show'); setTag(SHOWCASE[0]);
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){ el.children[0].classList.add('on'); return; }
-  const tiles=[...el.children]; let i=0;
-  setInterval(()=>{ tiles.forEach(t=>t.classList.remove('on')); tiles[i%tiles.length].classList.add('on'); i++; }, 1150);
+  if(reduce) return;
+  setInterval(()=>{
+    i=(i+1)%SHOWCASE.length; const f=SHOWCASE[i];
+    const back=imgs[front^1];
+    back.onload=()=>{ back.classList.add('show'); imgs[front].classList.remove('show'); front^=1; setTag(f); };
+    back.src=f.src;
+  }, 2300);
 }
 
 /* ---------------- configurator (image part-swapper) ---------------- */
@@ -766,27 +808,30 @@ $('backBtn').addEventListener('click',()=>{
 });
 $('nicheGrid').addEventListener('click',e=>{const c=e.target.closest('.nichecard');if(c)chooseNiche(c.dataset.niche);});
 $('nicheGrid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const c=e.target.closest('.nichecard');if(c){e.preventDefault();chooseNiche(c.dataset.niche);}}});
-$('toCfg').addEventListener('click',e=>{e.preventDefault();openCfg('welcome');});
 $('toCfg2').addEventListener('click',()=>{openCfg('brief');});
 $('restart').addEventListener('click',()=>{ STEPS.forEach(s=>state.selected[s.key]=new Set()); state.niche=null; state.brief={}; persist(); persistBrief(); state.step=0; renderStep(); show('welcome'); });
 $('summary').addEventListener('click',e=>{const b=e.target.closest('.b-edit');if(!b)return;const p=b.dataset.edit;CONFIGS[p].state={...state.brief[p]};openCfg('brief',p);});
 document.querySelector('.brand').addEventListener('click',()=>show('welcome'));
 
-/* start button on welcome */
-const startBtn=document.createElement('button');
-startBtn.className='btn btn-primary';startBtn.id='startBtn';
-startBtn.innerHTML='Мой бриф '+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-startBtn.style.marginTop='28px';startBtn.className+=' rv d5';
-$('s-welcome').querySelector('.how').after(startBtn);
-startBtn.addEventListener('click',()=>{ renderBrief(); show('brief'); });
-
-/* picker — rooms open the CONFIGURATOR (the core); photo quiz is the optional extra */
-const QUICK=[{key:'kitchen',label:'Кухня',hot:true},{key:'sofa',label:'Гостиная'},{key:'bed',label:'Спальня'},{key:'bath',label:'Ванная'},{key:'door',label:'Дверь'},{key:'__quiz',label:'Подбор по фото',full:true}];
-function startAt(key){ const idx=STEPS.findIndex(s=>s.key===key); state.entry='quick'; state.entryStep=idx<0?0:idx; state.step=state.entryStep; if(!state.niche) state.niche='apartment'; renderStep(); show('quiz'); }
-$('qsChips').innerHTML=QUICK.map((q,i)=>`<button class="qs${q.hot?' qs-hot':''}${q.full?' qs-full':''}" data-k="${q.key}" style="--i:${i}">${q.hot?`<span class="ic">${I.kitchen}</span>`:''}${q.label}</button>`).join('');
-$('qsChips').addEventListener('click',e=>{const b=e.target.closest('.qs');if(!b)return; const k=b.dataset.k;
-  if(k==='__quiz'){ state.entry='full'; renderNiche(); show('niche'); }
-  else openCfg('welcome',k);});
+/* room cards — the primary entry, each opens the CONFIGURATOR */
+const ROOMS=[
+  {key:'kitchen',label:'Кухня',img:'assets/cfg/k-isl-oak-stone-none-stone.jpg',hot:true},
+  {key:'sofa',label:'Гостиная',img:'assets/cfg/s2-min-clay-straight-rug.jpg'},
+  {key:'bed',label:'Спальня',img:'assets/cfg/bd-fabric-light-light.jpg'},
+  {key:'bath',label:'Ванная',img:'assets/cfg/b-light-black-oak-vessel.jpg'},
+  {key:'door',label:'Дверь',img:'assets/cfg/d-oak-black-solid.jpg'},
+];
+$('roomGrid').innerHTML=ROOMS.map((r,i)=>`<div class="roomcard${r.hot?' rc-hot':''}" data-k="${r.key}" role="button" tabindex="0" style="--i:${i}">
+  <img src="${r.img}" alt="" loading="lazy" onerror="this.remove()">
+  <div class="rl"><span>${r.label}${r.hot?'<i>топ</i>':''}</span><em>→</em></div>
+</div>`).join('');
+$('roomGrid').addEventListener('click',e=>{const c=e.target.closest('.roomcard');if(c)openCfg('welcome',c.dataset.k);});
+$('roomGrid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const c=e.target.closest('.roomcard');if(c){e.preventDefault();openCfg('welcome',c.dataset.k);}}});
+$('toQuiz').addEventListener('click',e=>{e.preventDefault(); state.entry='full'; renderNiche(); show('niche');});
+/* brief badge in header */
+function updateBriefBadge(){ const n=briefRoomCount(); $('briefBadgeN').textContent=n; $('briefBadge').style.opacity=n?'1':'.6'; }
+$('briefBadge').addEventListener('click',()=>{ renderBrief(); show('brief'); });
+updateBriefBadge();
 
 /* configurator controls */
 $('cfgTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfgProduct=b.dataset.p;[...$('cfgTabs').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===cfgProduct));renderCfgParts();setCfgImage();updateChrome();});
@@ -809,7 +854,7 @@ applyTheme(theme);
 themeBtn.addEventListener('click',()=>{ theme=theme==='dark'?'light':'dark'; applyTheme(theme); });
 
 /* init */
-initHeroMosaic();
+initShowcase();
 renderStep();
 updateChrome();
 </script>
