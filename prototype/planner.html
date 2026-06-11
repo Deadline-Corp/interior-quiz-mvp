@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADLINE · Interior Planner — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f3; --surface:#fefdfb; --ink:#1c1917; --ink-2:#57534e; --ink-3:#78716c;
+    --line:#e7e5e4; --line-2:#d6d3d1;
+    --accent:#0f766e; --accent-ink:#f4f7f6; --accent-soft:#e6f2f0;
+    --warn:#92400e; --warn-bg:#fef3e2; --danger:#b91c1c; --danger-bg:#fdeaea;
+    --ok:#15803d; --ok-bg:#e8f5ec;
+    --r-sm:8px; --r-md:12px; --r-lg:16px;
+    --shadow:0 10px 30px -12px rgba(28,25,23,.12);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select{font:inherit;color:inherit}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+  /* ---------- shell ---------- */
+  .app{display:grid;grid-template-rows:56px 1fr;height:100dvh}
+  header{display:flex;align-items:center;gap:20px;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+  .brand b{font-weight:700;letter-spacing:.14em;font-size:14px}
+  .brand span{color:var(--ink-3);font-size:12.5px}
+  .steps{display:flex;gap:4px;margin:0 auto}
+  .step-btn{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;color:var(--ink-2);font-weight:500;font-size:13.5px;transition:background .18s,color .18s}
+  .step-btn:hover{background:var(--bg)}
+  .step-btn[aria-current="step"]{background:var(--ink);color:#f7f5f1}
+  .step-btn .n{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;font-size:11px;font-weight:600}
+  .step-btn:disabled{opacity:.4;cursor:not-allowed}
+  .hdr-right{display:flex;align-items:center;gap:14px;white-space:nowrap}
+  .hdr-stat{text-align:right;line-height:1.15}
+  .hdr-stat small{display:block;color:var(--ink-3);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em}
+  .hdr-stat .num{font-size:14px;font-weight:600}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:var(--r-sm);font-weight:600;font-size:13.5px;transition:transform .12s,background .18s,box-shadow .18s;min-height:38px}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .btn-primary:hover{background:#0d6b63}
+  .btn-ghost{border:1px solid var(--line-2);background:var(--surface)}
+  .btn-ghost:hover{background:var(--bg)}
+  .btn-danger{color:var(--danger);border:1px solid #f3caca;background:var(--surface)}
+  .btn-danger:hover{background:var(--danger-bg)}
+
+  /* ---------- layout ---------- */
+  main{display:grid;grid-template-columns:320px 1fr 312px;min-height:0}
+  main.plan-mode{grid-template-columns:320px 1fr 312px}
+  .panel{background:var(--surface);overflow-y:auto;min-height:0}
+  .panel-l{border-right:1px solid var(--line)}
+  .panel-r{border-left:1px solid var(--line)}
+  .panel h2{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:600;padding:16px 16px 8px}
+  .canvas-wrap{position:relative;min-width:0;display:flex;flex-direction:column}
+  .canvas-hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);color:#f7f5f1;font-size:12.5px;padding:7px 14px;border-radius:999px;box-shadow:var(--shadow);pointer-events:none;opacity:0;transition:opacity .2s;z-index:5;white-space:nowrap}
+  .canvas-hint.show{opacity:.95}
+  svg#plan{flex:1;touch-action:none;display:block}
+  .canvas-foot{display:flex;gap:14px;align-items:center;padding:8px 16px;font-size:12px;color:var(--ink-3);border-top:1px solid var(--line);background:var(--surface)}
+  .canvas-foot kbd{font-family:var(--mono);font-size:10.5px;background:var(--bg);border:1px solid var(--line-2);border-bottom-width:2px;border-radius:4px;padding:1px 5px;color:var(--ink-2)}
+
+  /* ---------- templates (step 1 left) ---------- */
+  .tpl{display:flex;gap:12px;width:calc(100% - 32px);margin:0 16px 10px;padding:12px;border:1px solid var(--line);border-radius:var(--r-md);text-align:left;transition:border-color .18s,box-shadow .18s;background:var(--surface)}
+  .tpl:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+  .tpl svg{flex:none;border-radius:6px;background:var(--bg)}
+  .tpl b{display:block;font-size:14px;font-weight:600}
+  .tpl small{color:var(--ink-2);font-size:12.5px;display:block;margin-top:2px}
+  .tpl .meta{margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+
+  .field{padding:0 16px;margin-bottom:12px}
+  .field label{display:block;font-size:12.5px;font-weight:500;color:var(--ink-2);margin-bottom:5px}
+  .field input,.field select{width:100%;padding:8px 10px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--surface);min-height:38px}
+  .field input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:12px}
+  .row2 .field{padding:0;margin:0}
+  .inspector{border-top:1px solid var(--line);padding-bottom:16px}
+  .inspector .actions{display:flex;gap:8px;padding:4px 16px 0}
+  .muted-note{padding:10px 16px;color:var(--ink-3);font-size:12.5px}
+
+  /* ---------- catalog (step 2 left) ---------- */
+  .search{position:relative;margin:0 16px 10px}
+  .search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--surface);min-height:40px}
+  .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px;margin-bottom:10px}
+  .chip{padding:6px 11px;border-radius:999px;border:1px solid var(--line-2);font-size:12.5px;font-weight:500;color:var(--ink-2);transition:all .15s;min-height:30px}
+  .chip:hover{border-color:var(--ink-3)}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#f7f5f1}
+  .chip.store.on{background:var(--accent);border-color:var(--accent)}
+  .prod{display:flex;gap:11px;width:calc(100% - 32px);margin:0 16px 8px;padding:10px;border:1px solid var(--line);border-radius:var(--r-md);text-align:left;transition:border-color .15s,box-shadow .15s;position:relative;background:var(--surface)}
+  .prod:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+  .prod .thumb{flex:none;width:46px;height:46px;border-radius:8px;display:grid;place-items:center;color:#f7f5f1}
+  .prod b{display:block;font-size:13px;font-weight:600;line-height:1.3}
+  .prod .dims{font-size:11px;color:var(--ink-3);margin-top:1px}
+  .prod .price-row{display:flex;align-items:baseline;gap:7px;margin-top:3px}
+  .prod .price{font-weight:600;font-size:13px}
+  .prod .old{color:var(--ink-3);text-decoration:line-through;font-size:11px}
+  .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;letter-spacing:.02em}
+  .badge.promo{background:var(--warn-bg);color:var(--warn)}
+  .store-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--ink-2);margin-top:4px}
+  .store-dot{width:7px;height:7px;border-radius:50%}
+  .empty-cat{padding:24px 16px;color:var(--ink-3);font-size:13px;text-align:center}
+
+  /* ---------- estimate (right) ---------- */
+  .fresh{display:flex;align-items:center;gap:7px;margin:0 16px 12px;padding:8px 11px;background:var(--ok-bg);color:var(--ok);border-radius:var(--r-sm);font-size:12px;font-weight:500}
+  .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+  .est-store{margin:0 16px 12px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+  .est-store header{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;min-height:0}
+  .est-store header .num{margin-left:auto}
+  .est-line{display:flex;justify-content:space-between;gap:10px;padding:7px 12px;font-size:12.5px;border-bottom:1px solid var(--line)}
+  .est-line:last-child{border-bottom:none}
+  .est-line span:first-child{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .total-card{margin:0 16px 14px;padding:14px;border-radius:var(--r-md);background:var(--ink);color:#f7f5f1}
+  .total-card small{display:block;font-size:11px;color:#d6d3d1;text-transform:uppercase;letter-spacing:.08em}
+  .total-card .num{font-size:22px;font-weight:600}
+  .warns{margin:0 16px 12px;display:flex;flex-direction:column;gap:6px}
+  .warn-chip{display:flex;gap:8px;align-items:flex-start;background:var(--danger-bg);color:var(--danger);font-size:12px;padding:8px 10px;border-radius:var(--r-sm);font-weight:500}
+  .warn-chip svg{flex:none;margin-top:1px}
+  .est-empty{margin:0 16px;padding:22px 14px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);color:var(--ink-3);font-size:12.5px;text-align:center}
+
+  /* ---------- step 3 ---------- */
+  .order-wrap{grid-column:1 / -1;overflow-y:auto;padding:28px 24px 48px}
+  .order-grid{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
+  .order-col{display:flex;flex-direction:column;gap:14px}
+  .ocard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+  .ocard>header{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--bg)}
+  .ocard>header b{font-size:14px}
+  .ocard>header .badge-n{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .ocard .body{padding:6px 16px 13px}
+  .pay-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-top:1px solid var(--line)}
+  .pay-row .num{font-size:16px;font-weight:600}
+  .paid{color:var(--ok);font-weight:600;display:inline-flex;gap:7px;align-items:center;font-size:13.5px}
+  .note{font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:var(--r-md);padding:12px 14px;line-height:1.55}
+  .order-h{max-width:1060px;margin:0 auto 18px}
+  .order-h h1{font-size:24px;font-weight:700;letter-spacing:-.01em}
+  .order-h p{color:var(--ink-2);margin-top:4px;font-size:14px}
+
+  /* ---------- modal ---------- */
+  dialog{border:none;border-radius:var(--r-lg);padding:0;box-shadow:0 30px 70px -20px rgba(28,25,23,.35);width:min(92vw,400px)}
+  dialog::backdrop{background:rgba(28,25,23,.45)}
+  .modal-in{padding:22px}
+  .modal-in h3{font-size:17px;margin-bottom:4px}
+  .modal-in p{font-size:13px;color:var(--ink-2);margin-bottom:14px}
+  .modal-in .field{padding:0;margin-bottom:10px}
+  .modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+
+  /* ---------- svg plan ---------- */
+  .room{fill:#fdfdfc;stroke:var(--ink);stroke-width:2}
+  .room.sel{stroke:var(--accent);stroke-width:2.5}
+  .room-label{font-size:11px;fill:var(--ink-2);font-family:'Outfit',sans-serif;pointer-events:none}
+  .room-dim{font-size:10px;fill:var(--ink-3);font-family:var(--mono);pointer-events:none}
+  .item{stroke-width:1.5;cursor:grab;transition:filter .15s}
+  .item.bad{stroke:var(--danger)!important;fill:var(--danger-bg)!important}
+  .item.sel{filter:drop-shadow(0 3px 6px rgba(15,118,110,.45))}
+  .item-label{font-size:9px;fill:var(--ink);font-family:'Outfit',sans-serif;pointer-events:none;font-weight:600}
+  .ghost{opacity:.55;pointer-events:none}
+  @media (max-width:1100px){
+    main{grid-template-columns:280px 1fr 280px}
+  }
+  @media (max-width:900px){
+    main{grid-template-columns:1fr;grid-template-rows:auto 50vh auto}
+    .panel{max-height:38vh}
+    .order-grid{grid-template-columns:1fr}
+    .steps .lbl{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><b>DEADLINE</b><span>Interior Planner · прототип v0.1</span></div>
+    <nav class="steps" aria-label="Шаги">
+      <button class="step-btn" id="s1" aria-current="step"><span class="n">1</span><span class="lbl">План</span></button>
+      <button class="step-btn" id="s2"><span class="n">2</span><span class="lbl">Конструктор</span></button>
+      <button class="step-btn" id="s3"><span class="n">3</span><span class="lbl">Заказ</span></button>
+    </nav>
+    <div class="hdr-right">
+      <div class="hdr-stat"><small>Площадь</small><span class="num" id="statArea">0 м²</span></div>
+      <div class="hdr-stat"><small>Смета</small><span class="num" id="statTotal">฿ 0</span></div>
+      <button class="btn btn-ghost" id="loginBtn">Войти</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- LEFT -->
+    <aside class="panel panel-l" id="left"></aside>
+    <!-- CANVAS -->
+    <section class="canvas-wrap" id="canvasWrap" aria-label="План квартиры">
+      <div class="canvas-hint" id="hint"></div>
+      <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="canvas-foot">
+        <span><kbd>R</kbd> повернуть</span><span><kbd>Del</kbd> удалить</span><span><kbd>Esc</kbd> отмена</span>
+        <span style="margin-left:auto">Сетка 1 м · привязка 10 см · демо-данные</span>
+      </div>
+    </section>
+    <!-- RIGHT -->
+    <aside class="panel panel-r" id="right"></aside>
+  </main>
+</div>
+
+<dialog id="loginModal">
+  <form method="dialog" class="modal-in">
+    <h3>Вход в аккаунт</h3>
+    <p>Заглушка: в Фазе 1 здесь email + Google OAuth. Проект сейчас хранится локально в браузере.</p>
+    <div class="field"><label for="lEmail">Email</label><input id="lEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="field"><label for="lPass">Пароль</label><input id="lPass" type="password" autocomplete="current-password"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" value="cancel">Отмена</button>
+      <button class="btn btn-primary" value="ok">Войти (демо)</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="leadModal">
+  <form method="dialog" class="modal-in">
+    <h3>Отправить проект менеджеру</h3>
+    <p>Заглушка без бэкенда: в Фазе 1 заказ уходит магазинам автоматически, менеджер подключается при вопросах.</p>
+    <div class="field"><label for="leadName">Имя</label><input id="leadName" placeholder="Как к вам обращаться"></div>
+    <div class="field"><label for="leadPhone">Телефон / WhatsApp</label><input id="leadPhone" type="tel" inputmode="tel" placeholder="+66 ..."></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" value="cancel">Отмена</button>
+      <button class="btn btn-primary" value="ok">Отправить</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+'use strict';
+/* =========================================================
+   DEADLINE Interior Planner — кликабельный прототип Фазы 1.
+   Один файл, без сборки. Деньги в THB, размеры в метрах.
+   ========================================================= */
+
+const SCALE = 56;             // px на метр
+const SNAP  = 0.1;            // привязка, м
+const fmtTHB = n => '฿ ' + n.toLocaleString('th-TH');
+const fmtM   = n => (Math.round(n*100)/100).toLocaleString('ru-RU');
+
+/* ---------- каталог (демо-срез будущего фида) ---------- */
+const STORES = {
+  homepro:  {name:'HomePro',           color:'#1d4ed8'},
+  index:    {name:'Index Living Mall', color:'#b45309'},
+  ikea:     {name:'IKEA Thailand',     color:'#0f766e'},
+  powerbuy: {name:'Power Buy',         color:'#7c2d12'},
+};
+const CATS = {
+  kitchen:{name:'Кухня',    color:'#c8a96e'},
+  sofa:   {name:'Диваны',   color:'#8aa39b'},
+  bed:    {name:'Кровати',  color:'#a58fc0'},
+  table:  {name:'Столы',    color:'#c98f8f'},
+  storage:{name:'Хранение', color:'#9db3c8'},
+  light:  {name:'Свет',     color:'#d9b23c'},
+  tech:   {name:'Техника',  color:'#8b8b94'},
+  bath:   {name:'Ванная',   color:'#7fb6c2'},
+};
+/* w,d — см (ширина × глубина, вид сверху) */
+const CATALOG = [
+  {sku:'HP-KB60',  cat:'kitchen', store:'homepro',  name:'Кухонный модуль BASE-60',     w:60,  d:60, price:4290},
+  {sku:'HP-KB80',  cat:'kitchen', store:'homepro',  name:'Кухонный модуль BASE-80',     w:80,  d:60, price:5490},
+  {sku:'HP-KS80',  cat:'kitchen', store:'homepro',  name:'Модуль с мойкой SINK-80',     w:80,  d:60, price:7190, old:8490},
+  {sku:'IK-KNX120',cat:'kitchen', store:'ikea',     name:'Кухня KNOX компакт 120',      w:120, d:61, price:12900},
+  {sku:'HP-KT60',  cat:'kitchen', store:'homepro',  name:'Пенал кухонный TALL-60',      w:60,  d:60, price:8990},
+  {sku:'IK-ISL90', cat:'kitchen', store:'ikea',     name:'Островной модуль 90',         w:90,  d:70, price:9990},
+  {sku:'IX-SF230', cat:'sofa',    store:'index',    name:'Диван 3-местный AREEYA',      w:230, d:95, price:28900, old:34900},
+  {sku:'IX-SF180', cat:'sofa',    store:'index',    name:'Диван 2-местный LANTA',       w:180, d:90, price:18900},
+  {sku:'IK-SFCRN', cat:'sofa',    store:'ikea',     name:'Диван угловой VIMLE 4-м',     w:252, d:163,price:35990},
+  {sku:'IX-ARM',   cat:'sofa',    store:'index',    name:'Кресло BOVA',                 w:85,  d:88, price:8590},
+  {sku:'IX-BD160', cat:'bed',     store:'index',    name:'Кровать NAVIN 160×200',       w:166, d:208,price:16900},
+  {sku:'IK-BD180', cat:'bed',     store:'ikea',     name:'Кровать MALM 180×200',        w:186, d:209,price:18990, old:21990},
+  {sku:'IX-NS',    cat:'bed',     store:'index',    name:'Тумба прикроватная NAVIN',    w:48,  d:40, price:2990},
+  {sku:'IX-DT140', cat:'table',   store:'index',    name:'Стол обеденный SUKHUM 140',   w:140, d:80, price:9890},
+  {sku:'IX-CH',    cat:'table',   store:'index',    name:'Стул PRANEE (шт.)',           w:45,  d:52, price:1890},
+  {sku:'IK-CT90',  cat:'table',   store:'ikea',     name:'Журнальный стол LISTERBY',    w:90,  d:60, price:4490},
+  {sku:'IX-WD200', cat:'storage', store:'index',    name:'Шкаф WANIDA 200×60',          w:200, d:60, price:21900, old:24900},
+  {sku:'IK-PAX150',cat:'storage', store:'ikea',     name:'Гардероб PAX 150×58',         w:150, d:58, price:14490},
+  {sku:'IX-TV180', cat:'storage', store:'index',    name:'ТВ-тумба CHALONG 180',        w:180, d:45, price:8990},
+  {sku:'HP-SHELF', cat:'storage', store:'homepro',  name:'Стеллаж LOFT 80×40',          w:80,  d:40, price:4690},
+  {sku:'HP-FL',    cat:'light',   store:'homepro',  name:'Торшер NARA',                 w:40,  d:40, price:2490},
+  {sku:'IX-PEND',  cat:'light',   store:'index',    name:'Подвес RATTAN 45',            w:45,  d:45, price:3290, old:3990},
+  {sku:'HP-CEIL',  cat:'light',   store:'homepro',  name:'Потолочный светильник AIRY',  w:60,  d:60, price:1990},
+  {sku:'PB-FR70',  cat:'tech',    store:'powerbuy', name:'Холодильник Samsung 70',      w:70,  d:72, price:21990, old:25990},
+  {sku:'PB-WM60',  cat:'tech',    store:'powerbuy', name:'Стиральная машина LG 60',     w:60,  d:60, price:14990},
+  {sku:'PB-DW60',  cat:'tech',    store:'powerbuy', name:'Посудомойка Bosch 60',        w:60,  d:60, price:23990},
+  {sku:'PB-HOB60', cat:'tech',    store:'powerbuy', name:'Варочная панель 60 + духовка',w:60,  d:60, price:17990},
+  {sku:'PB-MW',    cat:'tech',    store:'powerbuy', name:'Микроволновка Sharp',         w:49,  d:40, price:3590},
+  {sku:'PB-AC12',  cat:'tech',    store:'powerbuy', name:'Кондиционер Daikin 12k BTU',  w:90,  d:23, price:18900},
+  {sku:'PB-TV55',  cat:'tech',    store:'powerbuy', name:'Телевизор TCL 55"',           w:123, d:8,  price:12990},
+  {sku:'HP-WC',    cat:'bath',    store:'homepro',  name:'Унитаз American Std.',        w:38,  d:70, price:5990},
+  {sku:'HP-BAS',   cat:'bath',    store:'homepro',  name:'Раковина с тумбой 60',        w:60,  d:48, price:6490, old:7990},
+  {sku:'HP-SHW',   cat:'bath',    store:'homepro',  name:'Душевой уголок 90×90',        w:90,  d:90, price:11990},
+  {sku:'HP-WH',    cat:'bath',    store:'homepro',  name:'Водонагреватель Stiebel',     w:36,  d:11, price:4290},
+];
+
+/* ---------- шаблоны планировок (типовые юниты Пхукета) ---------- */
+const TEMPLATES = [
+  {id:'studio', name:'Студия 32 м²', desc:'Типовая студия кондо — Rawai, Naiharn', area:32,
+   rooms:[{name:'Студия',x:0,y:0,w:6.4,h:4.2},{name:'С/у',x:6.4,y:0,w:1.8,h:2.2},{name:'Балкон',x:6.4,y:2.2,w:1.8,h:2.0}]},
+  {id:'1br', name:'1BR кондо 47 м²', desc:'Тип Laguna / Bang Tao, спальня + гостиная', area:47,
+   rooms:[{name:'Гостиная-кухня',x:0,y:0,w:5.6,h:4.4},{name:'Спальня',x:5.6,y:0,w:3.6,h:3.4},{name:'С/у',x:5.6,y:3.4,w:2.2,h:1.9},{name:'Балкон',x:0,y:4.4,w:3.4,h:1.4}]},
+  {id:'2br', name:'2BR кондо 68 м²', desc:'Семейный юнит — Cherngtalay, Kata', area:68,
+   rooms:[{name:'Гостиная-кухня',x:0,y:0,w:6.2,h:4.6},{name:'Спальня 1',x:6.2,y:0,w:3.8,h:3.6},{name:'Спальня 2',x:6.2,y:3.6,w:3.8,h:3.0},{name:'С/у 1',x:0,y:4.6,w:2.2,h:2.0},{name:'С/у 2',x:2.2,y:4.6,w:1.9,h:2.0},{name:'Балкон',x:4.1,y:4.6,w:3.0,h:1.5}]},
+  {id:'villa', name:'Вилла 3BR 140 м²', desc:'Одноэтажная вилла — Rawai, Layan', area:140,
+   rooms:[{name:'Гостиная',x:0,y:0,w:7.5,h:5.5},{name:'Кухня',x:7.5,y:0,w:4.0,h:3.4},{name:'Спальня 1',x:0,y:5.5,w:4.4,h:4.0},{name:'Спальня 2',x:4.4,y:5.5,w:4.0,h:4.0},{name:'Спальня 3',x:8.4,y:5.5,w:3.6,h:4.0},{name:'С/у 1',x:7.5,y:3.4,w:2.0,h:2.1},{name:'С/у 2',x:9.5,y:3.4,w:2.0,h:2.1}]},
+];
+
+/* ---------- состояние ---------- */
+let state = {step:1, rooms:[], items:[], nextId:1};
+try{ const s = JSON.parse(localStorage.getItem('dl-planner')); if(s && s.rooms) state = s; }catch(e){}
+const save = () => localStorage.setItem('dl-planner', JSON.stringify(state));
+
+let sel = null;          // {type:'room'|'item', id}
+let placing = null;      // sku в режиме размещения
+let ghostPos = null;     // {x,y} м
+let catFilter = 'all', storeFilter = 'all', q = '';
+let paidOrders = {};     // store -> true (демо)
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const svg = $('#plan'), left = $('#left'), right = $('#right'), hint = $('#hint');
+const snap = v => Math.round(v/SNAP)*SNAP;
+const prod = sku => CATALOG.find(p=>p.sku===sku);
+const itemWH = it => { const p = prod(it.sku); const w=p.w/100, d=p.d/100; return it.rot%180 ? {w:d, h:w} : {w, h:d}; };
+const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function showHint(text, ms=2600){ hint.textContent=text; hint.classList.add('show'); clearTimeout(hint._t); if(ms) hint._t=setTimeout(()=>hint.classList.remove('show'), ms); }
+
+function overlaps(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
+function insideAnyRoom(r){ return state.rooms.some(rm => r.x>=rm.x-0.001 && r.y>=rm.y-0.001 && r.x+r.w<=rm.x+rm.w+0.001 && r.y+r.h<=rm.y+rm.h+0.001); }
+function itemRect(it){ const {w,h}=itemWH(it); return {x:it.x,y:it.y,w,h}; }
+function itemProblems(it){
+  const r = itemRect(it), p = prod(it.sku), out = [];
+  if(!insideAnyRoom(r)) out.push(`${p.name}: не помещается в комнату (${p.w}×${p.d} см)`);
+  for(const o of state.items){ if(o.id!==it.id && overlaps(r, itemRect(o))){ out.push(`${p.name}: пересекается с «${prod(o.sku).name}»`); break; } }
+  return out;
+}
+const totalArea = () => state.rooms.reduce((s,r)=>s+r.w*r.h, 0);
+const estTotal  = () => state.items.reduce((s,it)=>s+prod(it.sku).price, 0);
+function byStore(){
+  const g = {};
+  for(const it of state.items){ const p=prod(it.sku); (g[p.store] ??= []).push(p); }
+  return g;
+}
+
+/* ---------- иконки (инлайн SVG, без эмодзи) ---------- */
+const I = {
+  search:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  warn:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 3.9-8.2 14.2a2 2 0 0 0 1.7 3h16.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4m0 4h.01"/></svg>',
+  check:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg>',
+  rotate:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg>',
+  trash:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>',
+  plus:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  cart:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h2.5l2.6 12.3a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>',
+};
+const catIcon = {
+  kitchen:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 12h18M9 4v8"/></svg>',
+  sofa:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3"/><path d="M3 18v-4a2 2 0 0 1 4 0v1h10v-1a2 2 0 0 1 4 0v4z"/></svg>',
+  bed:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8"/><path d="M3 14h18M6 8V6"/></svg>',
+  table:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h18M5 8v10M19 8v10"/></svg>',
+  storage:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M12 3v18M9 9h.01M15 9h.01"/></svg>',
+  light:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>',
+  tech:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 9h16M8 6h.01"/></svg>',
+  bath:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h18v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/><path d="M5 12V5a2 2 0 0 1 4 0"/></svg>',
+};
+
+/* =========================================================
+   РЕНДЕР
+   ========================================================= */
+function render(){
+  $('#statArea').textContent = fmtM(totalArea()) + ' м²';
+  $('#statTotal').textContent = fmtTHB(estTotal());
+  ['s1','s2','s3'].forEach((id,i)=>{
+    const b = $('#'+id);
+    b.setAttribute('aria-current', state.step===i+1 ? 'step' : 'false');
+    if(state.step===i+1) b.setAttribute('aria-current','step'); else b.removeAttribute('aria-current');
+  });
+  $('#s2').disabled = state.rooms.length===0;
+  $('#s3').disabled = state.items.length===0;
+
+  const main = $('#main');
+  if(state.step===3){ main.style.gridTemplateColumns='1fr'; left.style.display='none'; right.style.display='none'; $('#canvasWrap').style.display='none'; renderOrders(main); }
+  else {
+    main.style.gridTemplateColumns=''; left.style.display=''; right.style.display=''; $('#canvasWrap').style.display='';
+    const old = $('#orderWrap'); if(old) old.remove();
+    if(state.step===1) renderPlanPanel(); else renderCatalogPanel();
+    renderEstimate();
+    drawPlan();
+  }
+  save();
+}
+
+/* ---------- ЛЕВАЯ ПАНЕЛЬ: шаг 1 ---------- */
+function tplPreview(t){
+  const maxX = Math.max(...t.rooms.map(r=>r.x+r.w)), maxY = Math.max(...t.rooms.map(r=>r.y+r.h));
+  const k = Math.min(64/maxX, 48/maxY);
+  const rects = t.rooms.map(r=>`<rect x="${(r.x*k+2).toFixed(1)}" y="${(r.y*k+2).toFixed(1)}" width="${(r.w*k).toFixed(1)}" height="${(r.h*k).toFixed(1)}" fill="#fdfcfa" stroke="#1c1917" stroke-width="1"/>`).join('');
+  return `<svg width="68" height="52" viewBox="0 0 68 52" aria-hidden="true">${rects}</svg>`;
+}
+function renderPlanPanel(){
+  const selRoom = sel?.type==='room' ? state.rooms.find(r=>r.id===sel.id) : null;
+  left.innerHTML = `
+    <h2>Шаблоны планировок</h2>
+    ${TEMPLATES.map(t=>`
+      <button class="tpl" data-tpl="${t.id}">
+        ${tplPreview(t)}
+        <span><b>${t.name}</b><small>${t.desc}</small><span class="meta">${t.rooms.length} помещений · ~${t.area} м²</span></span>
+      </button>`).join('')}
+    <h2>Свой план</h2>
+    <div style="padding:0 16px 14px;display:flex;gap:8px">
+      <button class="btn btn-ghost" id="addRoom">${I.plus} Добавить комнату</button>
+      <button class="btn btn-danger" id="clearAll" ${state.rooms.length?'':'disabled'}>Очистить</button>
+    </div>
+    ${selRoom ? `
+    <div class="inspector">
+      <h2>Комната: ${esc(selRoom.name)}</h2>
+      <div class="field"><label for="rName">Название</label><input id="rName" value="${esc(selRoom.name)}"></div>
+      <div class="row2">
+        <div class="field"><label for="rW">Ширина, м</label><input id="rW" type="number" step="0.1" min="1" max="30" value="${selRoom.w}"></div>
+        <div class="field"><label for="rH">Глубина, м</label><input id="rH" type="number" step="0.1" min="1" max="30" value="${selRoom.h}"></div>
+      </div>
+      <div class="actions"><button class="btn btn-danger" id="delRoom">${I.trash} Удалить комнату</button></div>
+    </div>` : `<p class="muted-note">Выбери шаблон под свой юнит — или собери план сам. Клик по комнате на плане откроет её размеры; комнаты можно таскать мышью.</p>`}
+  `;
+  left.querySelectorAll('[data-tpl]').forEach(b=>b.onclick=()=>applyTemplate(b.dataset.tpl));
+  $('#addRoom').onclick = ()=>{ const id=state.nextId++; state.rooms.push({id,name:'Комната '+state.rooms.length,x:0.5,y:0.5,w:4,h:3}); sel={type:'room',id}; render(); };
+  $('#clearAll').onclick = ()=>{ if(confirm('Удалить весь план и расстановку?')){ state.rooms=[]; state.items=[]; sel=null; paidOrders={}; render(); } };
+  if(selRoom){
+    $('#rName').onchange = e=>{ selRoom.name=e.target.value||'Комната'; render(); };
+    $('#rW').onchange = e=>{ selRoom.w=Math.max(1,Math.min(30,+e.target.value||1)); render(); };
+    $('#rH').onchange = e=>{ selRoom.h=Math.max(1,Math.min(30,+e.target.value||1)); render(); };
+    $('#delRoom').onclick = ()=>{ state.rooms=state.rooms.filter(r=>r.id!==selRoom.id); sel=null; render(); };
+  }
+}
+function applyTemplate(id){
+  const t = TEMPLATES.find(t=>t.id===id);
+  if(state.rooms.length && !confirm('Заменить текущий план шаблоном «'+t.name+'»?')) return;
+  state.rooms = t.rooms.map(r=>({id:state.nextId++, ...r}));
+  state.items = []; paidOrders={}; sel=null;
+  showHint('Шаблон применён — подгони размеры под свой юнит и переходи к Конструктору');
+  render();
+}
+
+/* ---------- ЛЕВАЯ ПАНЕЛЬ: шаг 2 (каталог) ---------- */
+function renderCatalogPanel(){
+  const keepSearchFocus = document.activeElement && document.activeElement.id==='q';
+  const selItem = sel?.type==='item' ? state.items.find(i=>i.id===sel.id) : null;
+  const list = CATALOG.filter(p =>
+    (catFilter==='all'||p.cat===catFilter) &&
+    (storeFilter==='all'||p.store===storeFilter) &&
+    (!q || p.name.toLowerCase().includes(q)));
+  left.innerHTML = `
+    <h2>Каталог · ${CATALOG.length} SKU из 4 магазинов</h2>
+    <div class="search">${I.search}<input id="q" placeholder="Поиск по каталогу" value="${esc(q)}" aria-label="Поиск по каталогу"></div>
+    <div class="chips" role="group" aria-label="Категории">
+      <button class="chip ${catFilter==='all'?'on':''}" data-cat="all">Все</button>
+      ${Object.entries(CATS).map(([k,c])=>`<button class="chip ${catFilter===k?'on':''}" data-cat="${k}">${c.name}</button>`).join('')}
+    </div>
+    <div class="chips" role="group" aria-label="Магазины">
+      <button class="chip store ${storeFilter==='all'?'on':''}" data-store="all">Все магазины</button>
+      ${Object.entries(STORES).map(([k,s])=>`<button class="chip store ${storeFilter===k?'on':''}" data-store="${k}">${s.name}</button>`).join('')}
+    </div>
+    ${selItem ? itemInspector(selItem) : ''}
+    ${list.length ? list.map(p=>`
+      <button class="prod" data-sku="${p.sku}" title="Кликни и укажи место на плане">
+        <span class="thumb" style="background:${CATS[p.cat].color}">${catIcon[p.cat]}</span>
+        <span style="min-width:0">
+          <b>${esc(p.name)}</b>
+          <span class="dims num">${p.w}×${p.d} см</span>
+          <span class="price-row"><span class="price num">${fmtTHB(p.price)}</span>${p.old?`<span class="old num">${fmtTHB(p.old)}</span><span class="badge promo">АКЦИЯ</span>`:''}</span>
+          <span class="store-tag"><span class="store-dot" style="background:${STORES[p.store].color}"></span>${STORES[p.store].name}</span>
+        </span>
+      </button>`).join('') : `<div class="empty-cat">Ничего не нашлось.<br>Сбрось фильтры или измени запрос.</div>`}
+  `;
+  $('#q').oninput = e=>{ q=e.target.value.toLowerCase(); renderCatalogPanel(); };
+  left.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{ catFilter=b.dataset.cat; renderCatalogPanel(); });
+  left.querySelectorAll('[data-store]').forEach(b=>b.onclick=()=>{ storeFilter=b.dataset.store; renderCatalogPanel(); });
+  left.querySelectorAll('[data-sku]').forEach(b=>b.onclick=()=>startPlacing(b.dataset.sku));
+  if(selItem){
+    $('#iRot').onclick = ()=>{ selItem.rot=(selItem.rot+90)%180; render(); };
+    $('#iDel').onclick = ()=>{ state.items=state.items.filter(i=>i.id!==selItem.id); sel=null; render(); };
+  }
+  if(keepSearchFocus){ const qEl=$('#q'); qEl.focus(); qEl.setSelectionRange(qEl.value.length,qEl.value.length); }
+}
+function itemInspector(it){
+  const p = prod(it.sku);
+  return `<div class="inspector" style="border-bottom:1px solid var(--line);margin-bottom:10px">
+    <h2>Выбрано на плане</h2>
+    <div style="padding:0 16px 4px"><b style="font-size:13.5px">${esc(p.name)}</b>
+      <div class="dims num" style="color:var(--ink-3);font-size:11.5px">${p.w}×${p.d} см · ${fmtTHB(p.price)} · ${STORES[p.store].name}</div></div>
+    <div class="actions" style="padding-bottom:12px">
+      <button class="btn btn-ghost" id="iRot">${I.rotate} Повернуть</button>
+      <button class="btn btn-danger" id="iDel">${I.trash} Убрать</button>
+    </div></div>`;
+}
+function startPlacing(sku){
+  if(state.step!==2) return;
+  placing = sku; ghostPos = null; sel = null;
+  const p = prod(sku);
+  showHint(`Кликни на плане, куда поставить «${p.name}» · Esc — отмена`, 0);
+  drawPlan();
+}
+
+/* ---------- ПРАВАЯ ПАНЕЛЬ: смета ---------- */
+function renderEstimate(){
+  const groups = byStore();
+  const problems = state.items.flatMap(itemProblems);
+  const upd = new Date(); upd.setMinutes(0,0,0);
+  right.innerHTML = `
+    <h2>Смета проекта</h2>
+    <div class="fresh"><span class="dot"></span>Цены и остатки обновлены ${upd.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})}, ${upd.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</div>
+    ${problems.length?`<div class="warns">${problems.map(w=>`<div class="warn-chip">${I.warn}<span>${esc(w)}</span></div>`).join('')}</div>`:''}
+    ${Object.keys(groups).length ? Object.entries(groups).map(([st,items])=>`
+      <div class="est-store">
+        <header><span class="store-dot" style="background:${STORES[st].color}"></span>${STORES[st].name}<span class="num">${fmtTHB(items.reduce((s,p)=>s+p.price,0))}</span></header>
+        ${items.map(p=>`<div class="est-line"><span>${esc(p.name)}</span><span class="num">${fmtTHB(p.price)}</span></div>`).join('')}
+      </div>`).join('') : `<div class="est-empty">Пока пусто.<br>${state.step===1?'Заверши план и переходи к Конструктору.':'Выбирай товары в каталоге слева и расставляй на плане.'}</div>`}
+    ${state.items.length?`
+      <div class="total-card"><small>Итого · ${state.items.length} поз. · ${Object.keys(groups).length} магаз.</small><span class="num">${fmtTHB(estTotal())}</span></div>
+      <div style="padding:0 16px 18px">${state.step===2?`<button class="btn btn-primary" id="toOrder" style="width:100%;justify-content:center" ${problems.length?'disabled title="Сначала исправь конфликты на плане"':''}>${I.cart} Перейти к заказу</button>`:''}</div>`:''}
+  `;
+  const to = $('#toOrder'); if(to) to.onclick = ()=>{ state.step=3; render(); };
+}
+
+/* ---------- ШАГ 3: заказ ---------- */
+function renderOrders(main){
+  let wrap = $('#orderWrap');
+  if(!wrap){ wrap = document.createElement('section'); wrap.id='orderWrap'; wrap.className='order-wrap'; main.appendChild(wrap); }
+  const groups = byStore();
+  const orders = Object.entries(groups);
+  wrap.innerHTML = `
+    <div class="order-h">
+      <h1>Заказ · ${state.items.length} позиций из ${orders.length} магазинов</h1>
+      <p>Каждый магазин — отдельный чек и отдельная доставка. Это честно отражает, как устроена Фаза 1; единый платёж со сплитом (Xendit) — следующий шаг.</p>
+    </div>
+    <div class="order-grid">
+      <div class="order-col">
+        ${orders.map(([st,items],i)=>`
+          <div class="ocard">
+            <header><span class="store-dot" style="background:${STORES[st].color}"></span><b>${STORES[st].name}</b><span class="badge-n">чек ${i+1} из ${orders.length}</span></header>
+            <div class="body">${items.map(p=>`<div class="est-line" style="border:none;padding:6px 0"><span>${esc(p.name)}</span><span class="num">${fmtTHB(p.price)}</span></div>`).join('')}</div>
+            <div class="pay-row">
+              <span class="num">${fmtTHB(items.reduce((s,p)=>s+p.price,0))}</span>
+              ${paidOrders[st] ? `<span class="paid">${I.check} Оплачено · заказ передан магазину</span>`
+                               : `<button class="btn btn-primary" data-pay="${st}">Оплатить (PromptPay QR)</button>`}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="order-col">
+        <div class="ocard"><div class="body" style="padding:14px 16px">
+          <b style="font-size:14px">Проект</b>
+          <div class="est-line" style="padding:8px 0"><span>Площадь</span><span class="num">${fmtM(totalArea())} м²</span></div>
+          <div class="est-line" style="padding:8px 0"><span>Помещений</span><span class="num">${state.rooms.length}</span></div>
+          <div class="est-line" style="padding:8px 0;border:none"><span>Итого к оплате</span><span class="num" style="font-weight:600">${fmtTHB(estTotal())}</span></div>
+        </div></div>
+        <div class="note"><b>Дальше:</b> магазины собирают свои части заказа, доставка и сборка приезжают к вам. Статусы всех трёх доставок будут в одном кабинете — это и есть главное удобство сервиса.</div>
+        <button class="btn btn-ghost" id="leadBtn" style="justify-content:center">Отправить проект менеджеру</button>
+        <button class="btn btn-ghost" id="backBtn" style="justify-content:center">← Вернуться в конструктор</button>
+      </div>
+    </div>`;
+  wrap.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>{ paidOrders[b.dataset.pay]=true; renderOrders(main); });
+  $('#leadBtn').onclick = ()=> $('#leadModal').showModal();
+  $('#backBtn').onclick = ()=>{ state.step=2; render(); };
+}
+
+/* =========================================================
+   SVG-ПЛАН: отрисовка и взаимодействие
+   ========================================================= */
+function viewBox(){
+  const maxX = Math.max(8, ...state.rooms.map(r=>r.x+r.w)) + 1;
+  const maxY = Math.max(6, ...state.rooms.map(r=>r.y+r.h)) + 1;
+  return {x:-0.5, y:-0.5, w:maxX+1, h:maxY+1};
+}
+function drawPlan(){
+  const vb = viewBox();
+  svg.setAttribute('viewBox', `${vb.x*SCALE} ${vb.y*SCALE} ${vb.w*SCALE} ${vb.h*SCALE}`);
+  let g = '';
+  /* сетка 1 м */
+  g += '<g stroke="#e7e3da" stroke-width="1">';
+  for(let x=0;x<=Math.ceil(vb.w);x++) g+=`<line x1="${x*SCALE}" y1="${vb.y*SCALE}" x2="${x*SCALE}" y2="${(vb.y+vb.h)*SCALE}"/>`;
+  for(let y=0;y<=Math.ceil(vb.h);y++) g+=`<line x1="${vb.x*SCALE}" y1="${y*SCALE}" x2="${(vb.x+vb.w)*SCALE}" y2="${y*SCALE}"/>`;
+  g += '</g>';
+  /* комнаты */
+  for(const r of state.rooms){
+    const s = sel?.type==='room'&&sel.id===r.id;
+    g += `<g class="room-g" data-room="${r.id}" style="cursor:${state.step===1?'grab':'default'}">
+      <rect class="room ${s?'sel':''}" x="${r.x*SCALE}" y="${r.y*SCALE}" width="${r.w*SCALE}" height="${r.h*SCALE}"/>
+      <text class="room-label" x="${(r.x+0.15)*SCALE}" y="${(r.y+0.38)*SCALE}">${esc(r.name)}</text>
+      <text class="room-dim" x="${(r.x+0.15)*SCALE}" y="${(r.y+0.66)*SCALE}">${fmtM(r.w)}×${fmtM(r.h)} м · ${fmtM(r.w*r.h)} м²</text>
+    </g>`;
+  }
+  /* предметы */
+  for(const it of state.items){
+    const {w,h} = itemWH(it); const p = prod(it.sku);
+    const bad = itemProblems(it).length>0;
+    const s = sel?.type==='item'&&sel.id===it.id;
+    const fontFit = Math.min(10, w*SCALE/ (p.name.length*0.62));
+    g += `<g data-item="${it.id}">
+      <rect class="item ${bad?'bad':''} ${s?'sel':''}" x="${it.x*SCALE}" y="${it.y*SCALE}" width="${w*SCALE}" height="${h*SCALE}" rx="4"
+        fill="${CATS[p.cat].color}55" stroke="${bad?'#b91c1c':CATS[p.cat].color}"/>
+      ${w*SCALE>34 ? `<text class="item-label" x="${(it.x+w/2)*SCALE}" y="${(it.y+h/2)*SCALE+3}" text-anchor="middle" font-size="${Math.max(7,fontFit)}">${esc(p.name.split(' ')[0])}</text>`:''}
+    </g>`;
+  }
+  /* призрак размещения */
+  if(placing && ghostPos){
+    const p = prod(placing); const w=p.w/100, h=p.d/100;
+    g += `<rect class="ghost" x="${ghostPos.x*SCALE}" y="${ghostPos.y*SCALE}" width="${w*SCALE}" height="${h*SCALE}" rx="4" fill="${CATS[p.cat].color}" stroke="${CATS[p.cat].color}"/>`;
+  }
+  if(!state.rooms.length){
+    g += `<text x="${vb.w/2*SCALE}" y="${vb.h/2*SCALE}" text-anchor="middle" fill="#a8a29e" font-size="14" font-family="Outfit">План пуст — выбери шаблон слева или добавь комнату</text>`;
+  }
+  svg.innerHTML = g;
+}
+
+/* ---------- drag / place ---------- */
+let drag = null; // {kind:'room'|'item', id, dx, dy, moved}
+function svgPoint(ev){
+  const pt = new DOMPoint(ev.clientX, ev.clientY);
+  const m = svg.getScreenCTM(); if(!m) return {x:0,y:0};
+  const p = pt.matrixTransform(m.inverse());
+  return {x:p.x/SCALE, y:p.y/SCALE};
+}
+svg.addEventListener('pointerdown', ev=>{
+  const pos = svgPoint(ev);
+  if(placing){
+    const p = prod(placing);
+    const it = {id:state.nextId++, sku:placing, x:snap(pos.x-p.w/200), y:snap(pos.y-p.d/200), rot:0};
+    state.items.push(it); sel={type:'item',id:it.id};
+    const prob = itemProblems(it);
+    placing=null; hint.classList.remove('show');
+    if(prob.length) showHint('Поставил, но есть конфликт — смотри предупреждение в смете');
+    render(); return;
+  }
+  const itEl = ev.target.closest('[data-item]');
+  const rmEl = ev.target.closest('[data-room]');
+  if(itEl && state.step===2){
+    const it = state.items.find(i=>i.id==itEl.dataset.item);
+    sel={type:'item',id:it.id}; drag={kind:'item',id:it.id,dx:pos.x-it.x,dy:pos.y-it.y,moved:false};
+    svg.setPointerCapture(ev.pointerId); render(); return;
+  }
+  if(rmEl && state.step===1){
+    const r = state.rooms.find(r=>r.id==rmEl.dataset.room);
+    sel={type:'room',id:r.id}; drag={kind:'room',id:r.id,dx:pos.x-r.x,dy:pos.y-r.y,moved:false};
+    svg.setPointerCapture(ev.pointerId); render(); return;
+  }
+  if(!itEl && !rmEl){ sel=null; render(); }
+});
+svg.addEventListener('pointermove', ev=>{
+  const pos = svgPoint(ev);
+  if(placing){ const p=prod(placing); ghostPos={x:snap(pos.x-p.w/200), y:snap(pos.y-p.d/200)}; drawPlan(); return; }
+  if(!drag) return;
+  const t = drag.kind==='room' ? state.rooms.find(r=>r.id===drag.id) : state.items.find(i=>i.id===drag.id);
+  if(!t) return;
+  const nx = snap(pos.x-drag.dx), ny = snap(pos.y-drag.dy);
+  if(Math.abs(nx-t.x)>0.04||Math.abs(ny-t.y)>0.04) drag.moved=true;
+  t.x=Math.max(-0.5,nx); t.y=Math.max(-0.5,ny);
+  drawPlan();
+});
+svg.addEventListener('pointerup', ()=>{ if(drag){ drag=null; render(); } });
+document.addEventListener('keydown', ev=>{
+  if(ev.key==='Escape' && placing){ placing=null; ghostPos=null; hint.classList.remove('show'); drawPlan(); }
+  const typing = document.activeElement && document.activeElement.tagName==='INPUT';
+  if(sel?.type==='item' && !typing){
+    const it = state.items.find(i=>i.id===sel.id); if(!it) return;
+    if(ev.key==='r'||ev.key==='R'||ev.key==='к'||ev.key==='К'){ it.rot=(it.rot+90)%180; render(); }
+    if(ev.key==='Delete'||ev.key==='Backspace'){ state.items=state.items.filter(i=>i.id!==it.id); sel=null; render(); }
+  }
+  if(sel?.type==='room' && (ev.key==='Delete') && document.activeElement.tagName!=='INPUT'){
+    state.rooms=state.rooms.filter(r=>r.id!==sel.id); sel=null; render();
+  }
+});
+
+/* ---------- шаги / модалки ---------- */
+$('#s1').onclick=()=>{ state.step=1; placing=null; render(); };
+$('#s2').onclick=()=>{ if(state.rooms.length){ state.step=2; sel=null; render(); } };
+$('#s3').onclick=()=>{ if(state.items.length){ state.step=3; render(); } };
+$('#loginBtn').onclick=()=>$('#loginModal').showModal();
+$('#loginModal').addEventListener('close',()=>{ if($('#loginModal').returnValue==='ok'){ $('#loginBtn').textContent='Аккаунт (демо)'; } });
+$('#leadModal').addEventListener('close',()=>{ if($('#leadModal').returnValue==='ok'){ showHint('Проект отправлен (демо). В Фазе 1 — уведомление менеджеру + email клиенту.'); } });
+
+render();
+if(!state.rooms.length) showHint('Привет! Начни с шаблона планировки слева', 4000);
+</script>
+</body>
+</html>
