@@ -426,8 +426,17 @@ function renderPlanPanel(){
       </div>
       <div class="actions"><button class="btn btn-danger" id="delRoom">${I.trash} Удалить комнату</button></div>
     </div>` : `<p class="muted-note">Выбери шаблон под свой юнит — или собери план сам. Клик по комнате на плане откроет её размеры; комнаты можно таскать мышью.</p>`}
+    <div style="position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 16px;margin-top:8px">
+      <button class="btn btn-primary" id="confirmPlan" style="width:100%;justify-content:center" ${state.rooms.length?'':'disabled'}>Подтвердить планировку →</button>
+      <p style="font-size:11.5px;color:var(--ink-3);margin-top:7px;line-height:1.4">Дальше — оформление каждого помещения: вид на стену, реальные товары, цвета</p>
+    </div>
   `;
   left.querySelectorAll('[data-tpl]').forEach(b=>b.onclick=()=>applyTemplate(b.dataset.tpl));
+  const cp = $('#confirmPlan');
+  if(cp) cp.onclick = ()=>{
+    localStorage.setItem('dl-plan-confirmed', JSON.stringify({rooms:state.rooms, area:totalArea(), ts:Date.now()}));
+    location.href = 'wall-view.html';
+  };
   $('#addRoom').onclick = ()=>{ const id=state.nextId++; state.rooms.push({id,name:'Комната '+state.rooms.length,x:0.5,y:0.5,w:4,h:3}); sel={type:'room',id}; render(); };
   $('#clearAll').onclick = ()=>{ if(confirm('Удалить весь план и расстановку?')){ state.rooms=[]; state.items=[]; sel=null; paidOrders={}; render(); } };
   if(selRoom){

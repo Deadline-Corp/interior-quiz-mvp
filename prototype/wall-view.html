@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADLINE · Вид на стену — POC</title>
+<title>DEADLINE · Оформление помещений — POC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     --line:#e7e5e4; --line-2:#d6d3d1;
     --accent:#0f766e; --accent-ink:#f4f7f6; --accent-soft:#e6f2f0;
     --danger:#b91c1c; --danger-bg:#fdeaea; --ok:#15803d; --ok-bg:#e8f5ec;
-    --r-sm:8px; --r-md:12px;
+    --r-sm:8px; --r-md:12px; --r-lg:16px;
     --shadow:0 10px 30px -12px rgba(28,25,23,.12);
     --mono:'JetBrains Mono',ui-monospace,monospace;
   }
@@ -27,18 +27,20 @@
   @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 
   .app{display:grid;grid-template-rows:56px 1fr;height:100dvh}
-  header{display:flex;align-items:center;gap:16px;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+  header{display:flex;align-items:center;gap:14px;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto}
   .brand{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
   .brand b{font-weight:700;letter-spacing:.14em;font-size:14px}
   .brand span{color:var(--ink-3);font-size:12.5px}
-  .room-tabs{display:flex;gap:4px;margin:0 auto}
-  .room-tab{padding:7px 14px;border-radius:999px;color:var(--ink-2);font-weight:500;font-size:13.5px;transition:background .18s,color .18s;min-height:34px}
+  .room-tabs{display:flex;gap:4px;margin:0 auto;flex-wrap:nowrap}
+  .room-tab{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;color:var(--ink-2);font-weight:500;font-size:13px;transition:background .18s,color .18s;min-height:34px;white-space:nowrap}
   .room-tab:hover{background:var(--bg)}
   .room-tab.on{background:var(--ink);color:#f7f5f1}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:var(--r-sm);font-weight:600;font-size:13px;transition:transform .12s,background .18s;min-height:38px;text-decoration:none}
+  .room-tab .cnt{font-family:var(--mono);font-size:10.5px;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 6px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:var(--r-sm);font-weight:600;font-size:13px;transition:transform .12s,background .18s;min-height:38px;text-decoration:none;justify-content:center}
   .btn:active{transform:translateY(1px)}
   .btn-primary{background:var(--accent);color:var(--accent-ink)}
   .btn-primary:hover{background:#0d6b63}
+  .btn-primary:disabled{opacity:.45;cursor:not-allowed}
   .btn-ghost{border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
   .btn-ghost:hover{background:var(--bg)}
   .btn-danger{color:var(--danger);border:1px solid #f3caca;background:var(--surface)}
@@ -71,7 +73,7 @@
   .row2 .field{padding:0;margin:0}
 
   .swatches{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 12px}
-  .sw{width:34px;height:34px;border-radius:8px;border:2px solid var(--line-2);cursor:pointer;transition:transform .12s,border-color .15s;position:relative}
+  .sw{width:34px;height:34px;border-radius:8px;border:2px solid var(--line-2);cursor:pointer;transition:transform .12s,border-color .15s}
   .sw:hover{transform:scale(1.06)}
   .sw.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface) inset}
   .sw-name{padding:0 16px 10px;font-size:12px;color:var(--ink-2)}
@@ -89,26 +91,46 @@
   .total-card .num{font-size:20px;font-weight:600}
   .warns{margin:0 16px 10px;display:flex;flex-direction:column;gap:6px}
   .warn-chip{display:flex;gap:8px;background:var(--danger-bg);color:var(--danger);font-size:12px;padding:8px 10px;border-radius:var(--r-sm);font-weight:500}
-  .empty{margin:0 16px;padding:20px 14px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);color:var(--ink-3);font-size:12.5px;text-align:center}
-  .export-row{padding:0 16px 18px;display:flex;flex-direction:column;gap:8px}
+  .empty{margin:0 16px 12px;padding:20px 14px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);color:var(--ink-3);font-size:12.5px;text-align:center}
+  .actions-stack{padding:0 16px 18px;display:flex;flex-direction:column;gap:8px}
   .muted-note{padding:6px 16px 12px;color:var(--ink-3);font-size:12px}
+  .plan-badge{display:inline-flex;align-items:center;gap:7px;margin:0 16px 10px;padding:8px 11px;background:var(--accent-soft);color:var(--accent);border-radius:var(--r-sm);font-size:12px;font-weight:500}
+
+  /* ---- экран заказа ---- */
+  .order-wrap{grid-column:1 / -1;overflow-y:auto;padding:28px 24px 48px}
+  .order-h{max-width:1060px;margin:0 auto 18px}
+  .order-h h1{font-size:24px;font-weight:700;letter-spacing:-.01em}
+  .order-h p{color:var(--ink-2);margin-top:4px;font-size:14px}
+  .order-grid{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
+  .order-col{display:flex;flex-direction:column;gap:14px}
+  .ocard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+  .ocard>header{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--bg);overflow:visible}
+  .ocard>header b{font-size:14px}
+  .ocard>header .badge-n{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:auto}
+  .ocard .body{padding:6px 0 8px}
+  .pay-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-top:1px solid var(--line)}
+  .pay-row .num{font-size:16px;font-weight:600}
+  .paid{color:var(--ok);font-weight:600;display:inline-flex;gap:7px;align-items:center;font-size:13.5px}
+  .note{font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:var(--r-md);padding:12px 14px;line-height:1.55}
+  .ocard .field{padding:0 16px;margin-bottom:10px}
 
   @media (max-width:1000px){
     main{grid-template-columns:1fr;grid-template-rows:auto 46vh auto}
     .panel{max-height:34vh}
+    .order-grid{grid-template-columns:1fr}
   }
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <div class="brand"><b>DEADLINE</b><span>Вид на стену · POC</span></div>
-    <nav class="room-tabs" id="roomTabs" aria-label="Помещение"></nav>
-    <a class="btn btn-ghost" href="planner.html">← План квартиры</a>
+    <div class="brand"><b>DEADLINE</b><span>Оформление помещений · POC</span></div>
+    <nav class="room-tabs" id="roomTabs" aria-label="Помещения из планировки"></nav>
+    <a class="btn btn-ghost" href="planner.html" style="white-space:nowrap">← План квартиры</a>
   </header>
-  <main>
+  <main id="main">
     <aside class="panel panel-l" id="left"></aside>
-    <section class="canvas-wrap" aria-label="Стена помещения">
+    <section class="canvas-wrap" id="canvasWrap" aria-label="Стена помещения">
       <div class="hint" id="hint"></div>
       <svg id="wall" xmlns="http://www.w3.org/2000/svg"></svg>
       <div class="canvas-foot">
@@ -123,13 +145,15 @@
 <script>
 'use strict';
 /* =====================================================================
-   DEADLINE — Wall View POC. Фронтальный вид стены (elevation):
-   схематичные товары реальных габаритов в выбранном цвете.
-   Один файл, vanilla JS + SVG. Этап A: блоки-схемы, фото — этап B.
+   DEADLINE — Оформление помещений (elevation POC, v2).
+   Вкладки помещений берутся из ПОДТВЕРЖДЁННОЙ ПЛАНИРОВКИ planner.html
+   (localStorage 'dl-plan-confirmed'). Можно обставить ХОТЬ ОДНО
+   помещение — пустые комнаты в заказ не попадают.
+   Флоу: стены → итог по проекту → Оплатить заказ → форма оплаты.
    ===================================================================== */
 
 const fmtTHB = n => '฿ ' + n.toLocaleString('th-TH');
-const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const STORES = {
   homepro:{name:'HomePro',color:'#1d4ed8'}, index:{name:'Index Living Mall',color:'#b45309'},
   ikea:{name:'IKEA Thailand',color:'#0f766e'}, powerbuy:{name:'Power Buy',color:'#7c2d12'},
@@ -151,7 +175,7 @@ const APPLIANCE = [
 ];
 const WOODS = [{name:'Дуб',fill:'#b08a55',grain:true},{name:'Белый',fill:'#e9e4da'},{name:'Венге',fill:'#5a4636',grain:true}];
 
-/* ---------- каталог: габариты фронтальные (Ш×В см), mount: floor|wall|ceil|bg ---------- */
+/* ---------- каталог: rooms = ТИПЫ помещений ---------- */
 const CATALOG = [
   {sku:'KB60', name:'Кухонный модуль 60', store:'homepro', price:4290, w:60,h:85, mount:'floor', draw:'base',  vars:FACADES, rooms:['kitchen']},
   {sku:'KB80', name:'Кухонный модуль 80', store:'homepro', price:5490, w:80,h:85, mount:'floor', draw:'base',  vars:FACADES, rooms:['kitchen']},
@@ -162,16 +186,16 @@ const CATALOG = [
   {sku:'HOOD', name:'Вытяжка 60',         store:'powerbuy',price:4990, w:60,h:40, mount:'wall', elev:165, draw:'hood', vars:APPLIANCE.slice(0,3), rooms:['kitchen']},
   {sku:'FR70', name:'Холодильник 70',     store:'powerbuy',price:21990,w:70,h:180,mount:'floor', draw:'fridge',vars:APPLIANCE, rooms:['kitchen']},
   {sku:'OV60', name:'Плита + духовка 60', store:'powerbuy',price:17990,w:60,h:85, mount:'floor', draw:'oven', vars:[APPLIANCE[0],APPLIANCE[2]], rooms:['kitchen']},
-  {sku:'WM60', name:'Стиральная машина',  store:'powerbuy',price:14990,w:60,h:85, mount:'floor', draw:'washer',vars:[{name:'Белый',fill:'#e9e6df'},APPLIANCE[0]], rooms:['kitchen','bath']},
+  {sku:'WM60', name:'Стиральная машина',  store:'powerbuy',price:14990,w:60,h:85, mount:'floor', draw:'washer',vars:[{name:'Белый',fill:'#e9e6df'},APPLIANCE[0]], rooms:['kitchen','bath','balcony']},
 
   {sku:'SF180',name:'Диван 2-местный',    store:'index',   price:18900,w:180,h:85,mount:'floor', draw:'sofa', vars:FABRICS, rooms:['living']},
-  {sku:'AR85', name:'Кресло',             store:'index',   price:8590, w:85,h:80, mount:'floor', draw:'sofa', vars:FABRICS, rooms:['living','bedroom']},
+  {sku:'AR85', name:'Кресло',             store:'index',   price:8590, w:85,h:80, mount:'floor', draw:'sofa', vars:FABRICS, rooms:['living','bedroom','balcony']},
   {sku:'TV55', name:'Телевизор 55"',      store:'powerbuy',price:12990,w:123,h:71,mount:'wall', elev:110, draw:'tv', vars:[{name:'Чёрный',fill:'#2c2a27'}], rooms:['living','bedroom']},
-  {sku:'SH80', name:'Полка настенная 80', store:'ikea',    price:1290, w:80,h:22, mount:'wall', elev:150, draw:'shelf', vars:WOODS, rooms:['living','bedroom','kitchen']},
-  {sku:'FL40', name:'Торшер',             store:'index',   price:2490, w:42,h:150,mount:'floor', draw:'flamp', vars:FABRICS.slice(0,3), rooms:['living','bedroom']},
+  {sku:'SH80', name:'Полка настенная 80', store:'ikea',    price:1290, w:80,h:22, mount:'wall', elev:150, draw:'shelf', vars:WOODS, rooms:['living','bedroom','kitchen','balcony']},
+  {sku:'FL40', name:'Торшер',             store:'index',   price:2490, w:42,h:150,mount:'floor', draw:'flamp', vars:FABRICS.slice(0,3), rooms:['living','bedroom','balcony']},
   {sku:'PD45', name:'Подвесной светильник',store:'homepro',price:3290, w:45,h:60, mount:'ceil', draw:'pendant', vars:[{name:'Латунь',fill:'#bf9b5e'},{name:'Чёрный',fill:'#35332f'},{name:'Белый',fill:'#e9e4da'}], rooms:['kitchen','living','bedroom']},
   {sku:'CUR2', name:'Шторы 200',          store:'index',   price:3290, w:200,h:255,mount:'bg', draw:'curtain', vars:FABRICS, rooms:['living','bedroom']},
-  {sku:'WIN14',name:'Окно 140 (элемент)', store:null,      price:0,    w:140,h:140,mount:'bg', elev:90, draw:'window', vars:[{name:'Рама белая',fill:'#e9e4da'},{name:'Рама графит',fill:'#45433f'}], rooms:['kitchen','living','bedroom','bath']},
+  {sku:'WIN14',name:'Окно 140 (элемент)', store:null,      price:0,    w:140,h:140,mount:'bg', elev:90, draw:'window', vars:[{name:'Рама белая',fill:'#e9e4da'},{name:'Рама графит',fill:'#45433f'}], rooms:['kitchen','living','bedroom','bath','balcony']},
 
   {sku:'BD160',name:'Кровать 160 (изголовье)',store:'index',price:16900,w:166,h:105,mount:'floor', draw:'bed', vars:FABRICS, rooms:['bedroom']},
   {sku:'WD200',name:'Шкаф 200',           store:'ikea',    price:21900,w:200,h:220,mount:'floor', draw:'wardrobe', vars:WOODS, rooms:['bedroom','living']},
@@ -181,46 +205,100 @@ const CATALOG = [
   {sku:'SHW90',name:'Душевой уголок 90',  store:'homepro', price:11990,w:90,h:200,mount:'floor', draw:'shower', vars:[{name:'Стекло',fill:'#cfe0e6'}], rooms:['bath']},
 ];
 
-const ROOMS = {
-  kitchen:{name:'Кухня',    wallW:3.6, paint:'#ece6d9'},
-  living: {name:'Гостиная', wallW:4.2, paint:'#e7e1d4'},
-  bedroom:{name:'Спальня',  wallW:3.8, paint:'#e4dcd2'},
-  bath:   {name:'Санузел',  wallW:2.2, paint:'#dde4e2'},
-};
+/* ---------- помещения: из подтверждённой планировки или пресеты ---------- */
+const TYPE_PAINT = {kitchen:'#ece6d9', living:'#e7e1d4', bedroom:'#e4dcd2', bath:'#dde4e2', balcony:'#e9e6dc'};
+/* комната может совмещать типы: «Гостиная-кухня» = кухня + гостиная, «Студия» = всё сразу */
+function roomTypes(name){
+  const n = String(name).toLowerCase(), t = new Set();
+  if(/кух/.test(n)) t.add('kitchen');
+  if(/гостин|зал|комнат/.test(n)) t.add('living');
+  if(/студ/.test(n)){ t.add('living'); t.add('kitchen'); t.add('bedroom'); }
+  if(/спал/.test(n)) t.add('bedroom');
+  if(/с\/у|сан|ванн|туал/.test(n)) t.add('bath');
+  if(/балк|лодж/.test(n)) t.add('balcony');
+  if(!t.size) t.add('living');
+  return [...t];
+}
+let plan = null;
+try{ const p = JSON.parse(localStorage.getItem('dl-plan-confirmed')); if(p && p.rooms && p.rooms.length) plan = p; }catch(e){}
+
+let ROOMS = {};
+if(plan){
+  for(const r of plan.rooms){
+    const types = roomTypes(r.name);
+    ROOMS['r'+r.id] = {name:r.name, types, wallW:Math.round(Math.max(r.w,r.h)*10)/10, paint:TYPE_PAINT[types[0]]};
+  }
+}else{
+  ROOMS = {
+    kitchen:{name:'Кухня',types:['kitchen'],wallW:3.6,paint:TYPE_PAINT.kitchen},
+    living:{name:'Гостиная',types:['living'],wallW:4.2,paint:TYPE_PAINT.living},
+    bedroom:{name:'Спальня',types:['bedroom'],wallW:3.8,paint:TYPE_PAINT.bedroom},
+    bath:{name:'Санузел',types:['bath'],wallW:2.2,paint:TYPE_PAINT.bath},
+  };
+}
 const WALL_PAINTS = ['#ece6d9','#e7e1d4','#e4dcd2','#dde4e2','#d9cfc0','#cdd6cf','#c7d2d8','#b9aa9a','#8e9a94','#6f7d88'];
 const FLOOR = '#c2a273';
 
-/* ---------- состояние ---------- */
-let state = {room:'kitchen', wallW:3.6, wallH:2.7, paint:'#ece6d9',
-             items:{kitchen:[],living:[],bedroom:[],bath:[]}, nextId:1};
-try{ const s=JSON.parse(localStorage.getItem('dl-wall')); if(s && s.items) state=s; }catch(e){}
-const save = ()=>localStorage.setItem('dl-wall', JSON.stringify(state));
+/* ---------- состояние v2 (walls по ключам помещений) ---------- */
+let state = {roomKey:Object.keys(ROOMS)[0], view:'walls', planTs:plan?plan.ts:null, walls:{}, nextId:1, paid:{}};
+try{
+  const s = JSON.parse(localStorage.getItem('dl-wall2'));
+  if(s && s.walls && s.planTs === (plan?plan.ts:null)){ state = s; if(!ROOMS[state.roomKey]) state.roomKey = Object.keys(ROOMS)[0]; }
+}catch(e){}
+const save = ()=>localStorage.setItem('dl-wall2', JSON.stringify(state));
 let sel=null, drag=null;
 
 const $=s=>document.querySelector(s);
 const svg=$('#wall'), left=$('#left'), right=$('#right'), hint=$('#hint');
-const items = ()=>state.items[state.room];
 const prod = sku=>CATALOG.find(p=>p.sku===sku);
+function wallOf(key){
+  if(!state.walls[key]){
+    const R=ROOMS[key];
+    state.walls[key]={wallW:R.wallW, wallH:2.7, paint:R.paint, items:[]};
+  }
+  return state.walls[key];
+}
+const wall = ()=>wallOf(state.roomKey);
 function showHint(t,ms=2600){hint.textContent=t;hint.classList.add('show');clearTimeout(hint._t);if(ms)hint._t=setTimeout(()=>hint.classList.remove('show'),ms);}
 
+/* ---------- сводки по всему проекту ---------- */
+function allEntries(){ /* только товары с ценой, по всем помещениям */
+  const out=[];
+  for(const key of Object.keys(ROOMS)){
+    const w=state.walls[key]; if(!w) continue;
+    for(const it of w.items){ const p=prod(it.sku); if(p.store) out.push({key, room:ROOMS[key].name, it, p}); }
+  }
+  return out;
+}
+function allProblems(){
+  const out=[];
+  for(const key of Object.keys(ROOMS)){
+    const w=state.walls[key]; if(!w||!w.items.length) continue;
+    for(const it of w.items) for(const t of problems(it,w)) out.push(`${ROOMS[key].name}: ${t}`);
+  }
+  return out;
+}
+const projTotal = ()=>allEntries().reduce((s,e)=>s+e.p.price,0);
+
 /* ---------- геометрия (метры → px) ---------- */
-let PX=180; // px на метр, пересчитывается под вьюпорт
-const FLOOR_H=0.45; // видимая полоса пола, м
+let PX=180;
+const FLOOR_H=0.45;
 function layoutScale(){
-  const r=svg.getBoundingClientRect();
-  PX = Math.min((r.width-80)/state.wallW, (r.height-60)/(state.wallH+FLOOR_H));
+  const r=svg.getBoundingClientRect(), w=wall();
+  PX = Math.min((r.width-80)/w.wallW, (r.height-60)/(w.wallH+FLOOR_H));
   PX = Math.max(60, Math.min(260, PX));
 }
-const mx = m => 40 + m*PX;                 // x: метры → px
-const my = m => 20 + (state.wallH - m)*PX; // y: высота от пола → px (низ стены = пол)
+const mx = m => 40 + m*PX;
+const my = m => 20 + (wall().wallH - m)*PX;
 
 /* ---------- слои и коллизии ---------- */
 const layer = p => p.mount==='bg' ? 'bg' : (p.mount==='floor' ? 'floor' : 'wall');
 function itemBox(it){ const p=prod(it.sku); return {x:it.x, y:it.y, w:p.w/100, h:p.h/100}; }
-function problems(it){
+function problems(it, w){
+  w = w || wall();
   const p=prod(it.sku), b=itemBox(it), out=[];
-  if(b.x<-0.001 || b.x+b.w>state.wallW+0.001) out.push(`${p.name}: шире стены / выходит за край (${p.w} см)`);
-  if(layer(p)!=='bg') for(const o of items()){
+  if(b.x<-0.001 || b.x+b.w>w.wallW+0.001) out.push(`${p.name}: выходит за край стены (${p.w} см)`);
+  if(layer(p)!=='bg') for(const o of w.items){
     if(o.id===it.id) continue; const po=prod(o.sku);
     if(layer(po)!==layer(p)) continue;
     const ob=itemBox(o);
@@ -230,8 +308,7 @@ function problems(it){
 }
 
 /* ---------- отрисовка предметов (схематичные фронтальные блоки) ---------- */
-const LN='rgba(28,25,23,.22)';   // линии внутри фасадов
-const dk = f=>`<rect x="0" y="0" width="W" height="H" fill="${f}"/>`;
+const LN='rgba(28,25,23,.22)';
 function grainDefs(){
   return `<defs>
     <pattern id="grain" width="14" height="160" patternUnits="userSpaceOnUse">
@@ -243,7 +320,6 @@ function grainDefs(){
   </defs>`;
 }
 function fillAttr(v){ return v.grain ? `fill="${v.fill}"/><rect x="0" y="0" width="W" height="H" fill="url(#grain)"` : `fill="${v.fill}"`; }
-/* каждый draw-метод получает w,h в px и variант; возвращает внутренности <g> */
 const DRAW = {
   base(w,h,v){ const d=w>=120?3:(w>=70?2:1); let g=`<rect width="${w}" height="${h-7}" ${fillAttr(v)} stroke="${LN}"/>`;
     for(let i=1;i<d;i++) g+=`<line x1="${w/d*i}" y1="0" x2="${w/d*i}" y2="${h-7}" stroke="${LN}"/>`;
@@ -325,21 +401,24 @@ const DRAW = {
   shower(w,h,v){ return `<rect width="${w}" height="${h}" fill="url(#glass)" opacity=".5" stroke="#9ab2ba" stroke-width="2"/>
     <line x1="${w*0.55}" y1="0" x2="${w*0.55}" y2="${h}" stroke="#9ab2ba" stroke-width="2"/>
     <rect x="${w*0.55-3}" y="${h*0.45}" width="6" height="34" rx="3" fill="#7d959c"/>
-    <path d="M${w*0.2} ${h*0.06} v-0 q0 -0 0 0 M${w*0.2} ${h*0.06} v${h*0.06}" stroke="#7d959c" stroke-width="3"/>
     <circle cx="${w*0.2}" cy="${h*0.16}" r="7" fill="#7d959c"/>`; },
 };
 
-/* ---------- мини-превью для карточек каталога ---------- */
 function miniSvg(p){
   const k=Math.min(44/p.w, 40/p.h);
   const w=p.w*k, h=p.h*k, v=p.vars[0];
   return `<svg width="48" height="42" viewBox="${-(48-w)/2} ${-(42-h)/2} 48 42" aria-hidden="true">${grainDefs()}<g>${DRAW[p.draw](w,h,v)}</g></svg>`;
 }
 
-/* ---------- панели ---------- */
+/* ---------- левая панель: каталог по типу помещения ---------- */
 function renderLeft(){
-  const list = CATALOG.filter(p=>p.rooms.includes(state.room));
-  left.innerHTML = `<h2>Каталог · ${ROOMS[state.room].name}</h2>` + list.map(p=>`
+  const R = ROOMS[state.roomKey];
+  const list = CATALOG.filter(p=>p.rooms.some(t=>R.types.includes(t)));
+  left.innerHTML = `
+    ${plan?`<div class="plan-badge" style="margin-top:14px">Планировка подтверждена · ${Object.keys(ROOMS).length} помещ. · ${plan.area?plan.area.toFixed(1).replace('.',',')+' м²':''}</div>`:''}
+    <h2>Каталог · ${esc(R.name)}</h2>
+    <p class="muted-note" style="padding-top:0">Обставляй только нужные помещения — пустые в заказ не попадут.</p>
+    ` + list.map(p=>`
     <button class="prod" data-sku="${p.sku}">
       <span class="mini">${miniSvg(p)}</span>
       <span style="min-width:0">
@@ -353,44 +432,51 @@ function renderLeft(){
   left.querySelectorAll('[data-sku]').forEach(b=>b.onclick=()=>addItem(b.dataset.sku));
 }
 
+/* ---------- правая панель ---------- */
 function renderRight(){
-  const it = items().find(i=>i.id===sel);
-  const probs = items().flatMap(problems);
-  const shop = items().filter(i=>prod(i.sku).store);
-  const groups={}; shop.forEach(i=>{const p=prod(i.sku);(groups[p.store]??=[]).push(i);});
+  const w = wall();
+  const it = w.items.find(i=>i.id===sel);
+  const probs = w.items.flatMap(i=>problems(i,w));
+  const shop = w.items.filter(i=>prod(i.sku).store);
+  const entries = allEntries();
+  const roomsUsed = new Set(entries.map(e=>e.key)).size;
+  const projProbs = allProblems();
   right.innerHTML = `
-    <h2>Стена</h2>
+    <h2>Стена · ${esc(ROOMS[state.roomKey].name)}</h2>
     <div class="row2">
-      <div class="field"><label for="ww">Ширина, м</label><input id="ww" type="number" step="0.1" min="1.5" max="8" value="${state.wallW}"></div>
-      <div class="field"><label for="wh">Высота, м</label><input id="wh" type="number" step="0.05" min="2.2" max="4" value="${state.wallH}"></div>
+      <div class="field"><label for="ww">Ширина, м</label><input id="ww" type="number" step="0.1" min="1.5" max="9" value="${w.wallW}"></div>
+      <div class="field"><label for="wh">Высота, м</label><input id="wh" type="number" step="0.05" min="2.2" max="4" value="${w.wallH}"></div>
     </div>
     <div class="sw-name">Цвет стены</div>
     <div class="swatches" role="group" aria-label="Цвет стены">
-      ${WALL_PAINTS.map(c=>`<button class="sw ${state.paint===c?'on':''}" style="background:${c}" data-paint="${c}" aria-label="Цвет ${c}"></button>`).join('')}
+      ${WALL_PAINTS.map(c=>`<button class="sw ${w.paint===c?'on':''}" style="background:${c}" data-paint="${c}" aria-label="Цвет ${c}"></button>`).join('')}
     </div>
-    ${it ? selCard(it) : '<p class="muted-note">Кликни товар в каталоге — он встанет на стену. Перетаскивай мышью; выбери предмет, чтобы сменить цвет.</p>'}
-    <h2>Смета</h2>
-    ${probs.length?`<div class="warns">${probs.map(w=>`<div class="warn-chip">${esc(w)}</div>`).join('')}</div>`:''}
-    ${shop.length ? Object.entries(groups).map(([st,arr])=>`
-      <div class="est-line" style="background:var(--bg);font-weight:600"><span><span class="store-dot" style="background:${STORES[st].color};display:inline-block;margin-right:6px"></span>${STORES[st].name}</span><span class="num">${fmtTHB(arr.reduce((s,i)=>s+prod(i.sku).price,0))}</span></div>
-      ${arr.map(i=>{const p=prod(i.sku);return `<div class="est-line"><span>${esc(p.name)} · ${esc(p.vars[i.variant].name)}</span><span class="num">${fmtTHB(p.price)}</span></div>`;}).join('')}`).join('')
-      : '<div class="empty">Стена пока пустая</div>'}
-    ${shop.length?`<div class="total-card"><small>Итого · ${shop.length} поз.</small><span class="num">${fmtTHB(shop.reduce((s,i)=>s+prod(i.sku).price,0))}</span></div>`:''}
-    <div class="export-row">
-      <button class="btn btn-primary" id="exportBtn" style="justify-content:center">Скачать картинку (PNG)</button>
-      <button class="btn btn-ghost" id="clearBtn" style="justify-content:center" ${items().length?'':'disabled'}>Очистить стену</button>
+    ${it ? selCard(it) : '<p class="muted-note">Кликни товар в каталоге — он встанет на стену. Выбери предмет, чтобы сменить цвет.</p>'}
+    <h2>Смета · ${esc(ROOMS[state.roomKey].name)}</h2>
+    ${probs.length?`<div class="warns">${probs.map(t=>`<div class="warn-chip">${esc(t)}</div>`).join('')}</div>`:''}
+    ${shop.length ? shop.map(i=>{const p=prod(i.sku);return `<div class="est-line"><span>${esc(p.name)} · ${esc(p.vars[i.variant].name)}</span><span class="num">${fmtTHB(p.price)}</span></div>`;}).join('')
+      : '<div class="empty">В этом помещении пока пусто</div>'}
+    <h2>Итог по проекту</h2>
+    ${entries.length?`
+      <div class="total-card" style="margin-top:4px"><small>${entries.length} поз. · ${roomsUsed} ${roomsUsed===1?'помещение':'помещения(й)'}</small><span class="num">${fmtTHB(projTotal())}</span></div>`
+      :'<div class="empty">Добавь товары хотя бы в одно помещение</div>'}
+    <div class="actions-stack">
+      <button class="btn btn-ghost" id="exportBtn" ${w.items.length?'':'disabled'}>Сохранить рисунок (PNG)</button>
+      <button class="btn btn-ghost" id="saveBtn">Сохранить проект</button>
+      <button class="btn btn-primary" id="orderBtn" ${entries.length&&!projProbs.length?'':'disabled'}
+        title="${projProbs.length?'Сначала исправь конфликты: '+esc(projProbs[0]):''}">Оплатить заказ →</button>
     </div>
-    <p class="muted-note">POC: схематичные блоки реальных габаритов. Этап B — реальные фото товаров (вырезанные packshot'ы по цветам).</p>
+    <p class="muted-note">POC: схематичные блоки реальных габаритов; фотореализм — следующий этап.</p>
   `;
-  $('#ww').onchange=e=>{state.wallW=Math.max(1.5,Math.min(8,+e.target.value||3.6));render();};
-  $('#wh').onchange=e=>{state.wallH=Math.max(2.2,Math.min(4,+e.target.value||2.7));render();};
-  right.querySelectorAll('[data-paint]').forEach(b=>b.onclick=()=>{state.paint=b.dataset.paint;render();});
+  $('#ww').onchange=e=>{w.wallW=Math.max(1.5,Math.min(9,+e.target.value||w.wallW));render();};
+  $('#wh').onchange=e=>{w.wallH=Math.max(2.2,Math.min(4,+e.target.value||2.7));render();};
+  right.querySelectorAll('[data-paint]').forEach(b=>b.onclick=()=>{w.paint=b.dataset.paint;render();});
   $('#exportBtn').onclick=exportPNG;
-  $('#clearBtn').onclick=()=>{ if(confirm('Очистить стену?')){ state.items[state.room]=[]; sel=null; render(); } };
+  $('#saveBtn').onclick=()=>{ save(); showHint('Проект сохранён. В Фазе 1 — сохранение в аккаунт с любого устройства'); };
+  $('#orderBtn').onclick=()=>{ if(allEntries().length && !allProblems().length){ state.view='order'; sel=null; render(); } };
   if(it){
-    const p=prod(it.sku);
     right.querySelectorAll('[data-var]').forEach(b=>b.onclick=()=>{it.variant=+b.dataset.var;render();});
-    const del=$('#delBtn'); if(del) del.onclick=()=>{state.items[state.room]=items().filter(i=>i.id!==it.id);sel=null;render();};
+    const del=$('#delBtn'); if(del) del.onclick=()=>{w.items=w.items.filter(i=>i.id!==it.id);sel=null;render();};
   }
 }
 function selCard(it){
@@ -407,77 +493,84 @@ function selCard(it){
 }
 
 /* ---------- сцена ---------- */
-function render(){
+function renderScene(){
   layoutScale();
-  const W=state.wallW, H=state.wallH;
+  const w=wall(), W=w.wallW, H=w.wallH;
   const vbW=W*PX+80, vbH=(H+FLOOR_H)*PX+40;
   svg.setAttribute('viewBox',`0 0 ${vbW} ${vbH}`);
   let g = grainDefs();
-  /* стена + пол + плинтус */
-  g+=`<rect x="${mx(0)}" y="${my(H)}" width="${W*PX}" height="${H*PX}" fill="${state.paint}"/>`;
+  g+=`<rect x="${mx(0)}" y="${my(H)}" width="${W*PX}" height="${H*PX}" fill="${w.paint}"/>`;
   g+=`<rect x="${mx(0)}" y="${my(0)}" width="${W*PX}" height="${FLOOR_H*PX}" fill="${FLOOR}"/>`;
   for(let i=1;i<6;i++) g+=`<line x1="${mx(0)}" y1="${my(0)+FLOOR_H*PX/6*i}" x2="${mx(W)}" y2="${my(0)+FLOOR_H*PX/6*i}" stroke="rgba(28,25,23,.08)"/>`;
   g+=`<rect x="${mx(0)}" y="${my(0)-6}" width="${W*PX}" height="6" fill="#dcd5c8"/>`;
   g+=`<rect x="${mx(0)}" y="${my(H)}" width="${W*PX}" height="${H*PX}" fill="none" stroke="#a39e94" stroke-width="2"/>`;
-  /* размерная линейка */
   g+=`<line x1="${mx(0)}" y1="${my(H)-12}" x2="${mx(W)}" y2="${my(H)-12}" stroke="#a8a29e"/><text x="${mx(W/2)}" y="${my(H)-18}" text-anchor="middle" font-size="11" fill="#78716c" font-family="JetBrains Mono">${W.toFixed(1).replace('.',',')} м</text>`;
-  /* предметы по слоям: bg → floor → wall → ceil */
   const order={bg:0,floor:1,wall:2,ceil:3};
-  const sorted=[...items()].sort((a,b)=>order[layer(prod(a.sku))]-order[layer(prod(b.sku))]);
+  const sorted=[...w.items].sort((a,b)=>order[layer(prod(a.sku))]-order[layer(prod(b.sku))]);
   for(const it of sorted){
-    const p=prod(it.sku), w=p.w/100*PX, h=p.h/100*PX;
+    const p=prod(it.sku), pw=p.w/100*PX, ph=p.h/100*PX;
     const x=mx(it.x), y=my(it.y+p.h/100);
-    const bad=problems(it).length>0, isSel=sel===it.id;
-    if(layer(p)==='floor') g+=`<ellipse cx="${x+w/2}" cy="${my(0)+3}" rx="${w/2*0.92}" ry="4.5" fill="rgba(28,25,23,.10)"/>`;
+    const bad=problems(it,w).length>0, isSel=sel===it.id;
+    if(layer(p)==='floor') g+=`<ellipse cx="${x+pw/2}" cy="${my(0)+3}" rx="${pw/2*0.92}" ry="4.5" fill="rgba(28,25,23,.10)"/>`;
     g+=`<g data-item="${it.id}" transform="translate(${x} ${y})" style="cursor:grab">
-      ${DRAW[p.draw](w,h,p.vars[it.variant])}
-      ${bad?`<rect x="-3" y="-3" width="${w+6}" height="${h+6}" fill="rgba(185,28,28,.12)" stroke="#b91c1c" stroke-width="2" rx="4"/>`:''}
-      ${isSel?`<rect x="-4" y="-4" width="${w+8}" height="${h+8}" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 4" rx="4"/>
-        <text x="${w/2}" y="-10" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="600" font-family="JetBrains Mono">${p.w}×${p.h}</text>`:''}
+      ${DRAW[p.draw](pw,ph,p.vars[it.variant])}
+      ${bad?`<rect x="-3" y="-3" width="${pw+6}" height="${ph+6}" fill="rgba(185,28,28,.12)" stroke="#b91c1c" stroke-width="2" rx="4"/>`:''}
+      ${isSel?`<rect x="-4" y="-4" width="${pw+8}" height="${ph+8}" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 4" rx="4"/>
+        <text x="${pw/2}" y="-10" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="600" font-family="JetBrains Mono">${p.w}×${p.h}</text>`:''}
     </g>`;
   }
-  if(!items().length) g+=`<text x="${mx(W/2)}" y="${my(H/2)}" text-anchor="middle" font-size="14" fill="#a39e94" font-family="Outfit">Пустая стена — выбери товар слева</text>`;
+  if(!w.items.length) g+=`<text x="${mx(W/2)}" y="${my(H/2)}" text-anchor="middle" font-size="14" fill="#a39e94" font-family="Outfit">Пустая стена — выбери товар слева</text>`;
   svg.innerHTML=g;
-  $('#wallInfo').textContent=`${ROOMS[state.room].name} · стена ${state.wallW.toFixed(1).replace('.',',')} × ${state.wallH.toFixed(2).replace('.',',')} м · схематичный режим`;
-  renderRight(); save();
+  $('#wallInfo').textContent=`${ROOMS[state.roomKey].name} · стена ${W.toFixed(1).replace('.',',')} × ${H.toFixed(2).replace('.',',')} м · схематичный режим`;
+}
+
+/* ---------- общий рендер ---------- */
+function render(){
+  renderTabs();
+  if(state.view==='order'){ renderOrder(); save(); return; }
+  const old=$('#orderWrap'); if(old) old.remove();
+  left.style.display=''; right.style.display=''; $('#canvasWrap').style.display='';
+  $('#main').style.gridTemplateColumns='';
+  renderScene(); renderRight(); save();
 }
 
 /* ---------- добавление и перетаскивание ---------- */
 function defaultY(p){
+  const w=wall();
   if(p.mount==='floor') return 0;
-  if(p.mount==='ceil')  return state.wallH - p.h/100;
+  if(p.mount==='ceil')  return w.wallH - p.h/100;
   return (p.elev??120)/100;
 }
 function addItem(sku){
-  const p=prod(sku);
-  if(p.w/100>state.wallW){ showHint(`«${p.name}» шире стены (${p.w} см) — расширь стену или выбери другой размер`); return; }
-  const it={id:state.nextId++, sku, x:Math.max(0,(state.wallW-p.w/100)/2), y:defaultY(p), variant:0};
-  /* подвинуть вправо, если центр занят */
+  const p=prod(sku), w=wall();
+  if(p.w/100>w.wallW){ showHint(`«${p.name}» шире стены (${p.w} см) — расширь стену`); return; }
+  const it={id:state.nextId++, sku, x:Math.max(0,(w.wallW-p.w/100)/2), y:defaultY(p), variant:0};
   let guard=0;
-  while(problems(it).length && guard<40){ it.x=Math.min(state.wallW-p.w/100, it.x+0.2); guard++; if(it.x>=state.wallW-p.w/100) break; }
-  items().push(it); sel=it.id; render();
+  while(problems(it,w).length && guard<40){ it.x=Math.min(w.wallW-p.w/100, it.x+0.2); guard++; if(it.x>=w.wallW-p.w/100) break; }
+  w.items.push(it); sel=it.id; render();
 }
 function svgPoint(ev){
   const pt=new DOMPoint(ev.clientX,ev.clientY), m=svg.getScreenCTM();
   if(!m) return {x:0,y:0};
   const p=pt.matrixTransform(m.inverse());
-  return {x:(p.x-40)/PX, y:state.wallH-(p.y-20)/PX};
+  return {x:(p.x-40)/PX, y:wall().wallH-(p.y-20)/PX};
 }
 const snap1=v=>Math.round(v*100)/100;
 function snapEdges(it,nx){
-  const p=prod(it.sku), w=p.w/100, T=0.04;
+  const w=wall(), p=prod(it.sku), pw=p.w/100, T=0.04;
   let best=nx;
-  const edges=[0, state.wallW-w];
-  for(const o of items()){ if(o.id===it.id) continue; const po=prod(o.sku);
+  const edges=[0, w.wallW-pw];
+  for(const o of w.items){ if(o.id===it.id) continue; const po=prod(o.sku);
     if(layer(po)!==layer(p)) continue; const ob=itemBox(o);
-    edges.push(ob.x+ob.w, ob.x-w); }
+    edges.push(ob.x+ob.w, ob.x-pw); }
   for(const e of edges) if(Math.abs(nx-e)<T) best=e;
   return best;
 }
 svg.addEventListener('pointerdown',ev=>{
+  if(state.view!=='walls') return;
   const el=ev.target.closest('[data-item]');
   if(el){
-    const it=items().find(i=>i.id==el.dataset.item);
+    const it=wall().items.find(i=>i.id==el.dataset.item);
     const pos=svgPoint(ev);
     sel=it.id; drag={id:it.id, dx:pos.x-it.x, dy:pos.y-it.y};
     try{ svg.setPointerCapture(ev.pointerId); }catch(e){}
@@ -487,44 +580,89 @@ svg.addEventListener('pointerdown',ev=>{
 });
 svg.addEventListener('pointermove',ev=>{
   if(!drag) return;
-  const it=items().find(i=>i.id===drag.id); if(!it) return;
+  const w=wall(), it=w.items.find(i=>i.id===drag.id); if(!it) return;
   const p=prod(it.sku), pos=svgPoint(ev);
   let nx=snap1(pos.x-drag.dx);
-  nx=Math.max(-0.2, Math.min(state.wallW - p.w/100 + 0.2, nx));
+  nx=Math.max(-0.2, Math.min(w.wallW - p.w/100 + 0.2, nx));
   it.x=snapEdges(it,nx);
   if(p.mount==='wall'||p.mount==='bg'){
     let ny=snap1(pos.y-drag.dy);
-    it.y=Math.max(0, Math.min(state.wallH-p.h/100, ny));
+    it.y=Math.max(0, Math.min(w.wallH-p.h/100, ny));
   }
-  drawOnly();
+  renderScene();
 });
 svg.addEventListener('pointerup',()=>{ if(drag){drag=null;render();} });
-function drawOnly(){ /* лёгкий рендер во время drag без панелей */
-  const r=renderRight; renderRight=()=>{}; render(); renderRight=r;
-}
 document.addEventListener('keydown',ev=>{
   if(document.activeElement && document.activeElement.tagName==='INPUT') return;
+  if(state.view!=='walls') return;
   if(ev.key==='Escape'){ sel=null; render(); }
   if((ev.key==='Delete'||ev.key==='Backspace') && sel!=null){
-    state.items[state.room]=items().filter(i=>i.id!==sel); sel=null; render();
+    const w=wall(); w.items=w.items.filter(i=>i.id!==sel); sel=null; render();
   }
 });
 
-/* ---------- комнаты ---------- */
+/* ---------- вкладки помещений (из планировки) ---------- */
 function renderTabs(){
-  $('#roomTabs').innerHTML=Object.entries(ROOMS).map(([k,r])=>
-    `<button class="room-tab ${state.room===k?'on':''}" data-room="${k}">${r.name}</button>`).join('');
+  $('#roomTabs').innerHTML=Object.entries(ROOMS).map(([k,r])=>{
+    const cnt=(state.walls[k]?state.walls[k].items.filter(i=>prod(i.sku).store).length:0);
+    return `<button class="room-tab ${state.roomKey===k&&state.view==='walls'?'on':''}" data-room="${k}">${esc(r.name)}${cnt?`<span class="cnt num">${cnt}</span>`:''}</button>`;
+  }).join('');
   document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>{
-    state.room=b.dataset.room;
-    const r=ROOMS[state.room];
-    if(!items().length){ state.wallW=r.wallW; state.paint=r.paint; }
-    sel=null; renderTabs(); renderLeft(); render();
+    state.roomKey=b.dataset.room; state.view='walls'; sel=null; renderLeft(); render();
   });
+}
+
+/* ---------- экран заказа / форма оплаты ---------- */
+function renderOrder(){
+  left.style.display='none'; right.style.display='none'; $('#canvasWrap').style.display='none';
+  $('#main').style.gridTemplateColumns='1fr';
+  let wrap=$('#orderWrap');
+  if(!wrap){ wrap=document.createElement('section'); wrap.id='orderWrap'; wrap.className='order-wrap'; $('#main').appendChild(wrap); }
+  const entries=allEntries();
+  const groups={}; entries.forEach(e=>{(groups[e.p.store]??=[]).push(e);});
+  const orders=Object.entries(groups);
+  const roomsUsed=[...new Set(entries.map(e=>e.room))];
+  wrap.innerHTML=`
+    <div class="order-h">
+      <h1>Заказ · ${entries.length} поз. · ${roomsUsed.length} ${roomsUsed.length===1?'помещение':'помещения(й)'}</h1>
+      <p>${esc(roomsUsed.join(' · '))}. Каждый магазин — отдельный чек и доставка; единый платёж со сплитом (Xendit) — после MVP.</p>
+    </div>
+    <div class="order-grid">
+      <div class="order-col">
+        ${orders.map(([st,arr],i)=>`
+          <div class="ocard">
+            <header><span class="store-dot" style="background:${STORES[st].color}"></span><b>${STORES[st].name}</b><span class="badge-n">чек ${i+1} из ${orders.length}</span></header>
+            <div class="body">${arr.map(e=>`<div class="est-line" style="border:none;padding:6px 16px"><span>${esc(e.p.name)} · ${esc(e.p.vars[e.it.variant].name)} · ${esc(e.room)}</span><span class="num">${fmtTHB(e.p.price)}</span></div>`).join('')}</div>
+            <div class="pay-row">
+              <span class="num">${fmtTHB(arr.reduce((s,e)=>s+e.p.price,0))}</span>
+              ${state.paid[st]?`<span class="paid">Оплачено · заказ передан магазину</span>`
+                :`<button class="btn btn-primary" data-pay="${st}">Оплатить (PromptPay QR)</button>`}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="order-col">
+        <div class="ocard">
+          <header><b>Доставка</b></header>
+          <div class="body" style="padding:14px 0 4px">
+            <div class="field"><label for="dName">Имя</label><input id="dName" placeholder="Как к вам обращаться"></div>
+            <div class="field"><label for="dPhone">Телефон / WhatsApp</label><input id="dPhone" type="tel" inputmode="tel" placeholder="+66 ..."></div>
+            <div class="field"><label for="dAddr">ЖК / адрес и номер юнита</label><input id="dAddr" placeholder="Например: Laguna Skypark, юнит A-204"></div>
+            <div class="field"><label for="dDate">Желаемая дата доставки</label><input id="dDate" type="date"></div>
+          </div>
+          <div class="pay-row"><span class="num" style="font-size:13px;color:var(--ink-2)">Итого: <b>${fmtTHB(projTotal())}</b></span><button class="btn btn-ghost" id="sendDelivery">Отправить данные</button></div>
+        </div>
+        <div class="note"><b>Дальше:</b> магазины собирают свои части заказа, статусы всех доставок — в одном кабинете. Демо без бэкенда: оплата и отправка — заглушки.</div>
+        <button class="btn btn-ghost" id="backBtn">← Вернуться к стенам</button>
+      </div>
+    </div>`;
+  wrap.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>{ state.paid[b.dataset.pay]=true; render(); });
+  $('#backBtn').onclick=()=>{ state.view='walls'; render(); };
+  $('#sendDelivery').onclick=()=>{ showHint('Данные доставки отправлены (демо). В Фазе 1 — уведомление магазинам и менеджеру'); };
 }
 
 /* ---------- экспорт PNG ---------- */
 function exportPNG(){
-  const keep=sel; sel=null; render();
+  const keep=sel; sel=null; renderScene();
   const data=new XMLSerializer().serializeToString(svg);
   const blob=new Blob([data],{type:'image/svg+xml;charset=utf-8'});
   const url=URL.createObjectURL(blob);
@@ -537,7 +675,7 @@ function exportPNG(){
     ctx.drawImage(img,0,0,c.width,c.height);
     URL.revokeObjectURL(url);
     const a=document.createElement('a');
-    a.download=`deadline-wall-${state.room}.png`;
+    a.download=`deadline-${ROOMS[state.roomKey].types[0]}.png`;
     a.href=c.toDataURL('image/png'); a.click();
     showHint('Картинка стены скачана');
     sel=keep; render();
@@ -547,9 +685,10 @@ function exportPNG(){
 }
 
 /* ---------- старт ---------- */
-renderTabs(); renderLeft(); render();
-window.addEventListener('resize',()=>render());
-if(!items().length) showHint('Выбери товар слева и собери свою стену. Цвет меняется у выбранного предмета справа', 4200);
+renderLeft(); render();
+window.addEventListener('resize',()=>{ if(state.view==='walls') render(); });
+if(plan && !allEntries().length) showHint(`Планировка загружена: ${Object.keys(ROOMS).length} помещений. Можно обставить хоть одно — например, только кухню`, 4600);
+else if(!plan) showHint('Открыто без планировки — типовые помещения. Начни с плана квартиры (кнопка слева сверху)', 4600);
 </script>
 </body>
 </html>
