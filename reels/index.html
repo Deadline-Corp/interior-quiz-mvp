@@ -19,18 +19,14 @@
   [data-composition-id="root"] .sub{font-size:42px;color:var(--soft);margin-top:30px;max-width:20ch;line-height:1.35}
 
   /* DEMO full-bleed */
-  #s-demo{padding:0;justify-content:flex-end}
+  #s-demo{padding:0}
   #s-demo .imgs{position:absolute;inset:0;overflow:hidden;will-change:transform}
   #s-demo .imgs img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
-  #s-demo .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(18,15,12,.82) 0%,rgba(18,15,12,.18) 34%,rgba(18,15,12,.04) 52%,rgba(18,15,12,.34) 100%)}
-  #s-demo .top{position:absolute;top:150px;left:0;right:0;text-align:center;color:#fff}
-  #s-demo .top .k{font-size:30px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#F0C9BB}
-  #s-demo .top .t{font-size:62px;font-weight:600;margin-top:14px}
-  #s-demo .botwrap{position:absolute;left:0;right:0;bottom:150px;display:flex;flex-direction:column;align-items:center;gap:22px}
-  #s-demo .chip{display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
-    backdrop-filter:blur(8px);color:#fff;font-size:44px;font-weight:600;padding:20px 38px;border-radius:999px;opacity:0;position:absolute;bottom:0;white-space:nowrap}
-  #s-demo .chip .dot{width:30px;height:30px;border-radius:9px;flex:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
-  #s-demo .hint{color:rgba(255,255,255,.92);font-size:34px;font-weight:500}
+  #s-demo .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(18,15,12,.8) 0%,rgba(18,15,12,.1) 30%,rgba(18,15,12,0) 55%,rgba(18,15,12,.28) 100%)}
+  #s-demo .chips{position:absolute;left:0;right:0;bottom:160px;display:flex;justify-content:center}
+  #s-demo .chip{display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);
+    backdrop-filter:blur(8px);color:#fff;font-size:46px;font-weight:600;padding:22px 40px;border-radius:999px;opacity:0;position:absolute;bottom:0;white-space:nowrap}
+  #s-demo .chip .dot{width:32px;height:32px;border-radius:9px;flex:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.45)}
 
   /* BRIEF */
   #s-brief .speclist{margin-top:40px;display:flex;flex-direction:column;gap:18px}
@@ -41,15 +37,14 @@
 
   /* END */
   #s-end{justify-content:center;text-align:center;align-items:center}
-  #s-end .brand{display:flex;align-items:center;gap:18px;margin-bottom:40px}
+  #s-end .brand{display:flex;align-items:center;gap:18px;margin-bottom:44px}
   #s-end .mk{width:64px;height:64px;border:4px solid var(--ink);border-radius:18px;position:relative}
   #s-end .mk:after{content:"";position:absolute;inset:14px 14px auto auto;width:16px;height:16px;background:var(--accent);border-radius:5px}
   #s-end .brand span{font-size:40px;font-weight:700}
-  #s-end .link{margin-top:46px;font-size:34px;color:var(--soft)}
 </style>
 </head>
 <body>
-<div data-composition-id="root" data-width="1080" data-height="1920" data-start="0" data-duration="22" data-track-index="0">
+<div data-composition-id="root" data-width="1080" data-height="1920" data-start="0" data-duration="23" data-track-index="0">
 
   <!-- HOOK -->
   <div class="layer" id="s-hook">
@@ -66,24 +61,28 @@
   </div>
 
   <!-- DEMO -->
-  <div class="layer" id="s-demo">
-    <div class="imgs" id="demoImgs">
-      <img src="d1.jpg" id="im1" crossorigin="anonymous">
-      <img src="d2.jpg" id="im2" crossorigin="anonymous">
-      <img src="d3.jpg" id="im3" crossorigin="anonymous">
-      <img src="d4.jpg" id="im4" crossorigin="anonymous">
-      <img src="d5.jpg" id="im5" crossorigin="anonymous">
+  <div class="layer" id="s-demo" data-layout-allow-overflow>
+    <div class="imgs" id="demoImgs" data-layout-allow-overflow>
+      <img src="k1.jpg" id="im1" crossorigin="anonymous">
+      <img src="k2.jpg" id="im2" crossorigin="anonymous">
+      <img src="k3.jpg" id="im3" crossorigin="anonymous">
+      <img src="k4.jpg" id="im4" crossorigin="anonymous">
+      <img src="k5.jpg" id="im5" crossorigin="anonymous">
+      <img src="k6.jpg" id="im6" crossorigin="anonymous">
+      <img src="k7.jpg" id="im7" crossorigin="anonymous">
+      <img src="k8.jpg" id="im8" crossorigin="anonymous">
+      <img src="k9.jpg" id="im9" crossorigin="anonymous">
     </div>
     <div class="scrim"></div>
-    <div class="top">
-      <div class="k" id="dk">Одна кухня</div>
-      <div class="t serif" id="dt">Меняется только деталь</div>
-    </div>
-    <div class="botwrap">
-      <div class="chip" id="c1"><span class="dot" style="background:#8A9479"></span>Фасады · Зелёные</div>
-      <div class="chip" id="c2"><span class="dot" style="background:#3C3B39"></span>Столешница · Графит</div>
-      <div class="chip" id="c3"><span class="dot" style="background:#cdbfa6"></span>Планировка · Угловая</div>
-      <div class="chip" id="c4"><span class="dot" style="background:#B08D57"></span>Фурнитура · Латунь</div>
+    <div class="chips">
+      <div class="chip" id="c2"><span class="dot" style="background:#ECEAE4"></span>Фасады · Белые</div>
+      <div class="chip" id="c3"><span class="dot" style="background:#8A9479"></span>Фасады · Зелёные</div>
+      <div class="chip" id="c4"><span class="dot" style="background:#3C3B39"></span>Фасады · Графит</div>
+      <div class="chip" id="c5"><span class="dot" style="background:#3C3B39"></span>Столешница · Графит</div>
+      <div class="chip" id="c6"><span class="dot" style="background:#B07B4E"></span>Столешница · Дерево</div>
+      <div class="chip" id="c7"><span class="dot" style="background:#B08D57"></span>Фурнитура · Латунь</div>
+      <div class="chip" id="c8"><span class="dot" style="background:#F4F4F2"></span>Фартук · Плитка</div>
+      <div class="chip" id="c9"><span class="dot" style="background:#cdbfa6"></span>Планировка · Угловая</div>
     </div>
   </div>
 
@@ -92,8 +91,8 @@
     <div class="kicker" id="bk">Готово</div>
     <div class="h-big serif" id="bh" style="font-size:92px">Дизайн — в бриф<br>дизайнеру</div>
     <div class="speclist">
-      <div class="specrow" id="sr1"><span class="sw" style="background:#8A9479"></span><b>Кухня</b><span>Зелёные фасады</span></div>
-      <div class="specrow" id="sr2"><span class="sw" style="background:#3C3B39"></span><b>Столешница</b><span>Графит</span></div>
+      <div class="specrow" id="sr1"><span class="sw" style="background:#3C3B39"></span><b>Фасады</b><span>Графит</span></div>
+      <div class="specrow" id="sr2"><span class="sw" style="background:#B07B4E"></span><b>Столешница</b><span>Дерево</span></div>
       <div class="specrow" id="sr3"><span class="sw" style="background:#B08D57"></span><b>Фурнитура</b><span>Латунь</span></div>
     </div>
   </div>
@@ -103,7 +102,6 @@
     <div class="brand" id="eb"><span class="mk"></span><span>Ателье интерьера</span></div>
     <div class="h-big serif" id="e1" style="text-align:center">Закажет ровно это.</div>
     <div class="h-big serif" id="e2" style="text-align:center;color:var(--accent)">Без сюрпризов.</div>
-    <div class="link mono" id="el">deadline-corp.github.io/interior-quiz-mvp</div>
   </div>
 
 </div>
@@ -113,61 +111,58 @@
 window.__timelines = window.__timelines || {};
 const tl = gsap.timeline({ paused: true });
 
-/* HOOK 0.2 - 3.2 */
+/* HOOK 0.2 - 3.0 */
 tl.fromTo("#s-hook",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},0.2);
 tl.from("#hk",{y:30,opacity:0,duration:.5,ease:"power3.out"},0.35);
 tl.from("#h1",{y:60,opacity:0,duration:.7,ease:"power3.out"},0.5);
 tl.from("#h2",{y:60,opacity:0,duration:.7,ease:"expo.out"},1.05);
 tl.to("#s-hook",{opacity:0,duration:.5,ease:"power2.in"},3.0);
 
-/* TURN 3.1 - 5.7 */
+/* TURN 3.15 - 5.4 */
 tl.fromTo("#s-turn",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},3.15);
 tl.from("#tk",{y:26,opacity:0,duration:.45,ease:"power3.out"},3.3);
 tl.from("#t1",{y:54,opacity:0,duration:.7,ease:"power4.out"},3.5);
 tl.from("#t2",{y:34,opacity:0,duration:.55,ease:"power2.out"},3.95);
-tl.to("#s-turn",{opacity:0,duration:.5,ease:"power2.in"},5.4);
+tl.to("#s-turn",{opacity:0,duration:.5,ease:"power2.in"},5.3);
 
-/* DEMO 5.5 - 15.6 */
-tl.fromTo("#s-demo",{opacity:0},{opacity:1,duration:.6,ease:"power2.out"},5.5);
-tl.set("#im1",{opacity:1},5.5);
-tl.fromTo("#demoImgs",{scale:1.02},{scale:1.1,duration:10,ease:"none"},5.5);
-tl.from("#s-demo .top",{y:-30,opacity:0,duration:.6,ease:"power3.out"},6.0);
-/* crossfades */
-tl.to("#im1",{opacity:0,duration:.7,ease:"power1.inOut"},7.2);
-tl.fromTo("#im2",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},7.2);
-tl.to("#im2",{opacity:0,duration:.7,ease:"power1.inOut"},9.2);
-tl.fromTo("#im3",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},9.2);
-tl.to("#im3",{opacity:0,duration:.7,ease:"power1.inOut"},11.2);
-tl.fromTo("#im4",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},11.2);
-tl.to("#im4",{opacity:0,duration:.7,ease:"power1.inOut"},13.2);
-tl.fromTo("#im5",{opacity:0},{opacity:1,duration:.7,ease:"power1.inOut"},13.2);
-/* chips, each tied to its change */
-tl.fromTo("#c1",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},7.25);
-tl.to("#c1",{opacity:0,y:-18,duration:.35,ease:"power2.in"},9.0);
-tl.fromTo("#c2",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},9.25);
-tl.to("#c2",{opacity:0,y:-18,duration:.35,ease:"power2.in"},11.0);
-tl.fromTo("#c3",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},11.25);
-tl.to("#c3",{opacity:0,y:-18,duration:.35,ease:"power2.in"},13.0);
-tl.fromTo("#c4",{opacity:0,y:24},{opacity:1,y:0,duration:.4,ease:"back.out(1.6)"},13.25);
-tl.to("#c4",{opacity:0,y:-18,duration:.35,ease:"power2.in"},15.0);
-tl.to("#s-demo",{opacity:0,duration:.55,ease:"power2.in"},15.15);
+/* DEMO 5.4 - 16.0 : 9 frames, 8 changes ~1.15s apart */
+tl.fromTo("#s-demo",{opacity:0},{opacity:1,duration:.6,ease:"power2.out"},5.4);
+tl.set("#im1",{opacity:1},5.4);
+tl.fromTo("#demoImgs",{scale:1.02},{scale:1.12,duration:11,ease:"none"},5.4);
+const steps=[
+  {img:"#im2",chip:"#c2",t:6.6},
+  {img:"#im3",chip:"#c3",t:7.75},
+  {img:"#im4",chip:"#c4",t:8.9},
+  {img:"#im5",chip:"#c5",t:10.05},
+  {img:"#im6",chip:"#c6",t:11.2},
+  {img:"#im7",chip:"#c7",t:12.35},
+  {img:"#im8",chip:"#c8",t:13.5},
+  {img:"#im9",chip:"#c9",t:14.65},
+];
+const prev=["#im1","#im2","#im3","#im4","#im5","#im6","#im7","#im8"];
+steps.forEach((s,i)=>{
+  tl.to(prev[i],{opacity:0,duration:.55,ease:"power1.inOut"},s.t);
+  tl.fromTo(s.img,{opacity:0},{opacity:1,duration:.55,ease:"power1.inOut"},s.t);
+  tl.fromTo(s.chip,{opacity:0,y:22},{opacity:1,y:0,duration:.38,ease:"back.out(1.6)"},s.t+.05);
+  tl.to(s.chip,{opacity:0,y:-16,duration:.32,ease:"power2.in"},s.t+1.0);
+});
+tl.to("#s-demo",{opacity:0,duration:.55,ease:"power2.in"},15.85);
 
-/* BRIEF 15.3 - 18.5 */
-tl.fromTo("#s-brief",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},15.35);
-tl.from("#bk",{y:24,opacity:0,duration:.4,ease:"power3.out"},15.5);
-tl.from("#bh",{y:50,opacity:0,duration:.65,ease:"power4.out"},15.65);
-tl.from("#sr1",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.1);
-tl.from("#sr2",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.3);
-tl.from("#sr3",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.5);
-tl.to("#s-brief",{opacity:0,duration:.5,ease:"power2.in"},18.2);
+/* BRIEF 16.0 - 19.1 */
+tl.fromTo("#s-brief",{opacity:0},{opacity:1,duration:.5,ease:"power2.out"},16.0);
+tl.from("#bk",{y:24,opacity:0,duration:.4,ease:"power3.out"},16.15);
+tl.from("#bh",{y:50,opacity:0,duration:.65,ease:"power4.out"},16.3);
+tl.from("#sr1",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.75);
+tl.from("#sr2",{x:-40,opacity:0,duration:.5,ease:"expo.out"},16.95);
+tl.from("#sr3",{x:-40,opacity:0,duration:.5,ease:"expo.out"},17.15);
+tl.to("#s-brief",{opacity:0,duration:.5,ease:"power2.in"},18.9);
 
-/* END 18.35 - 22 */
-tl.fromTo("#s-end",{opacity:0},{opacity:1,duration:.55,ease:"power2.out"},18.35);
-tl.from("#eb",{y:30,opacity:0,duration:.55,ease:"power3.out"},18.5);
-tl.from("#e1",{y:50,opacity:0,duration:.65,ease:"power4.out"},18.8);
-tl.from("#e2",{y:50,opacity:0,duration:.65,ease:"expo.out"},19.15);
-tl.from("#el",{opacity:0,duration:.6,ease:"power2.out"},19.7);
-tl.to("#s-end",{opacity:0,duration:.7,ease:"power2.in"},21.3);
+/* END 19.05 - 23 */
+tl.fromTo("#s-end",{opacity:0},{opacity:1,duration:.55,ease:"power2.out"},19.05);
+tl.from("#eb",{y:30,opacity:0,duration:.55,ease:"power3.out"},19.2);
+tl.from("#e1",{y:50,opacity:0,duration:.65,ease:"power4.out"},19.55);
+tl.from("#e2",{y:50,opacity:0,duration:.65,ease:"expo.out"},19.9);
+tl.to("#s-end",{opacity:0,duration:.7,ease:"power2.in"},22.2);
 
 window.__timelines["root"] = tl;
 </script>
