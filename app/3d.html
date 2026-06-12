@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADLINE · 3D-конструктор — прототип движка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f3; --surface:#fefdfb; --ink:#1c1917; --ink-2:#57534e; --ink-3:#78716c;
+    --line:#e7e5e4; --line-2:#d6d3d1; --accent:#0f766e; --accent-ink:#f4f7f6; --accent-soft:#e6f2f0;
+    --danger:#b91c1c; --danger-bg:#fdeaea; --r-sm:8px; --r-md:12px;
+    --shadow:0 10px 30px -12px rgba(28,25,23,.12); --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;overflow:hidden}
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+  .app{display:grid;grid-template-rows:54px 1fr;height:100dvh}
+  header{display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--surface);border-bottom:1px solid var(--line);z-index:10}
+  .brand{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+  .brand b{font-weight:700;letter-spacing:.14em;font-size:13.5px}
+  .brand span{color:var(--ink-3);font-size:12px}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:var(--r-sm);font-weight:600;font-size:12.5px;min-height:36px;transition:transform .12s,background .18s;text-decoration:none;justify-content:center}
+  .btn:active{transform:translateY(1px)}
+  .btn-ghost{border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn-ghost:hover{background:var(--bg)}
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--line-2);border-radius:999px;padding:3px;margin:0 auto}
+  .seg button{padding:6px 16px;border-radius:999px;font-weight:600;font-size:12.5px;color:var(--ink-2)}
+  .seg button.on{background:var(--ink);color:#f7f5f1}
+
+  main{position:relative;min-height:0}
+  #gl{position:absolute;inset:0}
+  canvas{display:block;outline:none}
+
+  .panel{position:absolute;top:14px;bottom:14px;width:264px;background:rgba(254,253,251,.94);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow);overflow-y:auto;z-index:5}
+  .panel-l{left:14px}
+  .panel-r{right:14px;top:auto;bottom:14px;max-height:62%}
+  .panel h2{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:600;padding:14px 14px 8px;position:sticky;top:0;background:rgba(254,253,251,.96)}
+  .prod{display:flex;gap:10px;width:calc(100% - 24px);margin:0 12px 7px;padding:9px;border:1px solid var(--line);border-radius:10px;text-align:left;background:var(--surface);transition:border-color .15s,box-shadow .15s}
+  .prod:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+  .prod b{display:block;font-size:12.5px;font-weight:600;line-height:1.25}
+  .prod .meta{font-size:10.5px;color:var(--ink-3)}
+  .prod .price{font-weight:600;font-size:12px;margin-top:1px}
+  .store-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:1px}
+  .est-line{display:flex;justify-content:space-between;gap:8px;padding:6px 14px;font-size:12px;border-bottom:1px solid var(--line)}
+  .est-line span:first-child{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .total{margin:10px 12px 12px;padding:12px;border-radius:10px;background:var(--ink);color:#f7f5f1}
+  .total small{display:block;font-size:10px;color:#d6d3d1;text-transform:uppercase;letter-spacing:.08em}
+  .total .num{font-size:18px;font-weight:600}
+  .warn-chip{margin:0 12px 8px;background:var(--danger-bg);color:var(--danger);font-size:11.5px;padding:7px 10px;border-radius:8px;font-weight:500}
+  .hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);color:#f7f5f1;font-size:12px;padding:7px 14px;border-radius:999px;box-shadow:var(--shadow);opacity:0;transition:opacity .2s;z-index:8;pointer-events:none;white-space:nowrap}
+  .hint.show{opacity:.95}
+  .foot{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:12px;align-items:center;background:rgba(254,253,251,.92);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:11.5px;color:var(--ink-3);z-index:5;white-space:nowrap}
+  .foot kbd{font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--line-2);border-bottom-width:2px;border-radius:4px;padding:0 4px;color:var(--ink-2)}
+  #loader{position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;transition:opacity .4s}
+  #loader.off{opacity:0;pointer-events:none}
+  #loader .in{text-align:center;color:var(--ink-2)}
+  #loader b{display:block;font-size:15px;letter-spacing:.12em;margin-bottom:10px}
+  .bar{width:220px;height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin:0 auto}
+  .bar i{display:block;height:100%;width:0%;background:var(--accent);transition:width .25s}
+  .sel-info{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);background:rgba(28,25,23,.92);color:#f7f5f1;border-radius:10px;padding:8px 14px;font-size:12px;display:none;z-index:6;gap:12px;align-items:center}
+  .sel-info.show{display:flex}
+  .sel-info button{color:#f7f5f1;border:1px solid rgba(255,255,255,.25);border-radius:7px;padding:4px 10px;font-size:11.5px}
+  .sel-info button:hover{background:rgba(255,255,255,.12)}
+  @media (max-width:900px){ .panel{width:220px} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><b>DEADLINE</b><span>3D-конструктор · прототип движка</span></div>
+    <div class="seg" role="group" aria-label="Режим камеры">
+      <button id="mOrbit" class="on">Обход 3D</button>
+      <button id="mTop">План сверху</button>
+    </div>
+    <button class="btn btn-ghost" id="shot">Скриншот</button>
+    <a class="btn btn-ghost" href="index.html">← Приложение</a>
+  </header>
+  <main>
+    <div id="gl"></div>
+    <div class="hint" id="hint"></div>
+    <aside class="panel panel-l" id="catalog"><h2>Каталог · 3D-модели реальных товаров</h2></aside>
+    <aside class="panel panel-r" id="estimate"></aside>
+    <div class="sel-info" id="selInfo">
+      <span id="selName"></span>
+      <button id="selRot">Повернуть (R)</button>
+      <button id="selDel">Убрать (Del)</button>
+    </div>
+    <div class="foot"><span>ЛКМ — выбрать/тащить</span><span>колесо — зум</span><span>ПКМ — вращать сцену</span><span><kbd>R</kbd> поворот</span><span><kbd>Del</kbd> убрать</span></div>
+    <div id="loader"><div class="in"><b>DEADLINE</b>Готовим 3D-шоурум…<div class="bar" style="margin-top:12px"><i id="barFill"></i></div></div></div>
+  </main>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ============ каталог: CC0-модель ↔ реальный SKU магазина ============ */
+const STORES={homepro:{name:'HomePro',color:'#1d4ed8'},index:{name:'Index Living Mall',color:'#b45309'},powerbuy:{name:'Power Buy',color:'#7c2d12'}};
+const CAT=[
+  {id:'sofa_03',            name:'Диван 3-местный Lamona',     store:'index',  price:9990,  rot:0,       kind:'seat'},
+  {id:'modern_arm_chair_01',name:'Кресло Pillry',              store:'index',  price:1990,  rot:0,       kind:'seat'},
+  {id:'modern_coffee_table_01',name:'Журнальный стол Maribo',  store:'index',  price:2190,  rot:0,       kind:'table'},
+  {id:'round_wooden_table_01', name:'Обеденный стол Serrano',  store:'index',  price:8990,  rot:0,       kind:'table'},
+  {id:'dining_chair_02',    name:'Стул обеденный Pranee',      store:'homepro',price:1290,  rot:Math.PI, kind:'seat'},
+  {id:'modern_wooden_cabinet', name:'Комод Molly',             store:'index',  price:4590,  rot:0,       kind:'storage'},
+  {id:'side_table_tall_01', name:'Тумба Valux',                store:'index',  price:1290,  rot:0,       kind:'table'},
+];
+const M=id=>CAT.find(c=>c.id===id);
+const fmt=n=>'฿ '+n.toLocaleString('th-TH');
+
+/* ============ комната из подтверждённого плана приложения ============ */
+let ROOM={w:5.6,d:4.4,h:2.7,name:'Гостиная-кухня'};
+try{
+  const a=JSON.parse(localStorage.getItem('dl-app'));
+  if(a&&a.rooms&&a.rooms.length){const r=a.rooms.reduce((m,x)=>x.w*x.h>m.w*m.h?x:m,a.rooms[0]);ROOM={w:r.w,d:r.h,h:2.7,name:r.name};}
+}catch(e){}
+
+/* ============ сцена ============ */
+const mount=document.getElementById('gl');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.12;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+mount.appendChild(renderer.domElement);
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0xf2efe9);
+const pmrem=new THREE.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+if('environmentIntensity' in scene) scene.environmentIntensity=0.55;
+
+const camera=new THREE.PerspectiveCamera(46,1,0.05,120);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08;
+controls.maxPolarAngle=Math.PI/2-0.02;
+controls.minDistance=1.4; controls.maxDistance=Math.max(ROOM.w,ROOM.d)*3.2;
+controls.target.set(0,0.85,0);
+camera.position.set(ROOM.w*0.62,ROOM.h*0.78,ROOM.d*1.12);
+controls.mouseButtons={LEFT:null,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE}; // ЛКМ свободна под выбор/драг
+
+/* солнце с мягкими тенями */
+const sun=new THREE.DirectionalLight(0xfff2e0,2.6);
+sun.position.set(-ROOM.w*0.7,ROOM.h*2.1,ROOM.d*0.9);
+sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);
+const sc=Math.max(ROOM.w,ROOM.d)*0.9;
+Object.assign(sun.shadow.camera,{left:-sc,right:sc,top:sc,bottom:-sc,near:0.5,far:20});
+sun.shadow.bias=-0.0004; sun.shadow.normalBias=0.02; sun.shadow.radius=7;
+scene.add(sun);
+scene.add(new THREE.HemisphereLight(0xfdf6ea,0xb9a98e,0.35));
+
+/* ============ оболочка комнаты ============ */
+const texL=new THREE.TextureLoader();
+const floorDiff=texL.load('assets/3d/textures/floor_diff.jpg');
+const floorRough=texL.load('assets/3d/textures/floor_rough.jpg');
+floorDiff.colorSpace=THREE.SRGBColorSpace;
+[floorDiff,floorRough].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(ROOM.w/2.4,ROOM.d/2.4);t.anisotropy=8;});
+const floor=new THREE.Mesh(
+  new THREE.PlaneGeometry(ROOM.w,ROOM.d),
+  new THREE.MeshStandardMaterial({map:floorDiff,roughnessMap:floorRough,roughness:0.9,metalness:0})
+);
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+
+const wallMat=()=>new THREE.MeshStandardMaterial({color:0xe8e2d6,roughness:0.95});
+const bbMat=new THREE.MeshStandardMaterial({color:0xf2ede3,roughness:0.6});
+const walls=[]; // {group, n: внешняя нормаль}
+function makeWall(w,n,pos,rotY){
+  const g=new THREE.Group();
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,ROOM.h,0.08),wallMat());
+  m.position.y=ROOM.h/2; m.receiveShadow=true; g.add(m);
+  const bb=new THREE.Mesh(new THREE.BoxGeometry(w,0.09,0.094),bbMat);
+  bb.position.y=0.045; g.add(bb);
+  g.position.copy(pos); g.rotation.y=rotY; g.userData.n=n; scene.add(g); walls.push(g);
+}
+makeWall(ROOM.w,new THREE.Vector3(0,0,-1),new THREE.Vector3(0,0,-ROOM.d/2-0.04),0);
+makeWall(ROOM.w,new THREE.Vector3(0,0, 1),new THREE.Vector3(0,0, ROOM.d/2+0.04),0);
+makeWall(ROOM.d,new THREE.Vector3(-1,0,0),new THREE.Vector3(-ROOM.w/2-0.04,0,0),Math.PI/2);
+makeWall(ROOM.d,new THREE.Vector3( 1,0,0),new THREE.Vector3( ROOM.w/2+0.04,0,0),Math.PI/2);
+
+/* кольцо выбора */
+const ring=new THREE.Mesh(new THREE.RingGeometry(0.5,0.56,48),new THREE.MeshBasicMaterial({color:0x0f766e,transparent:true,opacity:0.9,side:THREE.DoubleSide}));
+ring.rotation.x=-Math.PI/2; ring.position.y=0.012; ring.visible=false; scene.add(ring);
+
+/* ============ загрузка моделей ============ */
+const loader=new GLTFLoader();
+const cache={};
+let loadedCount=0; const PRELOAD=['sofa_03','modern_arm_chair_01','modern_coffee_table_01','round_wooden_table_01','dining_chair_02'];
+function loadModel(id){
+  if(cache[id])return Promise.resolve(cache[id]);
+  return new Promise((res,rej)=>loader.load(`assets/3d/${id}/${id}.gltf`,g=>{
+    g.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+    cache[id]=g.scene; res(g.scene);
+  },undefined,rej));
+}
+
+/* ============ предметы в сцене ============ */
+const items=[]; // {id, sku, obj, hw, hd} (half-extents по XZ)
+let nextId=1, sel=null;
+async function addItem(sku,x=0,z=0,ry=0,silent=false){
+  const src=await loadModel(sku);
+  const obj=src.clone(true);
+  const box=new THREE.Box3().setFromObject(obj);
+  const size=box.getSize(new THREE.Vector3());
+  const center=box.getCenter(new THREE.Vector3());
+  const holder=new THREE.Group();
+  obj.position.sub(new THREE.Vector3(center.x,box.min.y,center.z)); // центр по XZ, низ на пол
+  holder.add(obj);
+  holder.position.set(x,0,z); holder.rotation.y=ry+( M(sku).rot||0 );
+  scene.add(holder);
+  const it={id:nextId++,sku,obj:holder,hw:size.x/2,hd:size.z/2,h:size.y};
+  items.push(it);
+  if(!silent){select(it);toast(`${M(sku).name} — тащи мышью, R — поворот`);}
+  renderPanels(); return it;
+}
+function halfExtents(it){ // AABB-полуразмеры с учётом поворота (0/90 точные, иначе оболочка)
+  const c=Math.abs(Math.cos(it.obj.rotation.y)),s=Math.abs(Math.sin(it.obj.rotation.y));
+  return {x:it.hw*c+it.hd*s, z:it.hw*s+it.hd*c};
+}
+function problems(it){
+  const e=halfExtents(it),p=it.obj.position,out=[];
+  if(p.x-e.x<-ROOM.w/2-0.01||p.x+e.x>ROOM.w/2+0.01||p.z-e.z<-ROOM.d/2-0.01||p.z+e.z>ROOM.d/2+0.01)out.push(`${M(it.sku).name}: выходит за стены`);
+  for(const o of items){if(o.id===it.id)continue;
+    const k1=M(it.sku).kind,k2=M(o.sku).kind;
+    if((k1==='seat'&&k2==='table')||(k1==='table'&&k2==='seat'))continue; // стул задвигается под стол — это норма
+    const oe=halfExtents(o),op=o.obj.position;
+    if(Math.abs(p.x-op.x)<e.x+oe.x-0.02&&Math.abs(p.z-op.z)<e.z+oe.z-0.02){out.push(`${M(it.sku).name}: пересекается с «${M(o.sku).name}»`);break;}}
+  return out;
+}
+const allProblems=()=>items.flatMap(problems);
+
+function select(it){sel=it;syncSel();}
+function syncSel(){
+  const si=document.getElementById('selInfo');
+  if(!sel){ring.visible=false;si.classList.remove('show');return;}
+  const e=halfExtents(sel),r=Math.hypot(e.x,e.z)+0.07;
+  ring.geometry.dispose();ring.geometry=new THREE.RingGeometry(r,r+0.05,56);
+  ring.position.set(sel.obj.position.x,0.012,sel.obj.position.z);
+  ring.material.color.set(problems(sel).length?0xb91c1c:0x0f766e);
+  ring.visible=true; si.classList.add('show');
+  document.getElementById('selName').textContent=`${M(sel.sku).name} · ${fmt(M(sel.sku).price)}`;
+}
+
+/* ============ панели UI ============ */
+function renderPanels(){
+  const catEl=document.getElementById('catalog');
+  catEl.innerHTML='<h2>Каталог · 3D-модели реальных товаров</h2>'+CAT.map(c=>`
+    <button class="prod" data-add="${c.id}"><span style="min-width:0"><b>${c.name}</b>
+      <span class="meta"><span class="store-dot" style="background:${STORES[c.store].color}"></span>${STORES[c.store].name}</span>
+      <span class="price num">${fmt(c.price)}</span></span></button>`).join('')
+    +'<p style="padding:4px 14px 14px;font-size:11px;color:var(--ink-3)">Модели CC0 (Poly Haven) сопоставлены реальным SKU — в проде каждая позиция каталога получает свою 3D-модель.</p>';
+  catEl.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addItem(b.dataset.add, (Math.random()-0.5)*1.2, (Math.random()-0.5)*1.2));
+  const est=document.getElementById('estimate');
+  const probs=allProblems();
+  est.innerHTML='<h2>Смета · '+ROOM.name+'</h2>'
+    +(probs.length?probs.slice(0,3).map(t=>`<div class="warn-chip">${t}</div>`).join(''):'')
+    +(items.length?items.map(i=>`<div class="est-line"><span>${M(i.sku).name}</span><span class="num">${fmt(M(i.sku).price)}</span></div>`).join(''):'<div style="padding:10px 14px;color:var(--ink-3);font-size:12px">Добавь мебель из каталога слева</div>')
+    +(items.length?`<div class="total"><small>${items.length} поз. · комната ${ROOM.w.toFixed(1)}×${ROOM.d.toFixed(1)} м</small><span class="num">${fmt(items.reduce((s,i)=>s+M(i.sku).price,0))}</span></div>`:'');
+}
+function toast(t,ms=2600){const h=document.getElementById('hint');h.textContent=t;h.classList.add('show');clearTimeout(h._t);h._t=setTimeout(()=>h.classList.remove('show'),ms);}
+
+/* ============ взаимодействие: выбор и drag по полу ============ */
+const ray=new THREE.Raycaster(), ndc=new THREE.Vector2(), dragPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+let drag=null;
+function pick(ev){
+  const r=renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX-r.left)/r.width)*2-1, -((ev.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(ndc,camera);
+  const hits=ray.intersectObjects(items.map(i=>i.obj),true);
+  if(!hits.length)return null;
+  let o=hits[0].object; while(o&&!items.find(i=>i.obj===o))o=o.parent;
+  return items.find(i=>i.obj===o)||null;
+}
+renderer.domElement.addEventListener('pointerdown',ev=>{
+  if(ev.button!==0)return;
+  const it=pick(ev);
+  if(it){select(it);const p=new THREE.Vector3();ray.ray.intersectPlane(dragPlane,p);
+    drag={it,dx:p.x-it.obj.position.x,dz:p.z-it.obj.position.z};controls.enabled=false;}
+  else{sel=null;syncSel();}
+});
+renderer.domElement.addEventListener('pointermove',ev=>{
+  if(!drag)return;
+  const r=renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX-r.left)/r.width)*2-1, -((ev.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(ndc,camera);
+  const p=new THREE.Vector3(); if(!ray.ray.intersectPlane(dragPlane,p))return;
+  const it=drag.it,e=halfExtents(it);
+  it.obj.position.x=THREE.MathUtils.clamp(p.x-drag.dx,-ROOM.w/2+e.x,ROOM.w/2-e.x);
+  it.obj.position.z=THREE.MathUtils.clamp(p.z-drag.dz,-ROOM.d/2+e.z,ROOM.d/2-e.z);
+  syncSel();
+});
+addEventListener('pointerup',()=>{if(drag){drag=null;controls.enabled=true;renderPanels();}});
+addEventListener('keydown',ev=>{
+  if(!sel)return;
+  if(ev.key==='r'||ev.key==='R'||ev.key==='к'||ev.key==='К'){sel.obj.rotation.y+=Math.PI/12;syncSel();renderPanels();}
+  if(ev.key==='Delete'||ev.key==='Backspace'){scene.remove(sel.obj);items.splice(items.indexOf(sel),1);sel=null;syncSel();renderPanels();}
+  if(ev.key==='Escape'){sel=null;syncSel();}
+});
+document.getElementById('selRot').onclick=()=>{if(sel){sel.obj.rotation.y+=Math.PI/12;syncSel();renderPanels();}};
+document.getElementById('selDel').onclick=()=>{if(sel){scene.remove(sel.obj);items.splice(items.indexOf(sel),1);sel=null;syncSel();renderPanels();}};
+
+/* ============ режимы камеры: обход / план сверху ============ */
+let camAnim=null, savedCam=null;
+function tweenCam(toPos,toTarget,ms=650){
+  camAnim={t0:performance.now(),ms,p0:camera.position.clone(),p1:toPos,g0:controls.target.clone(),g1:toTarget};
+}
+document.getElementById('mTop').onclick=()=>{
+  document.getElementById('mTop').classList.add('on');document.getElementById('mOrbit').classList.remove('on');
+  savedCam={p:camera.position.clone(),t:controls.target.clone()};
+  tweenCam(new THREE.Vector3(0.001,Math.max(ROOM.w,ROOM.d)*1.35,0.001),new THREE.Vector3(0,0,0));
+  controls.enableRotate=false;
+};
+document.getElementById('mOrbit').onclick=()=>{
+  document.getElementById('mOrbit').classList.add('on');document.getElementById('mTop').classList.remove('on');
+  controls.enableRotate=true;
+  tweenCam(savedCam?savedCam.p:new THREE.Vector3(ROOM.w*0.62,ROOM.h*0.78,ROOM.d*1.12),savedCam?savedCam.t:new THREE.Vector3(0,0.85,0));
+};
+document.getElementById('shot').onclick=()=>{
+  const a=document.createElement('a');a.download='deadline-3d.png';a.href=renderer.domElement.toDataURL('image/png');a.click();toast('Скриншот сохранён');
+};
+
+/* ============ стартовая сцена: диван-зона + стол СО СТУЛЬЯМИ ВОКРУГ ============ */
+async function starter(){
+  const W=ROOM.w,D=ROOM.d;
+  const total=PRELOAD.length;let done=0;
+  const tick=()=>{done++;document.getElementById('barFill').style.width=(done/total*100)+'%';};
+  for(const id of PRELOAD){await loadModel(id);tick();}
+  await addItem('sofa_03',            -W*0.22, -D*0.33, 0, true);
+  await addItem('modern_coffee_table_01', -W*0.22, -D*0.01, 0, true);
+  await addItem('modern_arm_chair_01',-W*0.37,  D*0.12, Math.PI/2.4, true);
+  const tx=W*0.26, tz=D*0.20;
+  await addItem('round_wooden_table_01', tx, tz, 0, true);
+  await addItem('dining_chair_02', tx-0.72, tz,     -Math.PI/2,  true);  // слева, лицом к столу
+  await addItem('dining_chair_02', tx+0.72, tz,      Math.PI/2,  true);  // справа
+  await addItem('dining_chair_02', tx, tz-0.72,      Math.PI,    true);  // за столом
+  await addItem('dining_chair_02', tx, tz+0.72,      0,          true);  // перед столом
+  renderPanels();
+  document.getElementById('loader').classList.add('off');
+  toast(`${ROOM.name} · ${W.toFixed(1)}×${D.toFixed(1)} м — покрути сцену правой кнопкой`);
+}
+
+/* ============ цикл ============ */
+function resize(){
+  const r=mount.getBoundingClientRect();
+  renderer.setSize(r.width,r.height,false);
+  camera.aspect=r.width/r.height;camera.updateProjectionMatrix();
+}
+addEventListener('resize',resize);resize();
+const camDir=new THREE.Vector3();
+renderer.setAnimationLoop(()=>{
+  if(camAnim){
+    const k=Math.min(1,(performance.now()-camAnim.t0)/camAnim.ms),e=1-Math.pow(1-k,3);
+    camera.position.lerpVectors(camAnim.p0,camAnim.p1,e);
+    controls.target.lerpVectors(camAnim.g0,camAnim.g1,e);
+    if(k>=1)camAnim=null;
+  }
+  controls.update();
+  camDir.copy(camera.position).sub(new THREE.Vector3(0,0,0)).setY(0).normalize();
+  for(const w of walls)w.visible=w.userData.n.dot(camDir)<0.25; // прячем стены между камерой и комнатой
+  ring.visible=!!sel&&!drag||!!sel;
+  renderer.render(scene,camera);
+});
+window.__capture=(q=0.8)=>renderer.domElement.toDataURL('image/jpeg',q);
+window.__state=()=>({items:items.map(i=>({sku:i.sku,x:+i.obj.position.x.toFixed(2),z:+i.obj.position.z.toFixed(2)})),room:ROOM,problems:allProblems()});
+renderPanels();
+starter().catch(e=>{document.getElementById('loader').classList.add('off');toast('Ошибка загрузки моделей: '+e.message,6000);});
+</script>
+</body>
+</html>
