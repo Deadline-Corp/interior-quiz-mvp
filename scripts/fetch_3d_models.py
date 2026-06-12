@@ -16,8 +16,14 @@ MODELS = [
     "dining_chair_02",         # обеденный стул (вокруг стола!)
     "modern_wooden_cabinet",   # комод/шкаф
     "side_table_tall_01",      # тумба
+    "mid_century_lounge_chair",# лаунж-кресло mid-century
+    "Ottoman_01",              # пуф
+    "modern_coffee_table_02",  # журнальный стол 2
+    "ClassicNightstand_01",    # тумба прикроватная
+    "Shelf_01",                # стеллаж
+    "GothicBed_01",            # кровать (классика)
 ]
-FLOOR_TEX = "wood_floor_deck"  # паркет
+FLOOR_TEX = "laminate_floor_02"  # светлый дуб-ламинат
 
 def get(url):
     return urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60).read()
